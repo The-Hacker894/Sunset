@@ -1,0 +1,10 @@
+{
+  "name":"Sunset",
+  "newversion": "1.0",
+  "version":"11.5",
+  "oldversion":"1.0",
+  "description":"Sunset is the best bot your could ever have",
+  "owner":"MrHacker894",
+  "library": "Discord.js",
+  "language": "Node.js"
+}
