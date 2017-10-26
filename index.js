@@ -9,11 +9,6 @@ const prefix = config.prefix
 const ytdl = require("ytdl-core")
 const request = require("request")
 
-var test = message.channel.send('test1')
-
-
-
-
 client.on("ready", () => {
   console.log('The time is ' + Date.now())
   console.log(`Sunset has started setting`)
