@@ -9,6 +9,8 @@ const prefix = config.prefix
 const ytdl = require("ytdl-core")
 const request = require("request")
 
+var test = message.channel.send('test')
+
 
 
 
