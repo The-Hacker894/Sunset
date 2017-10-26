@@ -8,8 +8,7 @@ const fs = require("fs");
 const prefix = config.prefix
 const ytdl = require("ytdl-core")
 const request = require("request")
-let ownerida = 270375857384587264
-let owneridb = '270375857384587264'
+
 
 
 
