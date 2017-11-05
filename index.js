@@ -12,14 +12,12 @@ const moment = require("moment")
 const cheerio = require('cheerio')
 const snekfetch = require('snekfetch')
 const querystring = require('querystring')
-
-
-let ownerida = 270375857384587264
-let owneridb = '270375857384587264'
+const math = require('mathjs')
+const tts = require('node-google-text-to-speech')
 
 var botjoinembed = new Discord.RichEmbed()
   .setColor('FFCE00')
-  .setTitle('From Sunset to Sunrise I\'ll be there!')
+  .setTitle('From ' + config.name + ' to Sunrise I\'ll be there!')
   .setDescription('**Thank you for inviting me to your server!**')
   .addField('**If you need any help you can use the** `help` **command**','┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄')
 
@@ -33,18 +31,22 @@ var newuserjoinembed = new Discord.RichEmbed()
 client.on("ready", () => {
   console.log('Logged on at ' + moment().format('h:mm:ss a') + ' on ' +  moment().format('MMMM Do YYYY'))
   console.log(`Sunset has started setting`)
-  client.user.setGame(client.guilds.size + ' servers | ' + config.prefix + 'help')
-  client.users.get('270375857384587264').send('Sunset has started setting')
+//  console.log(client.guilds)
+//  client.user.setGame('MAINTENANCE 11/3/2017 @ 8PM EST | ' + config.prefix + 'help')
+ client.user.setGame(client.guilds.size + ' servers | ' + config.prefix + 'help')
+  client.users.get('270375857384587264').send(config.name + ' has started setting')
+  // console.log(message)
 });
 client.on("guildCreate", guild => {
   guild.owner.send({embed: botjoinembed})
+    client.user.setGame(client.guilds.size + ' servers | ' + config.prefix + 'help')
 });
 client.on('message', msg => {
 if(msg.content === 'prefix') {
     msg.channel.send("My prefix is " + config.prefix)
   }
 });
-var disabled = 'This command has been disabled'
+
 
 client.on("message", message => {
   let args = message.content.substring(prefix.length).split(" ");
@@ -54,7 +56,7 @@ client.on("message", message => {
 
   switch (args[0].toLowerCase()) {
     case "ping":
-    var config = require("./config.json")
+    var config = require("./config.json");
     var pingembed = new Discord.RichEmbed()
       .setColor('FFCE00')
       .setTitle('Ping Usage')
@@ -67,8 +69,9 @@ client.on("message", message => {
     if(pingmessage === 'image') return message.channel.send('Pinging...').then(sent => { sent.edit('http://madeformakers.org/wp-content/uploads/2016/01/pong.png').then(msg => { msg.edit(`Pong! Took ${sent.createdTimestamp - message.createdTimestamp}ms`)})});
     message.delete()
     break;
+
     case "relog": {
-      var config = require("./config.json")
+      var config = require("./config.json");
       if (message.author.id !== config.ownerid) return message.channel.send(`**Owner Only Command**`);
     }
       client.destroy()
@@ -76,27 +79,142 @@ client.on("message", message => {
       break;
     case "restart": {
       // Only use this command if you have a process manager like PM2
-    var config = require("./config.json")
+    var config = require("./config.json");
     if (message.author.id !== config.ownerid) return message.channel.send('**Owner Only Command**');
 }
     message.channel.send('Restarting.... :arrows_counterclockwise: ') && process.exit(0);
 
       break;
+    case "vote":
+      var votereason = message.content.split(' ').slice(1).join(' ')
+      var voteembed = new Discord.RichEmbed()
+        .setTitle('Vote')
+        .setAuthor(message.author.username ,message.author.avatarURL)
+        .setColor('FFCE00')
+        .setDescription(votereason)
+        .setFooter('Poll setup at ' + moment().format('h:mm:ss a') + ' on ' +  moment().format('MMMM Do YYYY'))
+        message.channel.send({embed: voteembed})
+          .then(function (message) {
+            message.react('☝')
+            message.react('✌️')
+
+          });
+          message.channel.send('Please note that this command is not finished.')
+          break;
+          case "play":
+          var config = require("./config.json")
+          let simplegooglesearch = message.content.split(' ').slice(1).join(' ')
+          let ytgooglesearch = 'www.youtube.com/watch?=' + message.content.split(' ').slice(1).join(' ')
+          let ytsearchUrl = `https://www.google.com/search?q=${encodeURIComponent(ytgooglesearch)}`;
+
+          return snekfetch.get(ytsearchUrl).then((result) => {
+            let $ = cheerio.load(result.text);
+            let ytgoogleData = $('.r').first().find('a').first().attr('href');
+            ytgoogleData = querystring.parse(ytgoogleData.replace('/url?', ''));
+
+          let musictoplay = message.content.split(' ').slice(1).join('')
+          let youtubeurl = `www.youtube.com`
+          let volume2set = message.content.split(/\s+/g).slice(2).join(" ");
+          var musiclengtherror = new Discord.RichEmbed()
+            .setColor('FFCE00')
+            .setTitle('Music Commands Usage (Play)')
+            .setDescription('You must provide a search term for YouTube')
+            .addField(config.prefix + 'play <youtube_video>','<youtube_video> = Search Term for Youtube Video')
+
+          if(musictoplay.length < 1) return message.channel.send({embed: musiclengtherror}).catch(console.error);
+      //    if(!musictoplay.indexOf(youtubeurl)) return message.channel.send(`success`)
+          var voiceChannel = message.member.voiceChannel;
+        if (!voiceChannel) return message.reply("**You must be in a voice channel.**").catch(console.error);
+        voiceChannel.join()
+          .then(connnection => {
+            var stream = ytdl(`${ytgoogleData.q}`, { filter: 'audioonly' });
+            message.channel.send(':play_pause: **Now Playing** ' + `${ytgoogleData.q}`)
+
+            var dispatcher = connnection.playStream(stream);
+            dispatcher.on('end', () => voiceChannel.leave());
+            console.log('YTDL | ' + `${ytgoogleData.q}` + ' | ' + message.guild.name + ' | ' + message.author.toString())
+          });
+      });
+        break;
+    case "youtube":
+
+    var config = require('./config.json')
+    var ytsearchtooshortembed = new Discord.RichEmbed()
+     .setColor('FFCE00')
+      .setTitle('YouTube Search Help')
+      .setDescription('You must provide something to search for')
+      .addField(config.prefix + 'youtube <search>','<search> = Something to search on Youtube')
+//    var ytsearchundefinedembed = new Discord.RichEmbed()
+//      .setColor('FFCE00')
+//     .setTitle('YouTube Search Help')
+//      .setDescription('You must use a `+` symbol for your spaces *this issue will be fixed in a later update*')
+//      .addField(config.prefix + 'google <search>','<search> = Something to search on Google *No space*')
+
+    let ytsimplegooglesearch = message.content.split(' ').slice(1).join(' ')
+    let ytsearch = 'www.youtube.com/watch?=' + message.content.split(' ').slice(1).join(' ')
+    let youtubesearchUrl = `https://www.google.com/search?q=${encodeURIComponent(ytsearch)}`;
+    if(ytsimplegooglesearch.length < 1)  return message.channel.send({embed: ytsearchtooshortembed})
+
+    return snekfetch.get(youtubesearchUrl).then((result) => {
+      let $ = cheerio.load(result.text);
+      let youtubegoogleData = $('.r').first().find('a').first().attr('href');
+      youtubegoogleData = querystring.parse(youtubegoogleData.replace('/url?', ''));
+
+     var youtubegoogleresulterrorembed = new Discord.RichEmbed()
+        .setColor('FFCE00')
+        .setTitle('Sorry, but an error occured while processing your request.')
+        .setDescription('Please try rewording your search')
+        .addField(config.prefix + 'youtube <search>','<search> = Youtube Search Request')
+
+      if(youtubegoogleData.q === 'undefined') return message.channel.send({embed: youtubegoogleresulterrorembed})
+      var youtuberesultembed = new Discord.RichEmbed()
+        .setColor('FFCE00')
+       .setTitle('Here\'s what I found for')
+      .setDescription(ytsimplegooglesearch)
+        .addField(`${youtubegoogleData.q}`,'⠀')
+        .setThumbnail('https://ih0.redbubble.net/image.25011287.7046/flat,1000x1000,075,f.u1.jpg')
+        .setFooter('Youtube Search Result at ' + moment().format('h:mm:ss a') + ' on ' +  moment().format('MMMM Do YYYY'))
+      message.channel.send({embed: youtuberesultembed})
+      console.log(message.guild.name + " | " + message.author.toString() + ' | ' + ytsearch + ' | ' + `${youtubegoogleData.q}`)
+ });
+break;
     case "google":
-    var config = require("./config.json")
+    var config = require('./config.json')
     var googlesearchtooshortembed = new Discord.RichEmbed()
       .setColor('FFCE00')
       .setTitle('Google Search Help')
       .setDescription('You must provide something to search for')
       .addField(config.prefix + 'google <search>','<search> = Something to search on Google')
+    var googlesearchundefinedembed = new Discord.RichEmbed()
+      .setColor('FFCE00')
+      .setTitle('Google Search Help')
+      .setDescription('You must use a `+` symbol for your spaces *this issue will be fixed in a later update*')
+      .addField(config.prefix + 'google <search>','<search> = Something to search on Google *No space*')
+
     let googlesearch = message.content.split(' ').slice(1).join(' ')
     let searchUrl = `https://www.google.com/search?q=${encodeURIComponent(message.content.split(' ').slice(1).join(' '))}`;
     if(googlesearch.length < 1)  return message.channel.send({embed: googlesearchtooshortembed})
+
     return snekfetch.get(searchUrl).then((result) => {
       let $ = cheerio.load(result.text);
       let googleData = $('.r').first().find('a').first().attr('href');
       googleData = querystring.parse(googleData.replace('/url?', ''));
-      message.channel.send(`Here\'s what I found for ` + googlesearch + `\n${googleData.q}`);
+
+      var googleresulterrorembed = new Discord.RichEmbed()
+        .setColor('FFCE00')
+        .setTitle('Sorry, but an error occured while processing your request.')
+        .setDescription('Please try rewording your search')
+        .addField(config.prefix + 'google <search>','<search> = Google Search Request')
+
+      if(googleData.q === 'undefined') return message.channel.send({embed: googleresulterrorembed})
+      var googleresultembed = new Discord.RichEmbed()
+        .setColor('FFCE00')
+        .setTitle('Here\'s what I found for')
+        .setDescription(googlesearch)
+        .addField(`${googleData.q}`,'⠀')
+        .setThumbnail('https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Google_%22G%22_Logo.svg/1000px-Google_%22G%22_Logo.svg.png')
+        .setFooter('Google Search Result at ' + moment().format('h:mm:ss a') + ' on ' +  moment().format('MMMM Do YYYY'))
+      message.channel.send({embed: googleresultembed})
       console.log(message.guild.name + " | " + message.author.toString() + ' | ' + googlesearch + ' | ' + `${googleData.q}`)
 });
      break;
@@ -107,42 +225,28 @@ client.on("message", message => {
         .addField('Commands','`play` `stop` `end`')
         message.channel.send({embed: musichembed})
       break;
-
-        case "imageping":
-          message.channel.send('Pinging...').then(sent => {
-            sent.edit('http://madeformakers.org/wp-content/uploads/2016/01/pong.png').then(msg => {
-              msg.edit(`Pong! Took ${sent.createdTimestamp - message.createdTimestamp}ms`);
-              console.log('Image Ping performed on ' + message.guild.name + ` took ${sent.createdTimestamp - message.createdTimestamp}ms`)
-            })
-          })
-          message.delete()
-      break;
       case "volume":
       message.channel.send('I do not support changing the volume at this time')
         break;
-      case "play":
-      var config = require("./config.json")
-      let musictoplay = message.content.split(' ').slice(1).join('')
-      let volume2set = message.content.split(/\s+/g).slice(2).join(" ");
-      var musiclengtherror = new Discord.RichEmbed()
-        .setColor('FFCE00')
-        .setTitle('Music Commands Usage (Play)')
-        .setDescription('You must provide a link that is from `youtube.com`')
-        .addField(config.prefix + 'play <youtube_link>','<youtube_link> = Link to Youtube Video')
+      case "earrape":
+        var config = require("./config.json")
+        var voiceChannel = message.member.voiceChannel;
+      if (!voiceChannel) return message.channel.send("**You must be in a voice channel.**").catch(console.error);
+      function earrapetoplay() {
+      var rand = ['https://www.youtube.com/watch?v=uYRWDYDsjrY&t','https://www.youtube.com/watch?v=YMJhr6ca4Js','https://www.youtube.com/watch?v=5WltNU0JBPk&t'];
 
-      if(musictoplay.length < 1) return message.channel.send({embed: musiclengtherror}).catch(console.error);
+      return rand[Math.floor(Math.random()*rand.length)];
+  }
+      voiceChannel.join()
+        .then(connnection => {
+          var stream = ytdl(earrapetoplay(), { filter: 'audioonly' });
+          message.channel.send(':play_pause: **Now Playing Earrape**')
+          var dispatcher = connnection.playStream(stream);
+          dispatcher.on('end', () => voiceChannel.leave());
+          console.log('YTDL (Earrape) | ' + earrapetoplay() + ' | ' + message.guild.name + ' | ' + message.author.toString())
+        });
+        break;
 
-      var voiceChannel = message.member.voiceChannel;
-    if (!voiceChannel) return message.reply("You must be in a voice channel.");
-    voiceChannel.join()
-      .then(connnection => {
-        var stream = ytdl(musictoplay, { filter: 'audioonly' });
-        message.channel.send(':play_pause: **Now Playing** ' + musictoplay)
-
-        var dispatcher = connnection.playStream(stream);
-        dispatcher.on('end', () => voiceChannel.leave());
-      });
-    break;
       case "date":
       let momentdate = moment().format('MMMM Do YYYY')
       var dateembed = new Discord.RichEmbed()
@@ -159,13 +263,78 @@ client.on("message", message => {
           .setDescription(momentday)
           message.channel.send({embed: dayembed})
           break;
+      case "whois":
+      var config = require(`./config.json`)
+      let whoisuserprofile = message.content.split(' ').slice(1).join(' ')
+      let whoisotheruserprofile = message.guild.member(message.mentions.users.first())
+      var whoisuserprofilelengthtooshortembed = new Discord.RichEmbed()
+        .setColor('FFCE00')
+        .setTitle('Profile Help')
+        .setDescription('You must provide a mentioned user')
+        .addField(config.prefix + 'whois <@user>','<@user> =  Mentioned User')
+
+      if(whoisuserprofile.length < 1) return message.channel.send({embed: whoisuserprofilelengthtooshortembed})
+      var whoisprofileembed = new Discord.RichEmbed()
+        .setColor('FFCE00')
+        .setTitle(`Profile`)
+        .addField('Username', message.guild.member(message.mentions.users.first()))
+        .addField('ID', message.guild.member(message.mentions.users.first()).id)
+        .addField('Joined', message.guild.member(message.mentions.users.first()).joinedAt)
+        .addField('Status', message.guild.member(message.mentions.members.first()).presence.status)
+        .setThumbnail(message.mentions.users.first().displayAvatarURL)
+        message.channel.send({embed: whoisprofileembed})
+        break;
+      case "friend":
+        message.channel.send('**This command is not ready for public testing**')
+        break;
+      case "profile":
+      var config = require(`./config.json`)
+      let userprofile = message.content.split(' ').slice(1).join(' ')
+      let otheruserprofile = message.guild.member(message.mentions.users.first())
+      var userprofilelengthtooshortembed = new Discord.RichEmbed()
+        .setColor('FFCE00')
+        .setTitle('Profile Help')
+        .setDescription('You must provide a mentioned user')
+        .addField(config.prefix + 'profile <@user>','<@user> =  Mentioned User')
+
+      if(userprofile.length < 1) return message.channel.send({embed: userprofilelengthtooshortembed})
+      var profileembed = new Discord.RichEmbed()
+        .setColor('FFCE00')
+        .setTitle(`Profile`)
+        .addField('Username', message.guild.member(message.mentions.users.first()))
+        .addField('ID', message.guild.member(message.mentions.users.first()).id)
+        .addField('Joined', message.guild.member(message.mentions.users.first()).joinedAt)
+        .addField('Status', message.guild.member(message.mentions.members.first()).presence.status)
+        .setThumbnail(message.mentions.users.first().displayAvatarURL)
+        message.channel.send({embed: profileembed})
+        break;
+      case "avatar":
+      var config = require(`./config.json`)
+      let useravatar = message.content.split(' ').slice(1).join(' ')
+      let otheruser = message.guild.member(message.mentions.users.first())
+      var useravatarlengthtooshortembed = new Discord.RichEmbed()
+        .setColor('FFCE00')
+        .setTitle('Avatar Help')
+        .setDescription('You must provide a mentioned user')
+        .addField(config.prefix + 'avatar <@user>','<@user> =  Mentioned User')
+
+      if(useravatar.length < 1) return message.channel.send({embed: useravatarlengthtooshortembed})
+        var avatarouembed = new Discord.RichEmbed()
+          .setColor('FFCE00')
+          .setTitle(' ')
+          .setImage(message.mentions.users.first().displayAvatarURL)
+          .setAuthor(moment().format('MMMM Do YYYY') + ' at ' + moment().format('h:mm:ss a'),message.author.displayAvatarURL)
+          message.channel.send({embed: avatarouembed})
+          break;
       case "time":
-      let momenttime = moment().format('h:mm:ss a')
+      let momenttimeedt = moment().format('h:mm:ss a')
+      let momenttimepst = (moment().format('h:mm:ss a' - `2:00:00`))
+      message.guild.region
         var timeembed = new Discord.RichEmbed()
           .setColor('FFCE00')
           .setTitle('The time is (EDT)')
-          .setDescription(momenttime)
-          message.channel.send({embed: timeembed})
+          .setDescription(momenttimeedt)
+            message.channel.send({embed: timeembedt})
           break;
       case "pause":
           message.channel.send('I do not support pausing at this time :(')
@@ -191,17 +360,18 @@ client.on("message", message => {
 
       break;
 
+    case "math":
+      var config = require(`./config.json`)
+      if (message.author.id !== config.ownerid) return message.channel.send(`**Owner Only Command**`).catch(console.error);
 
+      let equation = message.content.split(' ').slice(1).join(' ')
+      let mathequation = math.eval(equation)
+      message.channel.send(mathequation).catch(console.error)
+      break;
     case "pi":
     var value = eval("Math.PI");
     message.channel.send(value)
     message.delete()
-    break;
-    case "math":
-    message.channel.send(disabled)
-    message.delete()
-  //    var mathequal = eval(message.content.split(' ').slice(1).join(' '))
-  //    message.channel.send('Your answer is ' + mathequal)
     break;
     case "jsexec":
     var config = require('./config.json')
@@ -289,25 +459,33 @@ if (unickisStaff) {
     }
 
       break;
-      case "dmuser":
-      var config = require("./config.json")
-      var dmuembed = new Discord.RichEmbed()
+    case "setstatus":
+      var config = require("./config.json");{
+        if (message.author.id !== config.ownerid) return message.channel.send(`**Owner Only Command**`);
+  }
+      var statustooshortembed = new Discord.RichEmbed()
         .setColor('FFCE00')
-        .setDescription('You must provide a user and a message to send')
-        .addField(config.prefix + 'dmuser <@user> <message>','<@user> = Mentioned User | <message> = message to send.')
+        .setTitle('Set Status Help')
+        .setDescription('You must set the status to `dnd` `online` `idle` or `invisible`')
+        .addField(config.prefix + 'setstatus <status>','<status> = `dnd` `online` `idle` or `invisible`')
+      var statustoolongembed = new Discord.RichEmbed()
+        .setColor('FFCE00')
+        .setTitle('Set Status Help')
+        .setDescription('You must set the status to `dnd` `online` `idle` or `invisible`')
+        .addField(config.prefix + 'setstatus <status>','<status> = `dnd` `online` `idle` or `invisible`')
 
-        let message2send2user = message.content.split(/\s+/g).slice(2).join(" ")
-        let user = message.guild.member(message.mentions.users.first())
-        if(message2send2user.length < 1) return message.channel.send({embed: dmuembed}).catch(console.error);
-        if(user.length < 1) return message.channel.send({embed: dmuembed}).catch(console.error);
-        message.guild.member(user).sendMessage('A message from the user ' + message.author.toString() + ' has arrived!')
-        message.guild.member(user).sendMessage(message2send2user)
-        message.channel.send('Message sent to ' + user + ' successfully!')
-        break;
+      let status = message.content.split(/\s+/g).slice(2).join(" ")
+    //  if (status.length < 3) return message.channel.send({embed: statustooshortembed})
+    //  if(status.length > 9) return message.channel.send({embed: statustoolongembed})
+      client.user.setStatus(status)
+      break;
     case "setgame":
+    var config = require("./config.json");{
+    if (message.author.id !== config.ownerid) return message.channel.send(`**Owner Only Command**`);
+  }
     var gameembed = new Discord.RichEmbed()
       .setColor('FFCE00')
-      .setDescription('You must provide a status *or game* for Sunset')
+      .setDescription('You must provide a status *or game* for ' + config.name)
       .addField(config.prefix + 'setgame <game>','<game> = Can be anything really')
 
     let playgame = message.content.split(' ').slice(1).join(' ')
@@ -318,9 +496,10 @@ if (unickisStaff) {
       break;
 
     case "website":
+    var config = require("./config.json");
       var websiteembed = new Discord.RichEmbed()
         .setColor('FFCE00')
-          .setTitle('Sunset Website')
+          .setTitle(config.name + ' Website')
             .setURL('https://sites.google.com/view/sunset-discordbot/home')
           message.channel.send({embed: websiteembed})
 
@@ -349,6 +528,7 @@ if (unickisStaff) {
           message.channel.send('https://giphy.com/gifs/glee-image-wiki-wvQIqJyNBOCjK')
           break;
           case "uptime":
+          var config = require("./config.json");
         let seconds = client.uptime / 1000 + ' seconds'
         let minutes = client.uptime / 60000 + ' minutes'
         let hours = client.uptime / 3600000 + ' hours'
@@ -357,7 +537,7 @@ if (unickisStaff) {
 
         var uptimeembed = new Discord.RichEmbed()
         .setColor(`FFCE00`)
-        .setTitle('Sunset Uptime')
+        .setTitle(config.name + ' Uptime')
         .addField('Uptime Seconds', seconds)
         .addField('Uptime Minutes', minutes)
         .addField('Uptime Hours', hours)
@@ -365,22 +545,22 @@ if (unickisStaff) {
 
         var secondupembed = new Discord.RichEmbed()
         .setColor(`FFCE00`)
-        .setTitle('Sunset Uptime (Seconds)')
+        .setTitle(config.name + ' Uptime (Seconds)')
         .addField('Uptime Seconds', seconds)
 
         var minuteupembed = new Discord.RichEmbed()
         .setColor('FFCE00')
-        .setTitle('Sunset Uptime (Minutes)')
+        .setTitle(config.name + ' Uptime (Minutes)')
         .addField('Uptime Minutes', minutes)
 
         var hourupembed = new Discord.RichEmbed()
         .setColor('FFCE00')
-        .setTitle('Sunset Uptime (Hours)')
+        .setTitle(config.name + ' Uptime (Hours)')
         .addField('Uptime Hours', hours)
 
         var dayupembed = new Discord.RichEmbed()
         .setColor('FFCE00')
-        .setTitle('Sunset Uptime (Days)')
+        .setTitle(config.name + ' Uptime (Days)')
         .addField('Uptime Days', days)
         if(uptimeformat === 'seconds') return message.channel.send({embed: secondupembed})
         if(uptimeformat === 'minutes') return message.channel.send({embed: minuteupembed})
@@ -400,18 +580,15 @@ if (unickisStaff) {
         var serverinfembed = new Discord.RichEmbed()
         .setColor('FFCE00')
         .setTitle('Server Info')
-        .addField('Server Name', message.guild.name + ' **|** ' + message.guild.id, true)
+        .addField('Server Name', message.guild.name + ' | ' + message.guild.id, true)
         .addField('Server Region', message.guild.region, true)
-
+        .addBlankField(false)
         .addField('Member Count', message.guild.memberCount, true)
         .addField('Channel Count', message.guild.channels.size, true)
-
-        .addField('Online Member Count', message.guild.presences.filter(p=>p.status == 'online').size, false)
-        .addField('Offline Member Count', `${message.guild.memberCount - message.guild.presences.filter(p=>p.status == 'online').size - message.guild.presences.filter(p=>p.status == 'idle').size - message.guild.presences.filter(p=>p.status == 'dnd').size} `, false)
-
-        .addField('Idle Member Count', message.guild.presences.filter(p=>p.status == 'idle').size, true)
-        .addField('Do Not Disturb Count', message.guild.presences.filter(p=>p.status == 'dnd').size, true)
-
+        .addBlankField(false)
+        .addField('Online Member Count', message.guild.presences.filter(p=>p.status == 'online').size, true)
+        .addField('Offline Member Count', `${message.guild.memberCount - message.guild.presences.filter(p=>p.status == 'online').size - message.guild.presences.filter(p=>p.status == 'idle').size - message.guild.presences.filter(p=>p.status == 'dnd').size} `, true)
+        .addBlankField(false)
 
         message.channel.send({embed: serverinfembed})
         break;
@@ -456,6 +633,7 @@ if (unickisStaff) {
 
         var permerrorembed = new Discord.RichEmbed()
         .setColor('FFCE00')
+        .setDescription('Please note that this command is not finished')
         .addField('Action','Warning')
         .addField('User:', usertowarn)
         .addField('Moderator', message.author.toString())
@@ -472,11 +650,11 @@ if (unickisStaff) {
         .setColor('FFCE00')
         .setDescription('You must provide an error to report')
         .addField(config.prefix + 'error-report <error>','<error> = Error to report')
-      let message4hacker = message.content.split(' ').slice(1).join(' ')
+      var message4hacker = message.content.split(' ').slice(1).join(' ')
       if(message4hacker.length < 1) return message.channel.send({embed: dmhembed}).catch(console.error);
         message.delete()
-        client.users.get('270375857384587264').send('An error report from the user ' + message.author.toString() + ' has arrived from the server ' + message.guild.name + '.')
-        client.users.get('270375857384587264').send(message4hacker)
+        client.users.get(config.ownerid).send('An error report from the user ' + message.author.toString() + ' has arrived from the server ' + message.guild.name + '.')
+        client.users.get(config.ownerid).send(message4hacker)
         console.log('Error Report | ' + message.guild.name + ' | ' + message.author.toString() + ' | ' + message4hacker)
         break;
       case "errreport":
@@ -485,11 +663,11 @@ if (unickisStaff) {
         .setColor('FFCE00')
         .setDescription('You must provide an error to report')
         .addField(config.prefix + 'error-report <error>','<error> = Error to report')
-
+      var message4hacker = message.content.split(' ').slice(1).join(' ')
       if(message4hacker.length < 1) return message.channel.send({embed: dmhembed}).catch(console.error);
         message.delete()
-        client.users.get('270375857384587264').send('A message from the user ' + message.author.toString() + ' has arrived.')
-        client.users.get('270375857384587264').send(message4hacker)
+        client.users.get(config.ownerid).send('A message from the user ' + message.author.toString() + ' has arrived.')
+        client.users.get(config.ownerid).send(message4hacker)
         break;
       case "err-report":
       var config = require("./config.json");
@@ -497,13 +675,14 @@ if (unickisStaff) {
         .setColor('FFCE00')
         .setDescription('You must provide an error to report')
         .addField(config.prefix + 'error-report <error>','<error> = Error to report')
-
+        var message4hacker = message.content.split(' ').slice(1).join(' ')
       if(message4hacker.length < 1) return message.channel.send({embed: dmhembed}).catch(console.error);
         message.delete()
-        client.users.get('270375857384587264').send('A message from the user ' + message.author.toString() + ' has arrived.')
-        client.users.get('270375857384587264').send(message4hacker)
+        client.users.get(config.ownerid).send('A message from the user ' + message.author.toString() + ' has arrived.')
+        client.users.get(config.ownerid).send(message4hacker)
         break;
       case "error-report":
+      var message4hacker = message.content.split(' ').slice(1).join(' ')
       var config = require("./config.json");
       var dmhembed = new Discord.RichEmbed()
         .setColor('FFCE00')
@@ -512,8 +691,8 @@ if (unickisStaff) {
 
       if(message4hacker.length < 1) return message.channel.send({embed: dmhembed}).catch(console.error);
         message.delete()
-        client.users.get('270375857384587264').send('A message from the user ' + message.author.toString() + ' has arrived.')
-        client.users.get('270375857384587264').send(message4hacker)
+        client.users.get(config.ownerid).send('A message from the user ' + message.author.toString() + ' has arrived.')
+        client.users.get(config.ownerid).send(message4hacker)
         break;
       case "ban":
 		        let staffRoleIDs = message.guild.roles.filter(r => r.name == "Owner" || r.name == 'Co-Owner' || r.name == 'Co Owner' || r.name == "Admin" || r.name == "Admins" || r.name == "Administrator").map(r => r.id);
@@ -545,11 +724,11 @@ if (unickisStaff) {
               .addField('Moderator', message.author.toString())
               .addField('Reason', banreason)
               message.channel.send({embed: embedaction})
-              console.log('A user has been BANNED on ' + message.guild.name + '.')
+              console.log('Ban | ' + message.guild.name + ' | ' + message.author.toString() + ' | ' + banreason + ' | ' + banMember + ' | ' + userid4unban)
 
             } else {
               var config = require("./config.json");
-              var info = require("./info.json");
+              var info = require("./info.json");;
               var embedpermreturn = new Discord.RichEmbed()
              .setColor("FFCE00")
              .setTitle('Ban Usage')
@@ -575,7 +754,7 @@ for (const id of staffRoleID) {
 }
 if (isStaffs) {
   var config = require("./config.json");
-  var info = require("./info.json");
+  var info = require("./info.json");;
 var newembed = new Discord.RichEmbed()
 .setColor("FFCE00")
 .setTitle('Kick Usage')
@@ -597,11 +776,12 @@ var newembed = new Discord.RichEmbed()
   message.channel.send({embed: embedaction})
       message.delete()
       message.guild.member(kickMember).kick(reason);{
-        message.channel.send("The user, " + message.author.toString() + " has kicked a member for " + reason + ".");
+        console.log('Kick | ' + message.guild.name + ' | ' + message.author.toString() + ' | ' + reason + ' | ' + kickMember)
       }
     }
     else {
-      var config = require("./config.json");{
+      var config = require("./config.json");
+      {
         var info = require('./info.json');
     var embedreturn = new Discord.RichEmbed()
     .setColor("FFCE00")
@@ -644,8 +824,10 @@ var newembed = new Discord.RichEmbed()
 
           if(purgearg.length < 1) return message.channel.send({embed: lengthtoosmall}).catch(console.error);
           if(purgearg.length > 100) return message.channel.send({embed: lengthtoobig}).catch(console.error);
+          message.channel.send('Deleting...')
           message.delete()
           message.guild.member(message.channel.bulkDelete(purgearg))
+          console.log('Purge | ' + purgearg + ' | ' + message.guild.name + ' | ' + message.author.toString())
     } else {
       var config = require("./config.json");
       var permembed = new Discord.RichEmbed()
@@ -729,19 +911,21 @@ var newembed = new Discord.RichEmbed()
       		message.channel.send("You have been noticed, " + message.author.toString() + ".")
       		break;
       case "sourcecode":
+      var config = require("./config.json");
       var scembed = new Discord.RichEmbed()
       .setColor('FFCE00')
-      .setTitle('Sunset Source Code')
+      .setTitle(config.name + ' Source Code')
       .setDescription('Here you can view and download the source code. Please note that the GitHub Source Code gets updated every week.')
-      .setURL('https://github.com/Mr-Hacker894/Sunset')
+      .setURL(config.github_project_link)
       message.channel.send({embed: scembed})
       break;
 	  case "github":
+    var config = require("./config.json");
 		  var gembed = new Discord.RichEmbed()
 		  .setColor('FFCE00')
-		  .setTitle('Sunset Github Page')
-		  .setDescription('Here you can view the Sunset github page.')
-		  .setURL('https://github.com/Mr-Hacker894/Sunset')
+		  .setTitle(config.name + ' Github Page')
+		  .setDescription('Here you can view the ' + config.name + ' github page.')
+		  .setURL(config.github_project_link)
 		  message.channel.send({embed: gembed})
             break;
 
@@ -764,57 +948,111 @@ var newembed = new Discord.RichEmbed()
     	message.author.send('https://media.giphy.com/media/8GY3UiUjwKwhO/giphy.gif')
     	break;
     case "botinvite":
-    	message.channel.send("Here is an invite for Sunset requested by, " + message.author.toString() + ".")
+    	var config = require("./config.json");
+    	message.channel.send("Here is an invite for " + config.name + " requested by, " + message.author.toString() + ".")
     	var binvembed = new Discord.RichEmbed()
     	.setColor('FFCE00')
-    	.setTitle('Sunset Invite')
-    	.setURL('https://discordapp.com/oauth2/authorize?client_id=371097223942897665&scope=bot&permissions=2146958591')
+    	.setTitle(config.name + ' Invite')
+    	.setURL('https://discordapp.com/oauth2/authorize?client_id='+ config.bot_client_id + '&scope=bot&permissions=' + config.bot_permissions)
     	message.channel.send({embed: binvembed})
     	break;
     case "info":
 
-    var info = require("./info.json");
+    var info = require("./info.json");;
 	var config = require("./config.json");
-    	var infoembed = new Discord.RichEmbed()
+    let infoseconds = client.uptime / 1000 + ' seconds'
+    let infominutes = client.uptime / 60000 + ' minutes'
+    let infohours = client.uptime / 3600000 + ' hours'
+    let infodays = client.uptime / 86400000 + ' days'
+    	var infosembed = new Discord.RichEmbed()
     	.setColor("FFCE00")
-    	.setTitle('Sunset Info')
+    	.setTitle(config.name + ' Info')
     	.addField('Owner', config.owner)
     	.addField('Library', info.library)
       .addField('Language', info.language)
       .addField('Description', info.description)
-      .addField('Uptime', client.uptime / 1000 + 's')
+      .addField('Uptime', infoseconds)
       .addField('Servers', client.guilds.size)
       	.addField('Helpers', '@Google Drive#0831, @Bloxxer_DTC#1958, The Discord.js Discord Server', false)
     	.addField('Testers', '@Corbs#9620, @Oganesson#8844, @Google Drive#0831, @Shadow The  |「Dimensions™」#5869, @Jackalope#6413', false)
     	.addField('Version', info.newversion)
       .setThumbnail('https://images-ext-1.discordapp.net/external/Z1krf1ZBQTM3mDkke47xThwIF4GEFG0doRAdKRVHgnY/%3Fsize%3D128/https/cdn.discordapp.com/avatars/342054071060004884/4b83b2aa5970b8d34db71fd986abfe30.jpg')
       .setFooter("Version " + info.newversion,"https://images-ext-1.discordapp.net/external/Z1krf1ZBQTM3mDkke47xThwIF4GEFG0doRAdKRVHgnY/%3Fsize%3D128/https/cdn.discordapp.com/avatars/342054071060004884/4b83b2aa5970b8d34db71fd986abfe30.jpg")
-		message.channel.send({embed: infoembed})
+
+      var infomembed = new Discord.RichEmbed()
+    	.setColor("FFCE00")
+    	.setTitle(config.name + ' Info')
+    	.addField('Owner', config.owner)
+    	.addField('Library', info.library)
+      .addField('Language', info.language)
+      .addField('Description', info.description)
+      .addField('Uptime', infominutes)
+      .addField('Servers', client.guilds.size)
+      	.addField('Helpers', '@Google Drive#0831, @Bloxxer_DTC#1958, The Discord.js Discord Server', false)
+    	.addField('Testers', '@Corbs#9620, @Oganesson#8844, @Google Drive#0831, @Shadow The  |「Dimensions™」#5869, @Jackalope#6413', false)
+    	.addField('Version', info.newversion)
+      .setThumbnail('https://images-ext-1.discordapp.net/external/Z1krf1ZBQTM3mDkke47xThwIF4GEFG0doRAdKRVHgnY/%3Fsize%3D128/https/cdn.discordapp.com/avatars/342054071060004884/4b83b2aa5970b8d34db71fd986abfe30.jpg')
+      .setFooter("Version " + info.newversion,"https://images-ext-1.discordapp.net/external/Z1krf1ZBQTM3mDkke47xThwIF4GEFG0doRAdKRVHgnY/%3Fsize%3D128/https/cdn.discordapp.com/avatars/342054071060004884/4b83b2aa5970b8d34db71fd986abfe30.jpg")
+
+      var infohembed = new Discord.RichEmbed()
+    	.setColor("FFCE00")
+    	.setTitle(config.name + ' Info')
+    	.addField('Owner', config.owner)
+    	.addField('Library', info.library)
+      .addField('Language', info.language)
+      .addField('Description', info.description)
+      .addField('Uptime', infohours)
+      .addField('Servers', client.guilds.size)
+      	.addField('Helpers', '@Google Drive#0831, @Bloxxer_DTC#1958, The Discord.js Discord Server', false)
+    	.addField('Testers', '@Corbs#9620, @Oganesson#8844, @Google Drive#0831, @Shadow The  |「Dimensions™」#5869, @Jackalope#6413', false)
+    	.addField('Version', info.newversion)
+      .setThumbnail('https://images-ext-1.discordapp.net/external/Z1krf1ZBQTM3mDkke47xThwIF4GEFG0doRAdKRVHgnY/%3Fsize%3D128/https/cdn.discordapp.com/avatars/342054071060004884/4b83b2aa5970b8d34db71fd986abfe30.jpg')
+      .setFooter("Version " + info.newversion,"https://images-ext-1.discordapp.net/external/Z1krf1ZBQTM3mDkke47xThwIF4GEFG0doRAdKRVHgnY/%3Fsize%3D128/https/cdn.discordapp.com/avatars/342054071060004884/4b83b2aa5970b8d34db71fd986abfe30.jpg")
+
+      var infodembed = new Discord.RichEmbed()
+    	.setColor("FFCE00")
+    	.setTitle(config.name + ' Info')
+    	.addField('Owner', config.owner)
+    	.addField('Library', info.library)
+      .addField('Language', info.language)
+      .addField('Description', info.description)
+      .addField('Uptime', infodays)
+      .addField('Servers', client.guilds.size)
+      	.addField('Helpers', '@Google Drive#0831, @Bloxxer_DTC#1958, The Discord.js Discord Server', false)
+    	.addField('Testers', '@Corbs#9620, @Oganesson#8844, @Google Drive#0831, @Shadow The  |「Dimensions™」#5869, @Jackalope#6413', false)
+    	.addField('Version', info.newversion)
+      .setThumbnail('https://images-ext-1.discordapp.net/external/Z1krf1ZBQTM3mDkke47xThwIF4GEFG0doRAdKRVHgnY/%3Fsize%3D128/https/cdn.discordapp.com/avatars/342054071060004884/4b83b2aa5970b8d34db71fd986abfe30.jpg')
+      .setFooter("Version " + info.newversion,"https://images-ext-1.discordapp.net/external/Z1krf1ZBQTM3mDkke47xThwIF4GEFG0doRAdKRVHgnY/%3Fsize%3D128/https/cdn.discordapp.com/avatars/342054071060004884/4b83b2aa5970b8d34db71fd986abfe30.jpg")
+
+      message.channel.send({embed: infosembed})
+    //  if(infoseconds < 60000) return message.channel.send({embed: infomembed})
+    //  if(infoseconds < 3600000) return message.channel.send({embed: infohembed})
+
     	break;
       case "help":
       let helpcommand = message.content.split(' ').slice(1).join(' ')
-      var info = require("./info.json")
+      var info = require("./info.json");
       var config = require("./config.json");
       var helpembed = new Discord.RichEmbed()
         .setColor('FFCE00')
         .setTitle('Commands')
-        .setDescription(config.prefix + 'help <command> to get help with all commands listed here with the exclusion of the **WIP** commands.')
-        .addField('**Information**','`help` `ping` `test` `info` `uptime` `serverinfo` `membercount` `channelcount`')
+        .setDescription(config.prefix + 'help <command> to get help with all commands listed here.')
+        .addField('**Information**','`help` `ping` `test` `info` `uptime` `serverinfo` `membercount` `channelcount` `avatar` `profile` `whois`')
         .addField('**Bot Information**','`botinvite` `website` `musicwebsite` `sourcecode` `github` `suggestion`')
         .addField('**Music**','`play` `skip` `pause` `queue` `end` `stop`')
-        .addField('**Entertainment**','`google` `say` `saytts` `8ball` `coinflip` `flip` `roll` `doubleroll`')
+        .addField('**Entertainment**','`youtube` `google` `earrape` `say` `saytts` `2ball` `8ball` `coinflip` `flip` `roll` `doubleroll`')
         .addField('**Memes**','`rage` `error` `tableflip` `untableflip` `shrug` `notproductive` `bigorder`')
         .addField('**Moderation**','`ban` `unban` `kick` `purge` `channelcreate` `channeldelete` `setnick`')
-        .addField('**Other**','`error-report` `dmuser` `devpage` `invite` `unixtime` `date` `day` `time`')
-        .addField('**WIP**','`warn` `mute`')
-        .addField('**Owner Only Commands**','`jsexec` `restart` `relog`')
+        .addField('**Other**','`error-report` `devpage` `invite` `unixtime` `date` `day` `time`')
+        .addField('**WIP**','`warn` `vote` `friend`')
+        .addField('**Owner Only Commands**','`jsexec` `restart` `relog` `setgame` `setstatus`')
         .setFooter(moment().format('MMMM Do YYYY, h:mm:ss a'))
 
 
         var helpcembed = new Discord.RichEmbed()
         .setColor('FFCE00')
         .setTitle('Help Help')
-        .setDescription('Get a list of commands available with Sunset')
+        .setDescription('Get a list of commands available with ' + config.name)
         .addField(config.prefix + 'help <command>','<command> = command from help')
         var pingembed = new Discord.RichEmbed()
           .setColor('FFCE00')
@@ -824,17 +1062,17 @@ var newembed = new Discord.RichEmbed()
         var testembed = new Discord.RichEmbed()
           .setColor('FFCE00')
           .setTitle('Test Help')
-          .setDescription('Test Command to see if Sunset is working')
+          .setDescription('Test Command to see if ' + config.name + ' is working')
           .addField(config.prefix + 'test','This command has no arguments')
         var infoembed = new Discord.RichEmbed()
           .setColor('FFCE00')
           .setTitle('Info Help')
-          .setDescription('Gives info on Sunset')
+          .setDescription('Gives info on ' + config.name)
           .addField(config.prefix + 'info','This command has no arguments')
         var uptimeembed = new Discord.RichEmbed()
           .setColor('FFCE00')
           .setTitle('Uptime Help')
-          .setDescription('Gives total Uptime of Sunset')
+          .setDescription('Gives total Uptime of ' + config.name)
           .addField(config.prefix + 'uptime <timeformat>','<timeformat> = Seconds, Minutes, etc,...')
         var serverinfoembed = new Discord.RichEmbed()
           .setColor('FFCE00')
@@ -854,27 +1092,27 @@ var newembed = new Discord.RichEmbed()
         var botinviteembed = new Discord.RichEmbed()
           .setColor('FFCE00')
           .setTitle('Bot Invite Help')
-          .setDescription('Sends an OAuth Invite for Sunset')
+          .setDescription('Sends an OAuth Invite for ' + config.name)
           .addField(config.prefix + 'botinvite','This command has no arguments')
         var websiteembed = new Discord.RichEmbed()
           .setColor('FFCE00')
           .setTitle('Website Help')
-          .setDescription('Sends a link to the Sunset Website')
+          .setDescription('Sends a link to the ' + config.name + ' Website')
           .addField(config.prefix + 'website','This command has no arguments')
         var musicwebsiteembed = new Discord.RichEmbed()
           .setColor('FFCE00')
           .setTitle('Music Website Help')
-          .setDescription('Sends a link to the Sunset Music Website')
+          .setDescription('Sends a link to the ' + config.name + ' Music Website')
           .addField(config.prefix + 'musicwebsite','This command has no arguments')
         var sourcecodeembed = new Discord.RichEmbed()
           .setColor('FFCE00')
           .setTitle('Source Code Help')
-          .setDescription('Sends a link to the Sunset Source')
+          .setDescription('Sends a link to the ' + config.name + ' Source')
           .addField(config.prefix + 'sourcecode','This command has no arguments')
         var githubembed = new Discord.RichEmbed()
           .setColor('FFCE00')
           .setTitle('GitHub Help')
-          .setDescription('Sends a link the Sunset GitHub Page')
+          .setDescription('Sends a link the ' + config.name + ' GitHub Page')
           .addField(config.prefix + 'github','This command has no arguments')
         var suggestionembed = new Discord.RichEmbed()
           .setColor('FFCE00')
@@ -888,12 +1126,12 @@ var newembed = new Discord.RichEmbed()
         var sayembed = new Discord.RichEmbed()
           .setColor('FFCE00')
           .setTitle("Say Help")
-          .setDescription('Say a message through Sunset')
+          .setDescription('Say a message through ' + config.name)
           .addField(config.prefix + 'say <message>','<message> = Message to say')
         var sayttsembed = new Discord.RichEmbed()
           .setColor('FFCE00')
           .setTitle('SayTTS Help')
-          .setDescription('Say a message through Sunset with Text To Speech')
+          .setDescription('Say a message through ' + config.name + ' with Text To Speech')
           .addField(config.prefix + 'saytts <ttsmessage>','<ttsmessage> = TTS Message to say')
         var eightballembed = new Discord.RichEmbed()
           .setColor('FFCE00')
@@ -982,9 +1220,8 @@ var newembed = new Discord.RichEmbed()
           .addField(config.prefix + 'setnick <@user> <nickname>','<@user> = @Mentioned User ! <nickname> = Nickname to set for the user or bot')
         var dmuserembed = new Discord.RichEmbed()
           .setColor('FFCE00')
-          .setTitle('DMUser Help')
-          .setDescription('DM a user through Sunset; **This command does not work globally**')
-          .addField(config.prefix + 'dmuser <@user> <message>','<@user> = @Mentioned User | <message> = Message to send to user')
+          .setTitle('**This command has been removed**')
+          .setDescription('**This command has been deemed useless therefore, it was removed.**')
         var dmhackerembed =  new Discord.RichEmbed()
           .setColor('FFCE00')
           .setTitle('**This command has been depricated**')
@@ -1008,7 +1245,7 @@ var newembed = new Discord.RichEmbed()
           .setColor('FFCE00')
           .setTitle('Music Command Help (Play)')
           .setDescription('Play some music from YouTube')
-          .addField(config.prefix + 'play <youtube_url>','<youtube_url> = URL from Youtube')
+          .addField(config.prefix + 'play <youtube_video>','<youtube_video> = Video Title from Youtube')
         var endembed = new Discord.RichEmbed()
           .setColor('FFCE00')
           .setTitle('Music Command Help (End)')
@@ -1069,6 +1306,56 @@ var newembed = new Discord.RichEmbed()
           .setTitle('Relog Help')
           .setDescription('Relogs the bot **Owner Only Command**')
           .addField(config.prefix + 'relog','This command has no arguments')
+        var setgameembed = new Discord.RichEmbed()
+          .setColor('FFCE00')
+          .setTitle('Set Game Help')
+          .setDescription('Sets ' + config.name + '\'s Game **Owner Only Command**')
+          .addField(config.prefix + 'setgame <game>','<game> = Now Playing ---- status')
+        var setstatusembed = new Discord.RichEmbed()
+          .setColor('FFCE00')
+          .setTitle('Set Status Help')
+          .setDescription('Sets ' + config.name + '\'s Status **Owner Only Command**')
+          .addField(config.prefix + `setstatus <status>`,'<status> = `dnd` `online` `idle` or `invisible`')
+        var twoballembed = new Discord.RichEmbed()
+          .setColor('FFCE00')
+          .setTitle('2Ball Help')
+          .setDescription('Have your questions answered by a binary randomizer')
+          .addField(config.prefix + '2ball <question>','<question> = Question for the 2Ball')
+        var earrapeembed = new Discord.RichEmbed()
+          .setColor('FFCE00')
+          .setTitle('Earrape Help')
+          .setDescription('Will select an earrape track from a randomizer to play in VC')
+          .addField(config.prefix + 'earrape','This command has no arguments')
+        var avatarembed = new Discord.RichEmbed()
+          .setColor('FFCE00')
+          .setTitle('Avatar Help')
+          .setDescription('Displays the Avatar of the @mentioned user')
+          .addField(config.prefix + 'avatar <@user>','<@user> = @mentioned user')
+        var profilecembed = new Discord.RichEmbed()
+          .setColor('FFCE00')
+          .setTitle('Profile Help')
+          .setDescription('Shows information about the @mentioned user')
+          .addField(config.prefix + 'profile <@user>','<@user> = @mentioned user')
+        var whoisembed = new Discord.RichEmbed()
+          .setColor('FFCE00')
+          .setTitle('WhoIs Help')
+          .setDescription('Shows information about the @mentioned user')
+          .addField(config.prefix + 'whois <@user>','<@user> = @mentioned user')
+        var warncembed = new Discord.RichEmbed()
+          .setColor('FFCE00')
+          .setTitle('Warn Help')
+          .setDescription('Warns an @mentioned user')
+          .addField(config.prefix + 'warn <@user> <reason>','<@user> = @mentioned user | <reason> = Reason for warn')
+        var friendembed = new Discord.RichEmbed()
+          .setColor('FFCE00')
+          .setTitle('Friend Help')
+          .setDescription('Sends a friend request to the author of the message')
+          .addField(config.prefix + 'friend','This command has no arguments')
+        var youtubeembed = new Discord.RichEmbed()
+          .setColor('FFCE00')
+          .setTitle('YouTube Help')
+          .setDescription('Searches for a video on YouTube *(if you would like to play this video use the* `play` *command)*')
+          .addField(config.prefix + 'youtube <yt_video>','<yt_video> = Video Title from Youtube')
 
 
         if(helpcommand.length < 1) return message.channel.send({embed: helpembed})
@@ -1123,7 +1410,7 @@ var newembed = new Discord.RichEmbed()
         if(helpcommand === `invite`) return message.channel.send({embed: inviteembed})
         if(helpcommand === `unixtime`) return message.channel.send({embed: unixtimeembed})
         if(helpcommand === `moderation`) return message.channel.send({embed: moderationembed})
-        if(helpcommand === `channel`) return message.channel.send({embed: channelembed})
+        if(helpcommand === `channel`) return message.channel.send({embed: channelcountembed}) && message.channel.send({embed: channelcreateembed}) && message.channel.send({channeldeleteembed})
         if(helpcommand === `time`) return message.channel.send({embed: timeembed})
         if(helpcommand === `date`) return message.channel.send({embed: dateembed})
         if(helpcommand === `day`) return message.channel.send({embed: dayembed})
@@ -1137,6 +1424,20 @@ var newembed = new Discord.RichEmbed()
         if(helpcommand === `googlesearch`) return message.channel.send({embed: googleembed})
         if(helpcommand === `relog`) return message.channel.send({embed: relogembed})
         if(helpcommand === `re`) return message.channel.send({embed: restartembed}) && message.channel.send({embed: relogembed})
+        if(helpcommand === `setgame`) return message.channel.send({embed: setgameembed})
+        if(helpcommand === `setstatus`) return message.channel.send({embed: setstatusembed})
+        if(helpcommand === `set`) return message.channel.send({embed: setnickembed}) && message.channel.send({embed: setstatusembed}) && message.channel.send({embed: setgameembed})
+        if(helpcommand === `moment`) return message.channel.send({embed: dateembed}) && message.channel.send({embed: timeembed}) && message.channel.send({embed: dayembed})
+        if(helpcommand === `2ball`) return message.channel.send({embed: twoballembed})
+        if(helpcommand === `ball`) return message.channel.send({embed: eightballembed}) && message.channel.send({embed: twoballembed})
+        if(helpcommand === `earrape`) return message.channel.send({embed: earrapeembed})
+        if(helpcommand === `avatar`) return message.channel.send({embed: avatarembed})
+        if(helpcommand === `profile`) return message.channel.send({embed: profilecembed})
+        if(helpcommand ===  `whois`) return message.channel.send({embed: whoisembed})
+        if(helpcommand === `warn`) return message.channel.send({embed: warncembed})
+        if(helpcommand === `friend`) return message.channel.send({embed: friendembed})
+        if(helpcommand === `youtube`) return message.channel.send({embed: youtubeembed})
+        if(helpcommand === `yt`) return message.channel.send({embed: youtubeembed})
         break;
         case "unban":
         let unbanstaffRoleIDs = message.guild.roles.filter(r => r.name == "Owner" || r.name == 'Co-Owner' || r.name == 'Co Owner' || r.name == "Admin" || r.name == "Admins" || r.name == "Administrator").map(r => r.id);
@@ -1148,7 +1449,7 @@ var newembed = new Discord.RichEmbed()
     }
     }
     if (unbanisStaff) {
-      var info = require("./info.json");
+      var info = require("./info.json");;
       var config = require('./config.json');
 
         var embedreturn = new Discord.RichEmbed()
@@ -1159,7 +1460,7 @@ var newembed = new Discord.RichEmbed()
 
     let unbanMember = message.mentions.users.first();
     let unbanreason = message.content.split(/\s+/g).slice(1, 2).join(" ");
-    if(reason.length < 1) return message.channel.sendEmbed(embedreturn).catch(console.error);
+    if(reason.length < 1) return message.channel.send(embedreturn).catch(console.error);
     message.guild.unban(unbanreason);
           message.delete()
           message.channel.sendMessage("The user, " + message.author.toString() + "has unbanned a member.");
@@ -1167,7 +1468,7 @@ var newembed = new Discord.RichEmbed()
         }
         else {
           var config = require('./config.json');
-          var info = require("./info.json");
+          var info = require("./info.json");;
           var embedpermerror = new Discord.RichEmbed()
             .setColor('FFCE00')
             .setTitle('Unban Usage')
@@ -1175,13 +1476,10 @@ var newembed = new Discord.RichEmbed()
             .addField(config.prefix + 'unban <userid> <reason>','<userid> = User\'s Guild ID | <reason> = Reason for Unban')
             .setFooter('Unban Info ' + info.newversion + '.')
 
-          return message.channel.sendEmbed(embedpermerror)
+          return message.channel.send({embed: embedpermerror})
         }
 
            break;
-    case "dexforums":
-      message.channel.send('https://dexforums.wixsite.com/home')
-    break;
     case "shrug":
     		message.channel.sendFile('https://media.giphy.com/media/ZeNmLY6FISq4M/giphy.gif')
     		break;
@@ -1189,8 +1487,15 @@ var newembed = new Discord.RichEmbed()
     		message.channel.send('https://tenor.com/view/bouncing-weeeeee-gif-3451476')
     		break;
     case "suggestion":
-    		message.channel.send('If you would like to submit a suggestion or concern visit one, or both, of the links below.')
-    		message.channel.send('https://github.com/Mr-Hacker894/Sunset/issues')
+    var config = require("./config.json");
+    var github_project_linkembed = new Discord.RichEmbed()
+      .setColor('FFCE00')
+      .setTitle('Suggestion Command Error')
+      .setDescription('You must edit the `config.json` file and put your github project link in the section titled `github_project_link`')
+
+    if(config.github_project_link.length < 1) return message.channel.send({embed: github_project_linkembed})
+    		message.channel.send('If you would like to submit a suggestion or concern visit the link below.')
+    		message.channel.send(config.github_project_link + 'issues')
     		break;
         function rollyodice() {
           var rand = ['**1**','**2**','**3**','**4**','**5**','**6**']
@@ -1221,22 +1526,41 @@ var newembed = new Discord.RichEmbed()
       message.channel.send(':game_die: **|** ' + rollyodice());
       break;
     }
+    function do2ballVoodoo() {
+      var rand = ['*Yes*','*No*','*Yes*','*No*','*Yes*','*No*','*Yes*','*No*']
+      return rand[Math.floor(Math.random()*rand.length)];
+    }
+    case "2ball":
+    {
+      var config = require('./config.json')
+      var questionembed = new Discord.RichEmbed()
+        .setColor('FFCE00')
+        .setDescription('You must provide a question to ask')
+        .addField(config.prefix + '2ball <question>','<question> = Question for the 2Ball')
+        let question = message.content.split(' ').slice(1).join(' ')
+        if(question.length < 1) return message.channel.send({embed: questionembed}).catch(console.error);
+        console.log(message.guild.name + ' | ' + moment().format('h:mm:ss a') + ' on ' +  moment().format('MMMM Do YYYY') + ' | ' + question + ' | ' + do2ballVoodoo());
+        message.channel.send(':two: :basketball: ' + do2ballVoodoo());
+     		break;
+      }
+
     function doMagic8BallVoodoo() {
     var rand = ['*It is certain*','*It is decidedly so*','*Without a doubt*','*Yes definitely*','*You may rely on it*','*As I see it, yes*','*Most likely*','*Outlook good*','*Yes*','*Signs point to yes*','*Reply hazy try again*','*Ask again later*','*Better not tell you now*','*Cannot predict now*','*Concentrate and ask again*','*Don\'t count on it*','*My reply is no*','*My sources say no*','*Outlook not so good*','*Very doubtful*'];
 
     return rand[Math.floor(Math.random()*rand.length)];
 }
 
-// Later in the code:
+
 	case "8ball":
 {
+    var config = require('./config.json')
     var questionembed = new Discord.RichEmbed()
       .setColor('FFCE00')
       .setDescription('You must provide a question to ask')
-      .addField('>8ball <question>','<question> = Question for the 8Ball')
+      .addField(config.prefix + '8ball <question>','<question> = Question for the 8Ball')
 
     let question = message.content.split(' ').slice(1).join(' ')
-    if(question.length < 1) return message.channel.sendEmbed(questionembed).catch(console.error);
+    if(question.length < 1) return message.channel.send({embed: questionembed}).catch(console.error);
     console.log(message.guild.name + ' | ' + moment().format('h:mm:ss a') + ' on ' +  moment().format('MMMM Do YYYY') + ' | ' + question + ' | ' + doMagic8BallVoodoo());
     message.channel.send(':8ball: ' + doMagic8BallVoodoo());
  		break;
@@ -1300,17 +1624,8 @@ if(message2say.length < 1) return message.channel.send({embed: sayembed}).catch(
     	message.channel.send('(╯°□°）╯︵ ┻━┻ ')
     	message.channel.sendFile('https://media.giphy.com/media/uKT0MWezNGewE/giphy.gif')
     	break;
-    case "dannyslife":
-    	message.channel.send('Here is the biography about DannyBoi')
-    	var dlembed = new Discord.RichEmbed()
-    	.setColor('FFCE00')
-    	.setTitle('Danny\'s Life')
-    	.setURL('https://drive.google.com/file/d/0B3AjZwDXKX8fY0RUVTZUV0RrNGs/view?usp=sharing')
-    	message.channel.send({embed: dlembed})
-    	break;
     case "pause":
-      message.channel.send('`Sorry, but I do not support this feature at the moment, but you can invite Sunset Music`')
-      message.channel.send('https://discordapp.com/oauth2/authorize?client_id=365255372480446465&scope=bot&permissions=2146958591')
+      message.channel.send('`Sorry, but I do not support this feature at the moment.`')
       break;
     case "rps":
     var config = require("./config.json");
