@@ -1,1 +1,11 @@
-{"name":"Sunset","prefix":">","yt_api_key": "yt_api_key_here","token":"bot_token","language":"Discord.js","owner":"TheHacker894","ownerid":"your_id_here"}
+{"name":"Sunset",
+  "prefix":">",
+  "yt_api_key":"yt_api_key_here",
+  "token":"token_here",
+  "language":"Discord.js",
+  "owner":"TheHacker894",
+  "ownerid":"owner_id",
+  "bot_client_id": "bot_client_id",
+  "bot_permissions": "2146958591",
+  "github_project_link": ""
+}
