@@ -1046,7 +1046,7 @@ var newembed = new Discord.RichEmbed()
         .addField('**Other**','`error-report` `devpage` `invite` `unixtime` `date` `day` `time`')
         .addField('**WIP**','`warn` `vote` `friend`')
         .addField('**Owner Only Commands**','`jsexec` `restart` `relog` `setgame` `setstatus`')
-        .setFooter(moment().format('MMMM Do YYYY, h:mm:ss a'))
+        .setFooter(moment().format('MMMM Do YYYY, h:mm:ss a') + "(Time is in Eastern Time.)")
 
 
         var helpcembed = new Discord.RichEmbed()
