@@ -1,4 +1,9 @@
 # Sunset
+  
+<a href="https://discordbots.org/bot/371097223942897665">
+  <img src="https://discordbots.org/api/widget/status/371097223942897665.png?noavatar=true" alt="Discord Bots" />
+</a>
+  
 Sunset is the best Discord Bot you'll ever have. You can invite it to your server with the link below.  
   
 If you would like to know how to run Sunset yourself visit the [Sunset Website](https://skydevpage.weebly.com/sunset.html)  
