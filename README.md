@@ -3,6 +3,18 @@
 <a href="https://discordbots.org/bot/371097223942897665">
   <img src="https://discordbots.org/api/widget/status/371097223942897665.png?noavatar=true" alt="Discord Bots" />
 </a>
+<a href="https://discordbots.org/bot/371097223942897665">
+  <img src="https://discordbots.org/api/widget/servers/371097223942897665.png?noavatar=true" alt="Discord Bots" />
+</a>
+<a href="https://discordbots.org/bot/371097223942897665">
+  <img src="https://discordbots.org/api/widget/upvotes/371097223942897665.png?noavatar=true" alt="Discord Bots" />
+</a>
+<a href="https://discordbots.org/bot/371097223942897665">
+  <img src="https://discordbots.org/api/widget/lib/371097223942897665.png?noavatar=true" alt="Discord Bots" />
+</a>
+<a href="https://discordbots.org/bot/371097223942897665">
+  <img src="https://discordbots.org/api/widget/owner/371097223942897665.png" alt="Discord Bots" />
+</a>
   
 Sunset is the best Discord Bot you'll ever have. You can invite it to your server with the link below.  
   
