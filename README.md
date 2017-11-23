@@ -25,9 +25,9 @@ If you would like to know how to run Sunset yourself visit the [Sunset Website](
 `npm install pm2 -g` to install  
 [PM2 GitHub Page](https://github.com/Unitech/pm2)  
   
-Before trying to run Sunset you should type  `npm install --save discord.js cheerio ffmpeg ffmpeg-binaries fs moment moment-timezone opusscript querystring request snekfetch ytdl-core webdict ` and press enter/return 
+Before trying to run Sunset you should type  `npm install --save discord.js cheerio ffmpeg ffmpeg-binaries fs moment moment-timezone opusscript querystring request snekfetch ytdl-core webdict request-promise-native` and press enter/return 
   
-*If you are on Linux, Darwin, or macOS you should use* `sudo npm install --save discord.js cheerio ffmpeg ffmpeg-binaries fs moment moment-timezone opusscript querystring request snekfetch ytdl-core webdict` *and press enter/return*
+*If you are on Linux, Darwin, or macOS you should use* `sudo npm install --save discord.js cheerio ffmpeg ffmpeg-binaries fs moment moment-timezone opusscript querystring request snekfetch ytdl-core webdict request-promise-native` *and press enter/return*
   
 **If any errors are encountered you may need to edit the `config.json` and constants at the beginning of `index.js`.**
 [Sunset Invite](https://discordapp.com/oauth2/authorize?client_id=371097223942897665&scope=bot&permissions=2146958591)
