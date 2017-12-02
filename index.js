@@ -12,7 +12,6 @@ const cheerio = require('cheerio')
 const snekfetch = require('snekfetch')
 const querystring = require('querystring')
 const embedfooter = moment().format('h:mm:ss a') + ' on ' +  moment().format('MMMM Do YYYY')
-const requestpn = require('request-promise-native');
 const Attachment = require('discord.js').Attachment
 const webdict = require('webdict');
 const pusage = require('pidusage')
@@ -54,16 +53,6 @@ client.on("ready", () => {
   console.log('[Announcement] ' + announcement.announce)
   client.user.setGame(game.game + ' | ' + data.prefix + 'help' )
   pusage.unmonitor(process.pid)
- requestpn.post({
-         uri: `https://discordbots.org/api/bots/${client.user.id}/stats`,
-         headers: {
-             Authorization: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjM3MTA5NzIyMzk0Mjg5NzY2NSIsImJvdCI6dHJ1ZSwiaWF0IjoxNTEwOTczNTg0fQ.Buo5Ql61yXVjTObZE-o8eAVmNVYRJANX2dCyZi8EOOU`, // Insert token here
-         },
-         json: true,
-         body: {
-             server_count: client.guilds.size,
-         },
-     });
 
 
 });
@@ -121,31 +110,13 @@ client.on('guildBanRemove', (guild, user) => {
 client.on("guildDelete", guild => {
   console.log('Removed from 1 server | ' + guild)
   client.user.setGame(game.game + ' | ' + data.prefix + 'help' )
-  requestpn.post({
-          uri: `https://discordbots.org/api/bots/${client.user.id}/stats`,
-          headers: {
-              Authorization: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjM3MTA5NzIyMzk0Mjg5NzY2NSIsImJvdCI6dHJ1ZSwiaWF0IjoxNTEwOTczNTg0fQ.Buo5Ql61yXVjTObZE-o8eAVmNVYRJANX2dCyZi8EOOU`, // Insert token here
-          },
-          json: true,
-          body: {
-              server_count: client.guilds.size,
-          },
-      });
+  
 
 });
 client.on("guildCreate", guild => {
   guild.owner.send({embed: botjoinembed}).catch(console.error);
       client.user.setGame(game.game + ' | ' + data.prefix + 'help' )
-     requestpn.post({
-            uri: `https://discordbots.org/api/bots/${client.user.id}/stats`,
-            headers: {
-                Authorization: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjM3MTA5NzIyMzk0Mjg5NzY2NSIsImJvdCI6dHJ1ZSwiaWF0IjoxNTEwOTczNTg0fQ.Buo5Ql61yXVjTObZE-o8eAVmNVYRJANX2dCyZi8EOOU`, // Insert token here
-            },
-            json: true,
-            body: {
-                server_count: client.guilds.size,
-            },
-        });
+     
 
 });
 client.on('guildMemberAdd', member => {
