@@ -1,6 +1,6 @@
 {
   "name":"Sunset",
-  "newversion": "2.1 DEV",
+  "newversion": "2.0.2",
   "description":"Sunset is the best bot your could ever have",
   "owner":"`TheHacker",
   "owner_discriminator":"#1072`",
@@ -15,5 +15,6 @@
   "bot_permissions": "2146958591",
   "github_project_link": "https://github.com/The-Hacker894/Sunset/",
   "bot_discriminator": "8283",
-  "bot_guild_id": "<@371097223942897665>"
+  "bot_guild_id": "<@371097223942897665>",
+  "embedcolor":"#FFF500"
 }
