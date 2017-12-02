@@ -15,7 +15,17 @@ const embedfooter = moment().format('h:mm:ss a') + ' on ' +  moment().format('MM
 const requestpn = require('request-promise-native');
 const Attachment = require('discord.js').Attachment
 const webdict = require('webdict');
-
+const pusage = require('pidusage')
+const figlet = require('figlet');
+const flip = require('flip-text');
+const cowsay = require('cowsay');
+const prettyMs = require('pretty-ms');
+const convert = require('color-convert');
+const defaultConfig = {
+  modLogChannel: "mod-log",
+  modRole: "Moderator",
+  adminRole: "Administrator"
+}
 
 //const modlog = member.guild.channels.find('name', 'mod-log');
 
@@ -43,6 +53,7 @@ client.on("ready", () => {
   console.log('[Game] ' + game.game)
   console.log('[Announcement] ' + announcement.announce)
   client.user.setGame(game.game + ' | ' + data.prefix + 'help' )
+  pusage.unmonitor(process.pid)
  requestpn.post({
          uri: `https://discordbots.org/api/bots/${client.user.id}/stats`,
          headers: {
@@ -54,11 +65,11 @@ client.on("ready", () => {
          },
      });
 
+
 });
 client.on('guildBanAdd', (guild, user) => {
   var modlog = guild.channels.find('name', 'mod-log')
   var announcements = guild.channels.find('name', 'announcements');
-  if (!announcements) return message.guild.owner.send({embed: noannouncechannelembed})
 
     var newbanembed = new Discord.RichEmbed()
       .setColor('FFCE00')
@@ -66,8 +77,10 @@ client.on('guildBanAdd', (guild, user) => {
       .setDescription('The user ' + user + ' has been met with the Ban Hammer :hammer: ')
       .setAuthor(user.username ,user.avatarURL)
       .setFooter(embedfooter)
-  announcements.send({embed: newbanembed}).catch(console.error);
-    if(modlog) return modlog.send({embed: newbanembed})
+    if(modlog) return modlog.send({embed: newbanembed}).then( () => {
+      if(announcements) return announcements.send({embed: newbanembed})
+    })
+
 });
 client.on('guildMemberSpeaking', (member, speaking) => {
   if(member.speaking) {
@@ -95,15 +108,15 @@ client.on('guildUpdate', (oGuild, nGuild) => {
 client.on('guildBanRemove', (guild, user) => {
   var modlog = guild.channels.find('name', 'mod-log')
   var announcements = guild.channels.find('name', 'announcements');
-  if (!announcements) return message.guild.owner.send({embed: noannouncechannelembed})
   var newunbanembed = new Discord.RichEmbed()
     .setColor('FFCE00')
     .setTitle('User Unbanned')
     .setDescription('The user ' + user + ' has been unbanned')
-    .setAuthor(guild.author.username ,guild.author.avatarURL)
+    .setAuthor(user.username , user.displayAvatarURL)
     .setFooter(embedfooter)
-    announcements.send({embed: newunbanembed}).catch(console.error);
-    if(modlog) return modlog.send({embed: newunbanembed})
+    if(modlog) return modlog.send({embed: newunbanembed}).then( () => {
+      if(announcements) return announcements.send({embed: newunbanembed})
+    })
 });
 client.on("guildDelete", guild => {
   console.log('Removed from 1 server | ' + guild)
@@ -139,7 +152,6 @@ client.on('guildMemberAdd', member => {
 
   var modlog = member.guild.channels.find('name', 'mod-log');
 var announcements = member.guild.channels.find('name', 'announcements');
-  if (!announcements) return member.guild.owner.send({embed: noannouncechannelembed}).catch(console.error);
 var newusermessageembed = new Discord.RichEmbed()
   .setColor("FFCE00")
   .setTitle('**Welcome to the server**')
@@ -150,21 +162,23 @@ var newusermessageembed = new Discord.RichEmbed()
     .setTitle('Member Announcement')
     .setDescription('A new user has joined the server :D \nPlease welcome ' + member + '!')
     .setFooter(embedfooter)
-  announcements.send({embed: newuserjoinembed}).catch(console.error);
-if(modlog) return modlog.send({embed: newuserjoinembed})
+
+if(modlog) return modlog.send({embed: newuserjoinembed}).then( () => {
+  if(announcements) return announcements.send({embed: newuserjoinembed})
+})
 // member.send({embed: newusermessageembed})
 });
 client.on('guildMemberRemove', member => {
   var modlog = member.guild.channels.find('name', 'mod-log');
 var announcements = member.guild.channels.find('name', 'announcements');
-    if (!announcements) return member.guild.owner.send({embed: noannouncechannelembed}).catch(console.error);
     var olduserjoinembed = new Discord.RichEmbed()
       .setColor('FFCE00')
       .setTitle('Member Announcement')
       .setDescription('A user has left the server D: \nPlease say your Farewells to ' + member + '!')
       .setFooter(embedfooter)
-      announcements.send({embed: olduserjoinembed}).catch(console.error);
-      if(modlog) return modlog.send({embed: olduserjoinembed}).catch(console.error);
+      if(modlog) return modlog.send({embed: olduserjoinembed}).then( () => {
+        if(announcements) return announcements.send({embed: olduserjoinembed})
+      })
 });
 client.on('channelUpdate', (oChannel, nChannel) => {
   var modlog = oChannel.guild.channels.find('name', 'mod-log');
@@ -254,6 +268,9 @@ if(msg.content === 'prefix') {
   if(msg.content === '<@&378930041356288010>') {
     msg.channel.send("My prefix is " + data.prefix).catch(console.error);
   }
+  if(msg.content.indexOf('porn') === 1) {
+    msg.delete(0)
+  }
 });
 
 
@@ -264,11 +281,35 @@ client.on("message", message => {
   fs.readFile("./data/brain/data.json", JSON.stringify(data), (err) => console.error);
 
   switch (args[0].toLowerCase()) {
+    case "usage":
+    pusage.stat(process.pid, function (err, stat) {
+      const cpuusage = parseFloat(Math.round(stat.cpu * 100) / 100).toFixed(2)
+      const memusage = parseFloat(Math.round(stat.memory / 1000000 * 100) / 100).toFixed(2)
+      var pusageembed = new Discord.RichEmbed()
+        .setColor("FFCE00")
+        .setTitle('Usage')
+        .setDescription('\n CPU: ' + cpuusage + '% \n Memory: ' + memusage + 'MB')
+  /*    message.channel.send('CPU: ' + parseFloat(Math.round(stat.cpu * 100) / 100).toFixed(2) + '%')
+      message.channel.send('Mem: ' + parseFloat(Math.round(stat.memory / 1000000 * 100) / 100).toFixed(2) + 'MB') //those are bytes
+      */
+      message.channel.send({embed: pusageembed}).then( () => {
+        pusage.unmonitor(process.pid)
+      })
+      var pusagemlembed = new Discord.RichEmbed()
+        .setColor("FFCE00")
+        .setTitle('Usage Command Used')
+        .setDescription('CPU: ' + cpuusage + '% \n Memory: ' + memusage + 'MB')
+        .setAuthor(message.author.username, message.author.displayAvatarURL)
+        var modlog = message.guild.channels.find('name', 'mod-log');
+        if(modlog) return modlog.send({embed: pusagemlembed}).catch(console.error);
+  });
+      break;
+
     case "disclaimer":
       var disclaimerembed = new Discord.RichEmbed()
         .setColor('FFCE00')
         .setTitle('Disclaimer for Sunset')
-        .setDescription('**Sunset logs a wide variety of data** \n This includes: \n \n -Any updates done to messages \n -UserIDs \n -Commands Used \n *This data is used for the bot to keep track of **who** and **where** you are*, on Discord of course. **The data that is logged by Sunset is in no way malicious and cannot be used against you.**')
+        .setDescription('**Sunset logs a wide variety of data** \n This includes: \n \n -Any updates done to messages \n -Commands Used \n *This data is used for some moderation features*. **The data that is logged by Sunset is in no way malicious and cannot be used against you.**')
         .setFooter(embedfooter)
         message.channel.send({embed: disclaimerembed})
       var disclaimermlembed = new Discord.RichEmbed()
@@ -327,12 +368,6 @@ client.on("message", message => {
       break;
     case "ping":
     var data = require("./data/brain/data.json");
-    var pingembed = new Discord.RichEmbed()
-      .setColor('FFCE00')
-      .setTitle('Ping Usage')
-      .setDescription(data.prefix + 'ping text or ' + data.prefix + 'ping image')
-      .addField(data.prefix + 'ping <image|text>','<image|text> = Test your ping with an image or with text')
-      .setFooter(embedfooter)
       var pingmlembed = new Discord.RichEmbed()
         .setColor('FFCE00')
         .setTitle('Ping Command used')
@@ -341,17 +376,11 @@ client.on("message", message => {
         .setFooter(embedfooter)
 
       var modlog = message.guild.channels.find('name', 'mod-log');
-
-
-    let pingmessage = message.content.split(' ').slice(1).join(' ')
-    if(pingmessage.length < 1) return message.channel.send({embed: pingembed}) && modlog.send({embed: pingmlembed}).catch(console.error);
-    if(pingmessage === 'text') return message.channel.send('Pinging...').then(sent => { sent.edit(`Pong! Took ${sent.createdTimestamp - message.createdTimestamp}ms`)})
-    if(pingmessage === 'image') return message.channel.send('Pinging...').then(sent => { sent.edit('http://madeformakers.org/wp-content/uploads/2016/01/pong.png').then(msg => { msg.edit(`Pong! Took ${sent.createdTimestamp - message.createdTimestamp}ms`)})})
+    message.channel.send('Pinging...').then(sent => {
+      sent.edit(`Pong! Took ${sent.createdTimestamp - message.createdTimestamp}ms`)
+    })
     if(modlog) return modlog.send({embed: pingmlembed}).catch(console.error);
     message.delete()
-
-
-
     break;
     case "announcement":
       var announcement = require("./data/brain/announcement.json");
@@ -1221,7 +1250,7 @@ var data = require("./data/brain/data.json")
       var websiteembed = new Discord.RichEmbed()
         .setColor('FFCE00')
           .setTitle(data.name + ' Website')
-            .setURL('https://sites.google.com/view/sunset-discordbot/home')
+            .setURL('https://skydevpage.weebly.com/sunset.html')
             .setFooter(embedfooter)
           message.channel.send({embed: websiteembed}).catch(console.error);
         var webistemlembed = new Discord.RichEmbed()
@@ -1261,45 +1290,14 @@ var data = require("./data/brain/data.json")
         var uptimeembed = new Discord.RichEmbed()
         .setColor(`FFCE00`)
         .setTitle(data.name + ' Uptime')
-        .addField('Uptime Seconds', seconds)
-        .addField('Uptime Minutes', minutes)
-        .addField('Uptime Hours', hours)
-        .addField('Uptime Days', days)
+        .setDescription('Uptime: ' + prettyMs(client.uptime, {verbose: true}))
         .setFooter(embedfooter)
         var uptimemlembed = new Discord.RichEmbed()
           .setColor('FFCE00')
-          .setTitle('Uptime Command Used (' + uptimeformat + ')')
+          .setTitle('Uptime Command Used')
           .setDescription(message.author.username)
           .setAuthor(message.author.username ,message.author.avatarURL)
           .setFooter(embedfooter)
-        var secondupembed = new Discord.RichEmbed()
-        .setColor(`FFCE00`)
-        .setTitle(data.name + ' Uptime (Seconds)')
-        .addField('Uptime Seconds', seconds)
-        .setFooter(embedfooter)
-
-        var minuteupembed = new Discord.RichEmbed()
-        .setColor('FFCE00')
-        .setTitle(data.name + ' Uptime (Minutes)')
-        .addField('Uptime Minutes', minutes)
-        .setFooter(embedfooter)
-
-        var hourupembed = new Discord.RichEmbed()
-        .setColor('FFCE00')
-        .setTitle(data.name + ' Uptime (Hours)')
-        .addField('Uptime Hours', hours)
-        .setFooter(embedfooter)
-
-        var dayupembed = new Discord.RichEmbed()
-        .setColor('FFCE00')
-        .setTitle(data.name + ' Uptime (Days)')
-        .addField('Uptime Days', days)
-        .setFooter(embedfooter)
-
-        if(uptimeformat === 'seconds') return message.channel.send({embed: secondupembed})
-        if(uptimeformat === 'minutes') return message.channel.send({embed: minuteupembed})
-        if(uptimeformat === 'hours') return message.channel.send({embed: hourupembed})
-        if(uptimeformat === 'days') return message.channel.send({embed: dayupembed})
         if(uptimeformat.length < 1) return message.channel.send({embed: uptimeembed})
         if(modlog) return modlog.send(uptimemlembed)
         break;
@@ -1810,16 +1808,17 @@ var data = require("./data/brain/data.json")
  if(modlog) return modlog.send({embed: versionmlembed}).catch(console.error);
 
   break;
-  case "randomhex":
+  case "randomcolor":
   let color = ((1 << 24) * Math.random() | 0).toString(16);
 var rhembed = new Discord.RichEmbed()
-    .setTitle(`#${color}`)
+    .setTitle('Random Color')
+    .setDescription(`**Hex** #${color} \n **RGB** ${convert.hex.rgb(color)} \n **LAB** ${convert.hex.lab(color)} \n **CMYK** ${convert.hex.cmyk(color)}`)
     .setColor(`#${color}`);
 message.channel.send({embed: rhembed});
 var rhmlembed = new Discord.RichEmbed()
   .setColor(`#${color}`)
-  .setTitle('Random Hex Command Used')
-  .setDescription(message.author.username)
+  .setTitle('Random Color Command Used')
+  .setAuthor(message.author.username, message.author.displayAvatarURL)
 var modlog = message.guild.channels.find('name', 'mod-log');
 if(modlog) return modlog.send({embed: rhmlembed}).catch(console.error);
 break;
@@ -1833,7 +1832,16 @@ break;
     let infodays = client.uptime / 86400000 + ' days'
     let total = 0;
     client.guilds.map(g => total += g.memberCount)
-
+    pusage.stat(process.pid, function (err, stat) {
+      const cpuusage = parseFloat(Math.round(stat.cpu * 100) / 100).toFixed(2)
+      const memusage = parseFloat(Math.round(stat.memory / 1000000 * 100) / 100).toFixed(2)
+  /*    var pusageembed = new Discord.RichEmbed()
+        .setColor("FFCE00")
+        .setTitle('Usage')
+        .setDescription('\n CPU: ' + cpuusage + '% \n Memory: ' + memusage + 'MB')
+      message.channel.send('CPU: ' + parseFloat(Math.round(stat.cpu * 100) / 100).toFixed(2) + '%')
+      message.channel.send('Mem: ' + parseFloat(Math.round(stat.memory / 1000000 * 100) / 100).toFixed(2) + 'MB') //those are bytes
+      */
     	var infosembed = new Discord.RichEmbed()
     	.setColor("FFCE00")
     	.setTitle(data.name + ' Info')
@@ -1843,7 +1851,9 @@ break;
       .addField('Host', '[Raspberry Pi 3](https://www.raspberrypi.org/products/raspberry-pi-3-model-b/)', true)
     	.addField('Library', '[' + data.library + '](https://discord.js.org/)', true )
       .addField('Language', '[' + data.language + '](https://nodejs.org/)', true)
-      .addField('Uptime', infoseconds, true)
+      .addField('Uptime', prettyMs(client.uptime, {verbose: true}), true)
+      .addField('CPU Usage', cpuusage + '%', true)
+      .addField('Memory Usage', memusage + 'MB', true)
       .addField('Invite', '[Sunset Invite](https://discordapp.com/oauth2/authorize?client_id=' + data.bot_client_id + '&scope=bot&permissions=' + data.bot_permissions + ')', true)
       .addField('Server Count', client.guilds.size, true)
       .addField('Total Members Count', total, true)
@@ -1855,7 +1865,9 @@ break;
       .setFooter(embedfooter)
 
 
-      message.channel.send({embed: infosembed}).catch(console.error);
+      message.channel.send({embed: infosembed}).then( () => {
+        pusage.unmonitor(process.pid)
+      })
       var infosmlembed = new Discord.RichEmbed()
         .setColor('FFCE00')
         .setTitle('Info Command Used')
@@ -1866,7 +1878,7 @@ break;
     //  if(infoseconds < 3600000) return message.channel.send({embed: infohembed})
     var modlog = message.guild.channels.find('name', 'mod-log');
  if(modlog) return modlog.send({embed: infosmlembed}).catch(console.error);
-
+});
     	break;
 
       case "help":
@@ -1877,12 +1889,12 @@ break;
         .setTitle('Commands')
         .setDescription(data.prefix + 'help <command> to get help with all commands listed here.')
         .addField('**Information**','`help` `disclaimer` `ping` `test` `info` `announcement` `uptime` `serverinfo` `membercount` `channelcount` `avatar` `profile` `whois`')
-        .addField('**More Information**','`botinvite` `website` `sourcecode` `github` `version`')
+        .addField('**More Information**','`usage` `botinvite` `website` `sourcecode` `github` `version`')
         .addField('**VC**','`soundtest` `play` `skip` `pause` `queue` `end` `stop` `join` `leave`')
-        .addField('**Entertainment**','`urbandictionary` `dictionary` `youtube` `google` `vote` `say` `saytts` `2ball` `8ball` `coinflip` `flip` `roll` `doubleroll`')
-        .addField('**Memes**','`tableflip` `untableflip` `shrug` `bigorder` `skid` `bruh`')
+        .addField('**Entertainment**','`emoji` `cowthink` `cowsay` `fliptext` `figlet` `urbandictionary` `dictionary` `youtube` `google` `vote` `say` `saytts` `2ball` `8ball` `coinflip` `flip` `roll` `doubleroll`')
+        .addField('**Memes**','`tableflip` `untableflip` `shrug` `bigorder`')
         .addField('**Moderation**','`ban` `unban` `kick` `purge` `channelcreate` `channeldelete` `mod-logcreate` `announcementscreate` `setnick`')
-        .addField('**Other**','`randomhex` `error-report` `devpage` `invite` `unixtime` `date` `day` `time` `importthis`')
+        .addField('**Other**','`randomcolor` `error-report` `devpage` `invite` `unixtime` `date` `day` `time` `importthis`')
         .addField('**WIP**','`warn`')
         .addField('**Owner Only Commands**','`jsexec` `flush` `setgame` `setstatus` `setannounce`')
         .setFooter(embedfooter)
@@ -2287,11 +2299,11 @@ break;
           .setDescription('Sends the version of ' + data.name)
           .addField(data.prefix + 'version','This command has no arguments')
           .setFooter(embedfooter)
-        var randomhexembed = new Discord.RichEmbed()
+        var randomcolorembed = new Discord.RichEmbed()
           .setColor('FFCE00')
-          .setTitle('Random Hex Help')
-          .setDescription('Sends a random hex color')
-          .addField(data.prefix + 'randomhex','This command has no arguments')
+          .setTitle('Random Color Help')
+          .setDescription('Sends a random color in `Hex`, `RGB`, `LAB`, and `CMYK`')
+          .addField(data.prefix + 'randomcolor','This command has no arguments')
           .setFooter(embedfooter)
         var skidhembed = new Discord.RichEmbed()
           .setColor('FFCE00')
@@ -2338,7 +2350,36 @@ break;
           .setTitle("Flush Help")
           .setDescription('*Flushes* bot *things*')
           .addField(data.prefix + 'flush <item>','<item> = Item to flush')
-
+        var figlethembed = new Discord.RichEmbed()
+          .setColor("FFCE00")
+          .setTitle("Figlet Help")
+          .setDescription("*Figletizes* a message")
+          .addField(data.prefix + 'figlet <message>','_')
+        var usageembed = new Discord.RichEmbed()
+          .setColor("FFCE00")
+          .setTitle("Usage Help")
+          .setDescription("Shows Sunset's usage")
+          .addField(data.prefix + 'usage','This message has no arguments')
+        var emojiembed = new Discord.RichEmbed()
+          .setColor("FFCE00")
+          .setTitle("Emoji Help")
+          .setDescription("Emojifies your message *(if possible)*")
+          .addField(data.prefix + 'emoji <message>','_')
+        var fliptextembed = new Discord.RichEmbed()
+          .setColor("FFCE00")
+          .setTitle("Flip Text Help")
+          .setDescription('Flips Text')
+          .addField(data.prefix + 'fliptext <message>','_')
+        var cowsayembed = new Discord.RichEmbed()
+          .setColor("FFCE00")
+          .setTitle("Cowsay Help")
+          .setDescription("Classic Cow Say Module")
+          .addField(data.prefix + 'cowsay <message>','_')
+        var cowthinkembed = new Discord.RichEmbed()
+          .setColor("FFCE00")
+          .setTitle("Cowthink Help")
+          .setDescription("Classic Cowthink Module")
+          .addField(data.prefix + 'cowthink <message>','_')
           // Below this line belong to the mod-log
 
           var modlog = message.guild.channels.find('name', 'mod-log')
@@ -2712,12 +2753,8 @@ break;
           message.channel.send({embed: versionembed})
           if(modlog) return modlog.send({embed: helpmlargembed})
         }
-        if(helpcommand === `randomhex`) {
-          message.channel.send({embed: randomhexembed})
-          if(modlog) return modlog.send({embed: helpmlargembed})
-        }
-        if(helpcommand === `rh`) {
-          message.channel.send({embed: randomhexembed})
+        if(helpcommand === `randomcolor`) {
+          message.channel.send({embed: randomcolorembed})
           if(modlog) return modlog.send({embed: helpmlargembed})
         }
         if(helpcommand === `skid`) {
@@ -2766,6 +2803,30 @@ break;
           message.channel.send({embed: flushembed})
           if(modlog) return modlog.send({embed: helpmlargembed})
         }
+        if(helpcommand === `usage`) {
+          message.channel.send({embed: usageembed})
+          if(modlog) return modlog.send({embed: helpmlargembed})
+        }
+        if(helpcommand === `figlet`) {
+          message.channel.send({embed: figlethembed})
+          if(modlog) return modlog.send({embed: helpmlargembed})
+        }
+        if(helpcommand === `cowsay`) {
+          message.channel.send({embed: cowsayembed})
+          if(modlog) return modlog.send({embed: helpmlargembed})
+        }
+        if(helpcommand === `cowthink`) {
+          message.channel.send({embed: cowthinkembed})
+          if(modlog) return modlog.send({embed: helpmlargembed})
+        }
+        if(helpcommand === `emoji`) {
+        message.channel.send({embed: emojiembed})
+        if(modlog) return modlog.send({embed: helpmlargembed})
+      }
+      if(helpcommand === `fliptext`) {
+      message.channel.send({embed: fliptextembed})
+      if(modlog) return modlog.send({embed: helpmlargembed})
+    }
       //  var helpargerrembed = new Discord.RichEmbed()
       //    .setColor('FFCE00')
       //    .setTitle('Help Error')
@@ -2835,6 +2896,7 @@ break;
             if(modlog) return modlog.send({embed: datboimlembed}).catch(console.error);
             break;
             case "importthis":
+            var modlog = message.guild.channels.find('name', 'mod-log');
               message.channel.send({file: new Attachment('./data/file/images/memes/importthis.jpg', 'importthis.jpg')})
               var importtmlembed = new Discord.RichEmbed()
                 .setColor('FFCE00')
@@ -3086,9 +3148,101 @@ break;
   if(modlog) return modlog.send({embed: flipmlembed}).catch(console.error);
   break;
 }
-case "kys":
-  message.channel.send(':ok_hand: :joy: :gun:')
+
+  case "cowthink":
+  let ctmsg = message.content.split(' ').slice(1).join(' ')
+  var cowsayerrembed = new Discord.RichEmbed()
+    .setColor("FFCE00")
+    .setTitle("Cowthink Usage Error")
+    .setDescription('You must provide something for the cow to think')
+  if(ctmsg.length < 1) return message.channel.send({embed: cowsayerrembed})
+    message.channel.send('```' + cowsay.think({text: ctmsg, e: "oO", T: "U"}) + '```')
+    var modlog = message.guild.channels.find('name', 'mod-log');
+    var cowthinkmlembed = new Discord.RichEmbed()
+      .setColor('FFCE00')
+      .setTitle('Cowthink Command Used')
+      .setDescription(message.author.username)
+      .setAuthor(message.author.username ,message.author.avatarURL)
+      .setFooter(embedfooter)
+      if(modlog) return modlog.send({embed: cowthinkmlembed}).catch(console.error);
+    break;
+    case "cowsay":
+    let csmsg = message.content.split(' ').slice(1).join(' ')
+    var cowsayerrembed = new Discord.RichEmbed()
+      .setColor("FFCE00")
+      .setTitle("Cowsay Usage Error")
+      .setDescription('You must provide something for the cow to say')
+    if(csmsg.length < 1) return message.channel.send({embed: cowsayerrembed})
+      message.channel.send('```' + cowsay.say({text: csmsg, e: "oO", T: "U"}) + '```')
+      var modlog = message.guild.channels.find('name', 'mod-log');
+      var cowsaymlembed = new Discord.RichEmbed()
+        .setColor('FFCE00')
+        .setTitle('Cowsay Command Used')
+        .setDescription(message.author.username)
+        .setAuthor(message.author.username ,message.author.avatarURL)
+        .setFooter(embedfooter)
+        if(modlog) return modlog.send({embed: cowsaymlembed}).catch(console.error);
+      break;
+  case "fliptext":
+  let flipmsg = message.content.split(' ').slice(1).join(' ')
+  var fliperrembed = new Discord.RichEmbed()
+    .setColor("FFCE00")
+    .setTitle("Flip Usage Error")
+    .setDescription('You must provide some text to flip')
+  if(flipmsg.length < 1) return message.channel.send({embed: fliperrembed})
+  message.channel.send('```' + flip(flipmsg) + '```')
+  var modlog = message.guild.channels.find('name', 'mod-log');
+  var fliptextmlembed = new Discord.RichEmbed()
+    .setColor('FFCE00')
+    .setTitle('Fliptext Command Used')
+    .setDescription(message.author.username)
+    .setAuthor(message.author.username ,message.author.avatarURL)
+    .setFooter(embedfooter)
+    if(modlog) return modlog.send({embed: fliptextmlembed}).catch(console.error);
+    break;
+  case "emoji":
+  translate = require('moji-translate');
+  let emsg = message.content.split(' ').slice(1).join(' ')
+  var emojierrembed = new Discord.RichEmbed()
+    .setColor("FFCE00")
+    .setTitle("Emoji Usage Error")
+    .setDescription('You must provide something to emojify')
+  if(emsg.length < 1) return message.channel.send({embed: emojierrembed})
+  message.channel.send(translate.translate(emsg));
+  var modlog = message.guild.channels.find('name', 'mod-log');
+  var emojimlembed = new Discord.RichEmbed()
+    .setColor('FFCE00')
+    .setTitle('Emoji Command Used')
+    .setDescription(message.author.username)
+    .setAuthor(message.author.username ,message.author.avatarURL)
+    .setFooter(embedfooter)
+    if(modlog) return modlog.send({embed: emojimlembed}).catch(console.error);
   break;
+
+case "figlet":
+let fmsg = message.content.split(' ').slice(1).join(' ')
+var figletembed = new Discord.RichEmbed()
+  .setColor('FFCE00')
+  .setTitle("Figlet Usage")
+  .setDescription("You must provide something to *figletize*")
+if(fmsg.length < 1) return message.channel.send({embed: figletembed})
+  figlet(fmsg, function(err, data) {
+    if (err) {
+      console.log('Something went wrong...');
+      console.dir(err);
+      return;
+  }
+  message.channel.send('```' + data + '```')
+  var modlog = message.guild.channels.find('name', 'mod-log');
+  var figletmlembed = new Discord.RichEmbed()
+    .setColor('FFCE00')
+    .setTitle('Figlet Command Used')
+    .setDescription(message.author.username)
+    .setAuthor(message.author.username ,message.author.avatarURL)
+    .setFooter(embedfooter)
+    if(modlog) return modlog.send({embed: figletmlembed}).catch(console.error);
+  });
+break;
 case "say":
 var data = require("./data/brain/data.json");
 var sayembed = new Discord.RichEmbed()
