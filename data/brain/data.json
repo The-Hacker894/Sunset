@@ -1,20 +1,20 @@
 {
   "name":"Sunset",
-  "newversion": "2.0.2",
+  "newversion": "2.1",
   "description":"Sunset is the best bot your could ever have",
   "owner":"`TheHacker",
   "owner_discriminator":"#1072`",
   "library": "Discord.js",
   "language": "Node.js",
-  "name":"Sunset",
   "prefix":">",
   "yt_api_key":"AIzaSyA5SNnBpD_ixfEQtkg_tWor1irVGueJYdI",
-  "token":"Mzcx_this_MDk3O_token_Dk3N0jY1.DMg_is_.xJLz_not_lbg_realM5ZTIiw",
+  "token":"Mzcx_this_MDk3O_token_Dk3N35jY1.DMg_is_.xJLz_not_lbg_realM5ZT69iw",
   "ownerid":"270375857384587264",
   "bot_client_id": "371097223942897665",
   "bot_permissions": "2146958591",
   "github_project_link": "https://github.com/The-Hacker894/Sunset/",
   "bot_discriminator": "8283",
   "bot_guild_id": "<@371097223942897665>",
-  "embedcolor":"#FFF500"
+  "embedcolor":"#FFA500",
+  "lock":"false"
 }
