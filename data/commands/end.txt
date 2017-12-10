@@ -1,0 +1,27 @@
+const RichEmbed = require("discord.js").RichEmbed;
+const Discord = require("discord.js");
+const moment = require("moment")
+const embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
+const momentdate = moment().format('MMMM Do YYYY')
+const momentday = moment().format('dddd')
+const webdict = require('webdict');
+module.exports.run = (client, message, args, data, game, announcement) => {
+  const modlog = message.guild.channels.find('name', 'mod-log');
+  const announcements = message.guild.channels.find('name', 'announcements')
+const voiceChannel = message.member.voiceChannel;
+  if(!voiceChannel) return message.channel.send('You must be in a voice channel').catch(console.error);
+  voiceChannel.leave()
+  message.channel.send(':wave:').catch(console.error);
+  var endmlembed = new Discord.RichEmbed()
+    .setColor(data.embedcolor)
+    .setTitle('End Command Used')
+    .setDescription(message.author.username)
+    .setAuthor(message.author.username ,message.author.avatarURL)
+    .setFooter(embedfooter)
+  if(modlog) modlog.send({embed: endmlembed}).catch(console.error);
+}
+module.exports.help = {
+  name: "end",
+  info: "End Sunset's music",
+  usage: "end"
+}

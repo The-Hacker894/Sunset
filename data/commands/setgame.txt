@@ -1,0 +1,48 @@
+const RichEmbed = require("discord.js").RichEmbed;
+const Discord = require("discord.js");
+const moment = require("moment")
+const embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
+const momentdate = moment().format('MMMM Do YYYY')
+const momentday = moment().format('dddd')
+const fs = require("fs")
+module.exports.run = (client, message, args, data, game, announcement) => {
+  var commandlock = data.lock
+  if(commandlock.includes('true')) {       
+    if(message.author.id !== data.ownerid) return message.channel.send('Sorry, but a command lock is in effect. Only the owner can use commands at this time.')   
+  } 
+  const modlog = message.guild.channels.find('name', 'mod-log');
+  const announcements = message.guild.channels.find('name', 'announcements')
+const playgame = message.content.split(' ').slice(1).join(' ')
+if (message.author.id !== data.ownerid) return message.channel.send(`**Owner Only Command**`)
+
+var setgamemlerrembed = new Discord.RichEmbed()
+  .setColor(data.embedcolor)
+  .setTitle('Set Game Command Used by Non-Owner')
+  .setDescription(message.author.username)
+  .setFooter(embedfooter)
+var gameembed = new Discord.RichEmbed()
+  .setColor(data.embedcolor)
+  .setDescription('You must provide a status *or game* for ' + data.name)
+  .addField(data.prefix + 'setgame <game>','<game> = Can be anything really')
+  .setFooter(embedfooter)
+  var setgamemlembed = new Discord.RichEmbed()
+    .setColor(data.embedcolor)
+    .setTitle('Set Game Command Used by Owner')
+    .setDescription(game.game + ' | ' + data.prefix + 'help')
+    .setAuthor(message.author.username ,message.author.avatarURL)
+    .setFooter(embedfooter)
+if(playgame.length < 1) return message.channel.send({embed: gameembed}).catch(console.error);
+
+game.game = playgame
+
+fs.writeFile("./data/brain/game.json", JSON.stringify(game), (err) => console.error)
+      message.delete()
+      message.channel.send('Set Game Status to `' + game.game + ' | ' + data.prefix + 'help`').catch(console.error);
+    if(modlog) return modlog.send({embed: setgamemlembed}).catch(console.error);
+    client.user.setGame(game.game + ' | ' + data.prefix + 'help')
+}
+module.exports.help = {
+  name: "setgame",
+  info: "Set Sunset's game",
+  usage: "setgame <game>"
+}

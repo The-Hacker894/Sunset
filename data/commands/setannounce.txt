@@ -1,0 +1,27 @@
+const RichEmbed = require("discord.js").RichEmbed;
+const Discord = require("discord.js");
+const moment = require("moment")
+const embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
+const momentdate = moment().format('MMMM Do YYYY')
+const momentday = moment().format('dddd')
+const fs = require('fs')
+module.exports.run = (client, message, args, data, game, announcement) => {
+  var commandlock = data.lock
+  if(commandlock.includes('true')) {       
+    if(message.author.id !== data.ownerid) return message.channel.send('Sorry, but a command lock is in effect. Only the owner can use commands at this time.')   
+  } 
+  const modlog = message.guild.channels.find('name', 'mod-log');
+  const announcements = message.guild.channels.find('name', 'announcements')
+if (message.author.id !== data.ownerid) return message.channel.send(`**Owner Only Command**`).catch(console.error);
+  const setnewannounce = message.content.split(' ').slice(1).join(' ')
+
+  announcement.announce = setnewannounce;
+
+fs.writeFileSync("./data/brain/announcement.json", JSON.stringify(announcement), (err) => console.error);
+message.channel.send('Set announcement to `' + setnewannounce + '`')
+}
+module.exports.help = {
+  name: "setannounce",
+  info: "Set the announcement",
+  usage: "setannounce <announcement>"
+}

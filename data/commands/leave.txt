@@ -1,0 +1,25 @@
+const RichEmbed = require("discord.js").RichEmbed;
+const Discord = require("discord.js");
+const moment = require("moment")
+const embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
+const momentdate = moment().format('MMMM Do YYYY')
+const momentday = moment().format('dddd')
+module.exports.run = (client, message, args, data, game, announcement) => {
+  const modlog = message.guild.channels.find('name', 'mod-log');
+  const announcements = message.guild.channels.find('name', 'announcements')
+const voiceChannel = message.member.voiceChannel;
+    if (!voiceChannel) return message.reply("**You must be in a voice channel.**").catch(console.error);
+    voiceChannel.leave()
+    var leavemlembed = new Discord.RichEmbed()
+      .setColor(data.embedcolor)
+      .setTitle('Leave Command Used')
+      .setDescription(message.author.username)
+      .setAuthor(message.author.username ,message.author.avatarURL)
+      .setFooter(embedfooter)
+    if(modlog) return modlog.send({embed: leavemlembed}).catch(console.error);
+}
+module.exports.help = {
+  name: "leave",
+  info: "Leave the current Voice Channel",
+  usage: "leave"
+}
