@@ -1,7 +1,7 @@
 const RichEmbed = require("discord.js").RichEmbed;
 const Discord = require("discord.js");
 const moment = require("moment")
-const embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
+var embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
 const momentdate = moment().format('MMMM Do YYYY')
 const momentday = moment().format('dddd')
 module.exports.run = (client, message, args, data, game, announcement) => {
@@ -23,13 +23,13 @@ var userprofilelengthtooshortembed = new Discord.RichEmbed()
   .addField('Joined Timestamp', message.member.joinedTimestamp, true)
   .addField('Status', message.author.presence.status, true)
   .setThumbnail(message.author.displayAvatarURL)
-  .setFooter(embedfooter)
+  // removed 
 var profilemlembed = new Discord.RichEmbed()
   .setColor('FFCE00')
   .setTitle(`Profile Command Used`)
   .setDescription(message.author.username)
   .setAuthor(message.author.username ,message.author.displayAvatarURL)
-  .setFooter(embedfooter)
+  // removed 
 
 if(userprofile.length < 1) return message.channel.send({embed: userprofilelengthtooshortembed})
 var profileembed = new Discord.RichEmbed()
@@ -42,7 +42,7 @@ var profileembed = new Discord.RichEmbed()
   .addField('Joined Timestamp', message.guild.member(message.mentions.users.first()).joinedTimestamp, true)
   .addField('Status', message.guild.member(message.mentions.members.first()).presence.status, true)
   .setThumbnail(message.mentions.users.first().displayAvatarURL)
-  .setFooter(embedfooter)
+  // removed 
   message.channel.send({embed: profileembed}).catch(console.error);
 
   if(modlog) return modlog.send({embed: profilemlembed}).catch(console.error);

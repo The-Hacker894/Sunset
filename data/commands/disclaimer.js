@@ -1,7 +1,7 @@
 const RichEmbed = require("discord.js").RichEmbed;
 const Discord = require("discord.js");
 const moment = require("moment")
-const embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
+var embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
 const momentdate = moment().format('MMMM Do YYYY')
 const momentday = moment().format('dddd')
 module.exports.run = (client, message, args, data, game, announcement) => {
@@ -15,13 +15,13 @@ module.exports.run = (client, message, args, data, game, announcement) => {
           .setColor(data.embedcolor)
           .setTitle('Disclaimer for Sunset')
           .setDescription('**Sunset logs a wide variety of data** \n This includes: \n \n -Any updates done to messages \n -Commands Used \n *This data is used for some moderation features*. **The data that is logged by Sunset is in no way malicious and cannot be used against you.**')
-          .setFooter(embedfooter)
+          // removed 
           message.channel.send({embed: disclaimerembed})
         var disclaimermlembed = new Discord.RichEmbed()
           .setColor(data.embedcolor)
           .setTitle('Disclaimer Command Used')
           .setDescription(message.author.username)
-          .setFooter(embedfooter)
+          // removed 
 
           if(modlog) return modlog.send({embed: disclaimermlembed}).catch(console.error);
 

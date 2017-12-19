@@ -1,7 +1,7 @@
 const RichEmbed = require("discord.js").RichEmbed;
 const Discord = require("discord.js");
 const moment = require("moment")
-const embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
+var embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
 module.exports.run = (client, message, args, data, game, announcement) => {
   var commandlock = data.lock
   if(commandlock.includes('true')) {       
@@ -16,7 +16,7 @@ var embedreturn = new Discord.RichEmbed()
   .setColor(data.embedcolor)
   .setDescription('You need to provide a member to ban and a reason for the ban')
   .addField(data.prefix + 'ban <@user> <reason>','<@user> = Mentioned User | <reason> = Reason for Ban')
-  .setFooter(embedfooter)
+  // removed 
 var embedpermreturn = new Discord.RichEmbed()
 .setColor(data.embedcolor)
 .setTitle('Ban Usage')
@@ -28,7 +28,7 @@ var embedbotpermreturn = new Discord.RichEmbed()
 .setTitle('Ban Usage')
 .setDescription('This command will only work if I have the permission `BAN_MEMBERS`')
 .addField(data.prefix + 'ban <@user> <reason>','<@user> = Mentioned User | <reason> = Reason for Kick')
-.setFooter(embedfooter)
+// removed 
 var banusermessageembed = new Discord.RichEmbed()
 .setColor(data.embedcolor)
 .setTitle('Automated Ban Message')
@@ -45,7 +45,7 @@ var banusermessageembed = new Discord.RichEmbed()
         .setColor(data.embedcolor)
         .setDescription('**A user has been banned** \n \n **User:** ' + banMember + '\n **Moderator:** ' + message.author.username + '\n **Reason:** ' + banreason + '\n **Server:** ' + message.guild.name)
         .setAuthor(message.author.username ,message.author.avatarURL)
-        .setFooter(embedfooter)
+        // removed 
         message.channel.send({embed: embedaction})
         console.log('Ban | ' + message.guild.name + ' | ' + message.author.username + ' | ' + banreason + ' | ' + banMember)
 
@@ -54,7 +54,7 @@ var banusermessageembed = new Discord.RichEmbed()
         .setColor(data.embedcolor)
         .setDescription('**A user has been banned** \n \n **User:** ' + banMember + '\n **Moderator:** ' + message.author.username + '\n **Reason:** ' + banreason + '\n **Server:** ' + message.guild.name)
         .setAuthor(message.author.username ,message.author.avatarURL)
-        .setFooter(embedfooter)
+        // removed 
         if(modlog) {
           modlog.send({embed: banmlembed}).catch(console.error);
         }

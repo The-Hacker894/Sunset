@@ -1,7 +1,7 @@
 const RichEmbed = require("discord.js").RichEmbed;
 const Discord = require("discord.js");
 const moment = require("moment")
-const embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
+var embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
 const momentdate = moment().format('MMMM Do YYYY')
 const momentday = moment().format('dddd')
 const request = require("request")
@@ -20,7 +20,7 @@ var googlesearchtooshortembed = new Discord.RichEmbed()
   .setTitle('Google Search Help')
   .setDescription('You must provide something to search for')
   .addField(data.prefix + 'google <search>','<search> = Something to search on Google')
-  .setFooter(embedfooter)
+  // removed 
 
 let googlesearch = message.content.split(' ').slice(1).join(' ')
 let searchUrl = `https://www.google.com/search?q=${encodeURIComponent(message.content.split(' ').slice(1).join(' '))}`;
@@ -37,7 +37,11 @@ return snekfetch.get(searchUrl).then((result) => {
     .setTitle('Sorry, but an error occured while processing your request.')
     .setDescription('Please try rewording your search')
     .addField(data.prefix + 'google <search>','<search> = Google Search Request')
-    .setFooter(embedfooter)
+  var googlensfwerrorembed = new Discord.RichEmbed()
+    .setColor(data.embedcolor)
+    .setTitle('NSFW Term')
+    .setDescription('NSFW Term used in non-NSFW channel.')
+    // removed 
 
   var googleresultembed = new Discord.RichEmbed()
     .setColor(data.embedcolor)
@@ -45,16 +49,31 @@ return snekfetch.get(searchUrl).then((result) => {
     .setDescription(googlesearch + '\n \n ' + googleData.q)
     .setThumbnail('https://i.imgur.com/kUSeXDX.png')
     .setFooter('Google Search Result at ' + embedfooter)
-  message.channel.send({embed: googleresultembed}).catch(console.error);
-  console.log(message.guild.name + " | " + message.author.username + ' | ' + googlesearch + ' | ' + `${googleData.q}`)
-  var googlemlembed = new Discord.RichEmbed()
+    var googlemlembed = new Discord.RichEmbed()
     .setColor(data.embedcolor)
     .setTitle('Google Command Used')
     .setDescription(message.author.username + '\n \n ' + googleData.q)
     .setAuthor(message.author.username ,message.author.avatarURL)
-    .setFooter(embedfooter)
+    var googlensfwmlembed = new Discord.RichEmbed()
+      .setColor(data.embedcolor)
+      .setTitle('Google Command Used (NSFW Failure)')
+      .setAuthor(message.author.username ,message.author.avatarURL)
+      
+    var checkGoogleData = googleData.q
+    var nsfwterms = ['porn', 'hentai', 'pron', 'ass', 'fuck', 'piss', 'penis', 'vagina']
+    if(message.channel.nsfw){
+      message.channel.send({embed: googleresultembed})
+      if(modlog) return message.channel.send({embed: googlemlembed})
+      }else{
+        if(nsfwterms.some(terms => checkGoogleData.includes(terms))) {
+          message.channel.send({embed: googlensfwerrorembed})
+          if(modlog) return message.channel.send({embed: googlensfwmlembed})
+        } else {
+          message.channel.send({embed: googleresultembed})
+          if(modlog) return message.channel.send({embed: googlemlembed})
+        }
+      }
     message.channel.stopTyping()
-  if(modlog) return modlog.send({embed: googlemlembed}).catch(console.error);
 });
 }
 module.exports.help = {

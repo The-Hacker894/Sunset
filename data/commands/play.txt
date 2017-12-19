@@ -1,7 +1,7 @@
 const RichEmbed = require("discord.js").RichEmbed;
 const Discord = require("discord.js");
 const moment = require("moment")
-const embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
+var embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
 const momentdate = moment().format('MMMM Do YYYY')
 const momentday = moment().format('dddd')
 const request = require("request")
@@ -34,7 +34,7 @@ var musiclengtherror = new Discord.RichEmbed()
   .setTitle('Music Commands Usage (Play)')
   .setDescription('You must provide a search term for YouTube')
   .addField(data.prefix + 'play <youtube_video>','<youtube_video> = Search Term for Youtube Video')
-  .setFooter(embedfooter)
+  // removed 
 
 if(musictoplay.length < 1) return message.channel.send({embed: musiclengtherror}).catch(console.error);
 
@@ -57,7 +57,7 @@ voiceChannel.join()
     .setDescription(message.author.username)
     .addField(`${ytgoogleData.q}`,'_')
     .setAuthor(message.author.username ,message.author.avatarURL)
-    .setFooter(embedfooter)
+    // removed 
   if(modlog) return modlog.send({embed: playmlembed}).catch(console.error);
 });
 });

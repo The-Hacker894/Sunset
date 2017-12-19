@@ -1,7 +1,7 @@
 const RichEmbed = require("discord.js").RichEmbed;
 const Discord = require("discord.js");
 const moment = require("moment")
-const embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
+var embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
 const momentdate = moment().format('MMMM Do YYYY')
 const momentday = moment().format('dddd')
 module.exports.run = (client, message, args, data, game, announcement) => {
@@ -15,7 +15,7 @@ var setstatusmlerrembed = new Discord.RichEmbed()
   .setColor(data.embedcolor)
   .setTitle('Set Status Command Used by Non-Owner')
   .setDescription(message.author.username)
-  .setFooter(embedfooter)
+  // removed 
   .setAuthor(message.author.username ,message.author.avatarURL)
     if (message.author.id !== data.ownerid) return message.channel.send(`**Owner Only Command**`).catch(console.error);
 const status = message.content.split(' ').slice(1).join(' ')
@@ -24,26 +24,26 @@ const status = message.content.split(' ').slice(1).join(' ')
     .setTitle('Set Status Help')
     .setDescription('You must set the status to `dnd` `online` `idle` or `invisible`')
     .addField(data.prefix + 'setstatus <status>','<status> = `dnd` `online` `idle` or `invisible`')
-    .setFooter(embedfooter)
+    // removed 
   var statustoolongembed = new Discord.RichEmbed()
     .setColor(data.embedcolor)
     .setTitle('Set Status Help')
     .setDescription('You must set the status to `dnd` `online` `idle` or `invisible`')
     .addField(data.prefix + 'setstatus <status>','<status> = `dnd` `online` `idle` or `invisible`')
-    .setFooter(embedfooter)
+    // removed 
   var setstatusmlembed = new Discord.RichEmbed()
     .setColor(data.embedcolor)
     .setTitle('Set Status Command Used by Owner')
     .setDescription(message.author.username)
     .addField(status, '_')
     .setAuthor(message.author.username ,message.author.avatarURL)
-    .setFooter(embedfooter)
+    // removed 
 var statussuccessembed = new Discord.RichEmbed()
   .setColor(data.embedcolor)
   .setTitle('Status Successfully Changed')
   .setDescription('**Status:** ' + status)
   .setAuthor(message.author.username ,message.author.avatarURL)
-  .setFooter(embedfooter)
+  // removed 
   client.user.setStatus(status)
   message.channel.send({embed: statussuccessembed})
   if(modlog) return modlog.send({embed: setstatusmlembed}).catch(console.error);

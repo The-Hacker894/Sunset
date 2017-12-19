@@ -1,7 +1,7 @@
 const RichEmbed = require("discord.js").RichEmbed;
 const Discord = require("discord.js");
 const moment = require("moment")
-const embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
+var embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
 const momentdate = moment().format('MMMM Do YYYY')
 const momentday = moment().format('dddd')
 module.exports.run = (client, message, args, data, game, announcement) => {
@@ -15,19 +15,19 @@ var wronguserembed = new Discord.RichEmbed()
   .setColor(data.embedcolor)
   .setTitle('**Owner Only Command**')
   .setDescription('*This command is exclusive to the owner of this bot*')
-  .setFooter(embedfooter)
+  // removed 
 var jsexecmlerrembed = new Discord.RichEmbed()
   .setColor(data.embedcolor)
   .setTitle('JSExec Command Used by Non-Owner')
   .setDescription(message.author.username)
-  .setFooter(embedfooter)
+  // removed 
 
 var jsexecmlembed = new Discord.RichEmbed()
   .setColor(data.embedcolor)
   .setTitle('JSExec Command Used by Owner')
   .setDescription(message.author.username)
   .setAuthor(message.author.username ,message.author.avatarURL)
-  .setFooter(embedfooter)
+  // removed 
 
 
 if (message.author.id !== data.ownerid) {
@@ -43,7 +43,7 @@ var noevalembed = new Discord.RichEmbed()
   .setTitle('JS Exec Usage')
   .setDescription("Please provide something to evaluate")
   .addField(data.prefix + 'jsexec <evaluation>','<evaluation> = Something to evaluate.')
-  .setFooter(embedfooter)
+  // removed 
 
 
 if (something2execute.length < 1) return message.channel.send({embed: noevalembed}).catch(console.error);
@@ -56,7 +56,7 @@ var jsembed = new Discord.RichEmbed()
  .addField(something2execute, '↓')
 .addField(':outbox_tray:','**Output**')
 .addField(execute, '∎')
-.setFooter(embedfooter)
+// removed 
     message.channel.send({embed: jsembed}).catch(console.error);
     if(modlog) return modlog.send({embed: jsexecmlembed}).catch(console.error);
 }

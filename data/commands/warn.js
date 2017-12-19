@@ -1,7 +1,7 @@
 const RichEmbed = require("discord.js").RichEmbed;
 const Discord = require("discord.js");
 const moment = require("moment")
-const embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
+var embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
 const momentdate = moment().format('MMMM Do YYYY')
 const momentday = moment().format('dddd')
 const momenttime = moment().format('h:mm:ss a')
@@ -17,7 +17,7 @@ var warnembed = new Discord.RichEmbed()
   .setColor(data.embedcolor)
   .setDescription('You must supply a reason and a mentioned user.')
   .addField(data.prefix + 'warn <@user> <reason>','<@user> = @Mentioned User | <reason> = Reason for warn')
-  .setFooter(embedfooter)
+  // removed 
 
 
 const reason = message.content.split(/\s+/g).slice(2).join(" ");
@@ -33,14 +33,14 @@ const usertowarn = message.guild.member(message.mentions.users.first());
   .addField('User:', usertowarn)
   .addField('Moderator', message.author.username)
   .addField('Reason', reason)
-  .setFooter(embedfooter)
+  // removed 
   message.channel.send({embed: permerrorembed}).catch(console.error);
   var warnmlembed = new Discord.RichEmbed()
     .setColor(data.embedcolor)
     .setTitle('Warn Command Used')
     .setDescription(message.author.username)
     .setAuthor(message.author.username ,message.author.avatarURL)
-    .setFooter(embedfooter)
+    // removed 
     .addField(usertowarn, reason)
   if(modlog) return modlog.send({embed: warnmlembed}).catch(console.error);
 

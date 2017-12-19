@@ -1,7 +1,7 @@
 const RichEmbed = require("discord.js").RichEmbed;
 const Discord = require("discord.js");
 const moment = require("moment")
-const embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
+var embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
 const momentdate = moment().format('MMMM Do YYYY')
 const momentday = moment().format('dddd')
 const momenttime = moment().format('h:mm:ss a')
@@ -22,7 +22,7 @@ module.exports.run = (client, message, args, data, game, announcement) => {
     .setTitle('YouTube Search Help')
     .setDescription('You must provide something to search for')
     .addField(data.prefix + 'youtube <search>','<search> = Something to search on Youtube')
-    .setFooter(embedfooter)
+    // removed 
 
   const ytsimplegooglesearch = message.content.split(' ').slice(1).join(' ')
   const ytsearch = 'www.youtube.com/watch?=' + message.content.split(' ').slice(1).join(' ')
@@ -34,30 +34,46 @@ module.exports.run = (client, message, args, data, game, announcement) => {
 
     var youtubegoogleData = $('.r').first().find('a').first().attr('href');
     youtubegoogleData = querystring.parse(youtubegoogleData.replace('/url?', ''));
+    var modlog = message.guild.channels.find('name', 'mod-log');
 
    var youtubegoogleresulterrorembed = new Discord.RichEmbed()
       .setColor(data.embedcolor)
       .setTitle('Sorry, but an error occured while processing your request.')
       .setDescription('Please try rewording your search')
       .addField(data.prefix + 'youtube <search>','<search> = Youtube Search Request')
-      .setFooter(embedfooter)
+      // removed 
     var youtuberesultembed = new Discord.RichEmbed()
       .setColor(data.embedcolor)
      .setTitle('Here\'s what I found for')
     .setDescription(ytsimplegooglesearch + '\n \n ' + youtubegoogleData.q)
       .setThumbnail('https://i.imgur.com/mr5RWW8.jpg')
       .setFooter('Youtube Search Result at ' + embedfooter)
-    message.channel.send({embed: youtuberesultembed}).catch(console.error);
-    console.log(message.guild.name + " | " + message.author.username + ' | ' + ytsearch + ' | ' + `${youtubegoogleData.q}`)
-    var youtubemlembed = new Discord.RichEmbed()
+      var youtubemlembed = new Discord.RichEmbed()
       .setColor(data.embedcolor)
       .setTitle('YouTube Command Used')
       .setDescription(message.author.username + '\n \n ' + youtubegoogleData.q)
       .setAuthor(message.author.username ,message.author.avatarURL)
-      .setFooter(embedfooter)
+      var nsfwtermerrorembed = new Discord.RichEmbed()
+        .setColor(data.embedcolor)
+        .setTitle('NSFW Term Error')
+        .setDescription('NSFW Term used in Non-NSFW Channel')
+      var nsfwterms = ['porn', 'hentai', 'pron', 'ass', 'fuck', 'piss', 'penis', 'vagina']
+      var ytcheck = youtubegoogleData.q
+      if(message.channel.nsfw) {
+        message.channel.send({embed: youtuberesultembed}).catch(console.error);
+        if(modlog) return modlog.send({embed: youtubemlembed}).catch(console.error);
+      } else {
+        if(nsfwterms.some(terms => ytcheck.includes(terms))) {
+          message.channel.send({embed: nsfwtermerrorembed})
+          if(modlog) return modlog.send({embed: nsfwtermerrorembed})
+        }else {
+          message.channel.send({embed: youtuberesultembed}).catch(console.error);
+          if(modlog) return modlog.send({embed: youtubemlembed}).catch(console.error);
+        }
+      }
       message.channel.stopTyping()
-    var modlog = message.guild.channels.find('name', 'mod-log');
-    if(modlog) return modlog.send({embed: youtubemlembed}).catch(console.error);
+    
+    
 });
 }
 module.exports.help = {

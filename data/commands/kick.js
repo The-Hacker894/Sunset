@@ -1,7 +1,7 @@
 const RichEmbed = require("discord.js").RichEmbed;
 const Discord = require("discord.js");
 const moment = require("moment")
-const embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
+var embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
 const momentdate = moment().format('MMMM Do YYYY')
 const momentday = moment().format('dddd')
 module.exports.run = (client, message, args, data, game, announcement) => {
@@ -18,7 +18,7 @@ var embedkreturn = new Discord.RichEmbed()
   .setColor(data.embedcolor)
   .setDescription('You need to provide a member to kick and a reason for the kick')
   .addField(data.prefix + 'kick <@user> <reason>','<@user> = Mentioned User | <reason> = Reason for Kick')
-  .setFooter(embedfooter)
+  // removed 
 var embedkpermreturn = new Discord.RichEmbed()
 .setColor(data.embedcolor)
 .setTitle('Kick Usage')
@@ -30,7 +30,7 @@ var embedbotkpermreturn = new Discord.RichEmbed()
 .setTitle('Kick Usage')
 .setDescription('This command will only work if I have the permission `KICK_MEMBERS`')
 .addField(data.prefix + 'kick <@user> <reason>','<@user> = Mentioned User | <reason> = Reason for Kick')
-.setFooter(embedfooter)
+// removed 
 
   if (!message.member.hasPermission('KICK_MEMBERS')) return message.channel.send({embed: embedkpermreturn}).catch(console.error);
   if(!message.guild.me.hasPermission('KICK_MEMBERS')) return message.channel.send({embed: embedbotkpermreturn}).catch(console.error);
@@ -45,7 +45,7 @@ var embedbotkpermreturn = new Discord.RichEmbed()
     .setTitle('Kick Usage Error')
     .setDescription('I cannot kick myself :joy:')
     .addField(data.prefix + 'kick <@user> <reason>','<@user> = Mentioned User | <reason> = Reason for kick')
-    .setFooter(embedfooter)
+    // removed 
 
 
     if(kickreason.length < 1) return message.channel.send({embed: newembed}).catch(console.error);
@@ -58,7 +58,7 @@ var embedbotkpermreturn = new Discord.RichEmbed()
     .setColor(data.embedcolor)
     .setDescription('**A user has been Kicked** \n \n **User:** ' + kickMember + '\n **Moderator:** ' + message.author.username + ' \n **Reason:** ' + kickreason + ' \n **Server:** ' + message.guild.name)
     .setAuthor(message.author.username ,message.author.avatarURL)
-    .setFooter(embedfooter)
+    // removed 
     message.channel.send({embed: embedaction}).catch(console.error);
         message.delete()
         message.guild.member(kickMember).kick(kickreason);
@@ -67,7 +67,7 @@ var embedbotkpermreturn = new Discord.RichEmbed()
             .setColor(data.embedcolor)
             .setDescription('**A user has been Kicked** \n \n **User:** ' + kickMember + '\n **Moderator:** ' + message.author.username + ' \n **Reason:** ' + kickreason + ' \n **Server:** ' + message.guild.name)
             .setAuthor(message.author.username ,message.author.avatarURL)
-            .setFooter(embedfooter)
+            // removed 
           if(modlog) {
             modlog.send({embed: kickmlembed}).catch(console.error);
           }

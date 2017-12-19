@@ -1,7 +1,7 @@
 const RichEmbed = require("discord.js").RichEmbed;
 const Discord = require("discord.js");
 const moment = require("moment")
-const embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
+var embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
 const momentdate = moment().format('MMMM Do YYYY')
 const momentday = moment().format('dddd')
 function botrock() {
@@ -28,19 +28,19 @@ var rpsmlembed = new Discord.RichEmbed()
   .setTitle('RPS Command Used')
   .setDescription(message.author.username)
   .setAuthor(message.author.username ,message.author.avatarURL)
-  .setFooter(embedfooter)
+  // removed 
 var rpsmlargembed = new Discord.RichEmbed()
   .setColor(data.embedcolor)
   .setTitle('RPS Command Used *(' + rpsitem + ')*')
   .setDescription(message.author.username)
   .setAuthor(message.author.username ,message.author.avatarURL)
-  .setFooter(embedfooter)
+  // removed 
 var rpsitemlengtherrorembed = new Discord.RichEmbed()
   .setTitle('RPS Usage')
   .setColor(data.embedcolor)
   .setDescription('Please provide an item to *through*')
   .addField(data.prefix + 'rps <rock|paper|scissors>','<rock|paper|scissors> = Rock, Paper, or Scissors')
-  .setFooter(embedfooter)
+  // removed 
 
 const rpsitem = message.content.split(' ').slice(1).join(' ')
   if(rpsitem === "rock") return message.channel.send('I choose...').then(sent => {sent.edit(botrock())})

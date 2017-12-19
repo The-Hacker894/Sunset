@@ -1,7 +1,7 @@
 const RichEmbed = require("discord.js").RichEmbed;
 const Discord = require("discord.js");
 const moment = require("moment")
-const embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
+var embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
 const momentdate = moment().format('MMMM Do YYYY')
 const momentday = moment().format('dddd')
 module.exports.run = (client, message, args, data, game, announcement) => {
@@ -15,7 +15,7 @@ var github_project_linkembed = new Discord.RichEmbed()
   .setColor(data.embedcolor)
   .setTitle('Suggestion Command Error')
   .setDescription('You must edit the `data.json` file and put your github project link in the section titled `github_project_link`')
-  .setFooter(embedfooter)
+  // removed 
 
 if(data.github_project_link.length < 1) return message.channel.send({embed: github_project_linkembed}).catch(console.error);
     message.channel.send('If you would like to submit an issue or PR visit the link below.')
@@ -25,7 +25,7 @@ if(data.github_project_link.length < 1) return message.channel.send({embed: gith
       .setTitle('Suggestion Command Used')
       .setDescription(message.author.username)
       .setAuthor(message.author.username ,message.author.avatarURL)
-      .setFooter(embedfooter)
+      // removed 
       if(modlog) return modlog.send({embed: suggestionmlembed}).catch(console.error);
     }
     module.exports.help = {

@@ -1,7 +1,7 @@
 const RichEmbed = require("discord.js").RichEmbed;
 const Discord = require("discord.js");
 const moment = require("moment")
-const embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
+var embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
 const momentdate = moment().format('MMMM Do YYYY')
 const momentday = moment().format('dddd')
 const momenttime = moment().format('h:mm:ss a')
@@ -17,13 +17,13 @@ var permerrorubembed = new Discord.RichEmbed()
   .setTitle('Unban Usage')
   .setDescription("You must have the permission `BAN_MEMBERS`")
   .addField(data.prefix + 'unban <userid> <reason>','<userid> = User\'s Guild ID | <reason> = Reason for Unban')
-  .setFooter(embedfooter)
+  // removed 
 var botpermerrorubembed = new Discord.RichEmbed()
   .setColor(data.embedcolor)
   .setTitle("Unban Usage")
   .setDescription("I must have the permission `BAN_MEMBERS`")
   .addField(data.prefix + 'unban <userid> <reason>','<userid> = User\'s Guild ID | <reason> = Reason for Unban')
-  .setFooter(embedfooter)
+  // removed 
 
   if(!message.member.hasPermission('BAN_MEMBERS')) return message.channel.send({embed: permerrorubembed}).catch(console.error);
   if(!message.guild.me.hasPermission('BAN_MEMBERS')) return message.channel.send({embed: botpermerrorubembed}).catch(console.error);
@@ -32,7 +32,7 @@ var botpermerrorubembed = new Discord.RichEmbed()
     .setTitle('Unban Usage')
     .setDescription('You must provide a reason for the UnBan')
       .addField(data.prefix + 'unban <userid> <reason>','<userid> = User\'s Guild ID | <reason> = Reason for Unban')
-    .setFooter(embedfooter)
+    // removed 
 
 const unbanMember = message.mentions.users.first();
 const unbanreason = message.content.split(/\s+/g).slice(1, 2).join(" ");
@@ -47,7 +47,7 @@ message.guild.unban(unbanreason);
       .setDescription(message.author.username)
       .addField(unbanMember, unbanreason)
       .setAuthor(message.author.username ,message.author.avatarURL)
-      .setFooter(embedfooter)
+      // removed 
       if(modlog) {
         modlog.send({embed: unbanmlembed}).catch(console.error);
       }

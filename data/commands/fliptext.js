@@ -1,7 +1,7 @@
 const RichEmbed = require("discord.js").RichEmbed;
 const Discord = require("discord.js");
 const moment = require("moment")
-const embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
+var embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
 const momentdate = moment().format('MMMM Do YYYY')
 const momentday = moment().format('dddd')
 const webdict = require('webdict');
@@ -25,7 +25,7 @@ module.exports.run = (client, message, args, data, game, announcement) => {
     .setTitle('Fliptext Command Used')
     .setDescription(message.author.username)
     .setAuthor(message.author.username ,message.author.avatarURL)
-    .setFooter(embedfooter)
+    // removed 
     if(modlog) return modlog.send({embed: fliptextmlembed}).catch(console.error);
 }
 module.exports.help = {

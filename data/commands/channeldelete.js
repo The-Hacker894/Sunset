@@ -1,7 +1,7 @@
 const RichEmbed = require("discord.js").RichEmbed;
 const Discord = require("discord.js");
 const moment = require("moment")
-const embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
+var embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
 module.exports.run = (client, message, args, data, game, announcement) => {
   var commandlock = data.lock
   if(commandlock.includes('true')) {       
@@ -15,13 +15,13 @@ var embedcdpermreturn = new Discord.RichEmbed()
   .setTitle('Channel Delete Usage')
   .setDescription('You must have the permission `MANAGAE_CHANNELS`')
   .addField(data.prefix + 'channeldelete <reason>','<reason> = Reason for Channel Deletion')
-  .setFooter(embedfooter)
+  // removed 
 var embedbotcdpermreturn = new Discord.RichEmbed()
   .setColor(data.embedcolor)
   .setTitle('Channel Delete Usage')
   .setDescription('I must have the permission `MANAGE_CHANNELS`')
   .addField(data.prefix + 'channeldelete <reason>','<reason> = Reason for Channel Deletion')
-  .setFooter(embedfooter)
+  // removed 
 var chnldelrsnerrorembed = new Discord.RichEmbed()
   .setColor(data.embedcolor)
   .setTitle('Channel Delete Usage')
@@ -40,7 +40,7 @@ var chnldelrsnerrorembed = new Discord.RichEmbed()
       .setTitle('Channel Delete Command Used')
       .setDescription(message.author.username + '\n \n **Reason:** ' + channeldelreason)
       .setAuthor(message.author.username ,message.author.avatarURL)
-      .setFooter(embedfooter)
+      // removed 
     if(modlog) return modlog.send({embed: channeldelmlembed}).catch(console.error);
   }
   module.exports.help = {

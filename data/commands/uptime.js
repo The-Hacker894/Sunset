@@ -1,7 +1,7 @@
 const RichEmbed = require("discord.js").RichEmbed;
 const Discord = require("discord.js");
 const moment = require("moment")
-const embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
+var embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
 const momentdate = moment().format('MMMM Do YYYY')
 const momentday = moment().format('dddd')
 const momenttime = moment().format('h:mm:ss a')
@@ -17,13 +17,13 @@ module.exports.run = (client, message, args, data, game, announcement) => {
   .setColor(data.embedcolor)
   .setTitle(data.name + ' Uptime')
   .setDescription('Uptime: ' + prettyMs(client.uptime, {verbose: true}))
-  .setFooter(embedfooter)
+  // removed 
   var uptimemlembed = new Discord.RichEmbed()
   .setColor(data.embedcolor)
   .setTitle('Uptime Command Used')
   .setDescription(message.author.username)
   .setAuthor(message.author.username ,message.author.avatarURL)
-  .setFooter(embedfooter)
+  // removed 
   message.channel.send({embed: uptimeembed})
   if(modlog) return modlog.send(uptimemlembed)
 }

@@ -1,7 +1,7 @@
 const RichEmbed = require("discord.js").RichEmbed;
 const Discord = require("discord.js");
 const moment = require("moment")
-const embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
+var embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
 const momentdate = moment().format('MMMM Do YYYY')
 const momentday = moment().format('dddd')
 const momenttime = moment().format('h:mm:ss a')
@@ -19,14 +19,14 @@ var whoisuserprofilelengthtooshortembed = new Discord.RichEmbed()
   .setTitle('Profile Help')
   .setDescription('You must provide a mentioned user')
   .addField(data.prefix + 'whois <@user>','<@user> =  Mentioned User')
-  .setFooter(embedfooter)
+  // removed 
 
   var whoismlembed = new Discord.RichEmbed()
     .setColor(data.embedcolor)
     .setTitle('Who Is Command Used')
     .setDescription(message.author.username)
     .setAuthor(message.author.username ,message.author.avatarURL)
-    .setFooter(embedfooter)
+    // removed 
 
 if(whoisuserprofile.length < 1) return message.channel.send({embed: whoisuserprofilelengthtooshortembed})
 var whoisprofileembed = new Discord.RichEmbed()
@@ -39,7 +39,7 @@ var whoisprofileembed = new Discord.RichEmbed()
   .addField('Joined Timestamp', message.guild.member(message.mentions.users.first()).joinedTimestamp, true)
   .addField('Status', message.guild.member(message.mentions.members.first()).presence.status, true)
   .setThumbnail(message.mentions.users.first().displayAvatarURL)
-  .setFooter(embedfooter)
+  // removed 
   message.channel.send({embed: whoisprofileembed}).catch(console.error);
   if(modlog) return modlog.send({embed: whoismlembed}).catch(console.error);
 }

@@ -1,7 +1,7 @@
 const RichEmbed = require("discord.js").RichEmbed;
 const Discord = require("discord.js");
 const moment = require("moment")
-const embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
+var embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
 const momentdate = moment().format('MMMM Do YYYY')
 const momentday = moment().format('dddd')
 module.exports.run = (client, message, args, data, game, announcement) => {
@@ -16,7 +16,7 @@ var sayttsembed = new Discord.RichEmbed()
 .setTitle('SayTTS Usage')
 .setDescription('You must provide a message to say using TTS')
 .addField(data.prefix + 'saytts <messagetts>',':x')
-.setFooter(embedfooter)
+// removed 
 
 const message2saytts = message.content.split(' ').slice(1).join(' ')
 if(message2saytts < 1) return message.channel.send({embed: sayttsembed}).catch(console.error);
@@ -30,7 +30,7 @@ var sayttsmlembed = new Discord.RichEmbed()
   .setDescription(message.author.username)
   .addField(message2saytts, '_')
   .setAuthor(message.author.username ,message.author.avatarURL)
-  .setFooter(embedfooter)
+  // removed 
   if(modlog) return modlog.send({embed: sayttsmlembed}).catch(console.error);
 }
 module.exports.help = {

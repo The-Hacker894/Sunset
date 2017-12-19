@@ -1,7 +1,7 @@
 const RichEmbed = require("discord.js").RichEmbed;
 const Discord = require("discord.js");
 const moment = require("moment")
-const embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
+var embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
 const momentdate = moment().format('MMMM Do YYYY')
 const momentday = moment().format('dddd')
 const fs = require("fs")
@@ -19,18 +19,18 @@ var setgamemlerrembed = new Discord.RichEmbed()
   .setColor(data.embedcolor)
   .setTitle('Set Game Command Used by Non-Owner')
   .setDescription(message.author.username)
-  .setFooter(embedfooter)
+  // removed 
 var gameembed = new Discord.RichEmbed()
   .setColor(data.embedcolor)
   .setDescription('You must provide a status *or game* for ' + data.name)
   .addField(data.prefix + 'setgame <game>','<game> = Can be anything really')
-  .setFooter(embedfooter)
+  // removed 
   var setgamemlembed = new Discord.RichEmbed()
     .setColor(data.embedcolor)
     .setTitle('Set Game Command Used by Owner')
     .setDescription(game.game + ' | ' + data.prefix + 'help')
     .setAuthor(message.author.username ,message.author.avatarURL)
-    .setFooter(embedfooter)
+    // removed 
 if(playgame.length < 1) return message.channel.send({embed: gameembed}).catch(console.error);
 
 game.game = playgame

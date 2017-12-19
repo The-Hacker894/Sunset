@@ -1,7 +1,7 @@
 const RichEmbed = require("discord.js").RichEmbed;
 const Discord = require("discord.js");
 const moment = require("moment")
-const embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
+var embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
 const momentdate = moment().format('MMMM Do YYYY')
 const momentday = moment().format('dddd')
 module.exports.run = (client, message, args, data) => {
@@ -55,7 +55,7 @@ module.exports.run = (client, message, args, data) => {
         .setAuthor(message.author.username, message.author.displayAvatarURL)
     
     if(!setting) {
-        if(message.channel.topic.length < 1) {
+        if(!message.channel.topic) {
             if(modlog) {
                 modlog.send({embed: channelsettingmlNoTopic})
                 return message.channel.send({embed: channelsettingsNoTopic})
@@ -65,7 +65,7 @@ module.exports.run = (client, message, args, data) => {
             }
             
         }
-        if(message.channel.topic.length === 'null') {
+        if(message.channel.topic === 'null') {
             if(modlog) {
                 modlog.send({embed: channelsettingmlNoTopic})
                 return message.channel.send({embed: channelsettingsNoTopic})

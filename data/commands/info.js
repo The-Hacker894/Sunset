@@ -4,7 +4,7 @@ const RichEmbed = require("discord.js").RichEmbed;
 const Attachment = require("discord.js").Attachment;
 const Discord = require("discord.js");
 const moment = require("moment")
-const embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
+var embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
 const momentdate = moment().format('MMMM Do YYYY')
 const momentday = moment().format('dddd')
 module.exports.run = (client, message, args, data, game, announcement) => {
@@ -14,10 +14,12 @@ module.exports.run = (client, message, args, data, game, announcement) => {
   } 
   const modlog = message.guild.channels.find('name', 'mod-log');
   const announcements = message.guild.channels.find('name', 'announcements')
-const total = 0;
+let total = 0;
+client.guilds.map(g => total += g.memberCount)
   pusage.stat(process.pid, function (err, stat) {
     const cpuusage = parseFloat(Math.round(stat.cpu * 100) / 100).toFixed(2)
     const memusage = parseFloat(Math.round(stat.memory / 1000000 * 100) / 100).toFixed(2)
+    
 var infosembed = new Discord.RichEmbed()
     .setColor(data.embedcolor)
     .setTitle(data.name + ' Info')
@@ -30,16 +32,16 @@ var infosembed = new Discord.RichEmbed()
     .addField('Uptime', prettyMs(client.uptime, {verbose: true}), true)
     .addField('CPU Usage', cpuusage + '%', true)
     .addField('Memory Usage', memusage + 'MB', true)
-    .addField('Invite', '[Sunset Invite](https://discordapp.com/oauth2/authorize?client_id=' + data.bot_client_id + '&scope=bot&permissions=' + data.bot_permissions + ')', true)
-    .addField('Website', '[Sunset Website](https://skydevpage.weebly.com/sunset.html)',true)
+    .addField('Total Members', total, true )
+    .addField('Sunset Invite', '[Sunset Invite](https://discordapp.com/oauth2/authorize?client_id=' + data.bot_client_id + '&scope=bot&permissions=' + data.bot_permissions + ')', true)
+    .addField('Sunset Lite Invite', '[Sunset Lite Invite](https://discordapp.com/oauth2/authorize?client_id=391606660214292482&scope=bot&permissions=' + data.bot_permissions + ')', true)
+    .addField('Website', '[Sunset Website](https://hackerhubsite.weebly.com/sunset.html)',true)
     .addField('Server Count', client.guilds.size, true)
-      .addField('Helpers', '@Google Drive#0831, @Bloxxer_DTC#1958, The Discord.js Discord Server', true)
-    .addField('Testers', '@Corbs#9620, @Oganesson#8844, @Google Drive#0831, @Shadow The  |「Dimensions™」#5869, @Jackalope#6413, @XomberLight#3502', true)
     .addField('Version', data.newversion, true)
     .setThumbnail(client.user.displayAvatarURL)
-    .setImage('https://i.imgur.com/ZfQo3rY.gif')
+    //.setImage('https://i.imgur.com/ZfQo3rY.gif')
     .setAuthor(client.user.username, client.user.displayAvatarURL)
-    .setFooter(embedfooter)
+    // removed 
 
 
     message.channel.send({embed: infosembed}).then( () => {
@@ -50,7 +52,7 @@ var infosembed = new Discord.RichEmbed()
       .setTitle('Info Command Used')
       .setDescription(message.author.username)
       .setAuthor(message.author.username ,message.author.avatarURL)
-      .setFooter(embedfooter)
+      // removed 
 if(modlog) return modlog.send({embed: infosmlembed}).catch(console.error);
 });
 }

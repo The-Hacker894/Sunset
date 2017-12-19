@@ -1,7 +1,7 @@
 const RichEmbed = require("discord.js").RichEmbed;
 const Discord = require("discord.js");
 const moment = require("moment")
-const embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
+var embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
 const momentdate = moment().format('MMMM Do YYYY')
 const momentday = moment().format('dddd')
 module.exports.run = (client, message, args, data, game, announcement) => {
@@ -16,13 +16,13 @@ var permembed = new Discord.RichEmbed()
   .setTitle('Purge Usage')
   .setDescription('You must have the permission `MANAGE_MESSAGES`')
   .addField(data.prefix + 'purge <amount>','<amount> = Messages to purge')
-  .setFooter(embedfooter)
+  // removed 
 var permbotembed = new Discord.RichEmbed()
   .setColor(data.embedcolor)
   .setTitle('Purge Usage')
   .setDescription('I have have the permission `MANAGE_MESSAGES`')
   .addField(data.prefix + 'purge <amount>','<amount> = Messages to purge')
-  .setFooter(embedfooter)
+  // removed 
 
   if (!message.member.hasPermission('MANAGE_MESSAGES')) return message.channel.send({embed: permembed})
   if (!message.guild.me.hasPermission("MANAGE_MESSAGES")) return message.channel.send({embed: permbotembed})
@@ -31,19 +31,19 @@ var permbotembed = new Discord.RichEmbed()
     .setColor(data.embedcolor)
     .setDescription('You must provide a number of message to purge; 2 - 200')
     .addField(data.prefix + 'purge <amount>','<amount> = Messages to purge')
-    .setFooter(embedfooter)
+    // removed 
 
   var lengthtoobig = new Discord.RichEmbed()
     .setColor(data.embedcolor)
     .setDescription('The amount of messages to purge cannot be greater than 200')
     .addField(data.prefix + 'purge <amount>','<amount> = Messages to purge (cannot be greater than 200)')
-    .setFooter(embedfooter)
+    // removed 
 
   var purgetoosmall = new Discord.RichEmbed()
     .setColor(data.embedcolor)
     .setDescription('The amount of messages to purge can be as small as 2 but larger than 200')
     .addField(data.prefix + 'purge <amount>','<amount> = Messages to purge (2 - 200)')
-    .setFooter(embedfooter)
+    // removed 
 
 var purgearg = message.content.split(' ').slice(1).join(' ')
 var roundedpurgearg = Math.round(purgearg / 2)
@@ -63,7 +63,7 @@ var roundedpurgearg = Math.round(purgearg / 2)
     .setDescription(message.author.username)
     .addField(roundedpurgearg, '_')
     .setAuthor(message.author.username ,message.author.avatarURL)
-    .setFooter(embedfooter)
+    // removed 
   if(modlog) return modlog.send({embed: purgemlembed})
 }
 module.exports.help  = {

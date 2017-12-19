@@ -1,7 +1,7 @@
 const RichEmbed = require("discord.js").RichEmbed;
 const Discord = require("discord.js");
 const moment = require("moment")
-const embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
+var embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
 const momentdate = moment().format('MMMM Do YYYY')
 const momentday = moment().format('dddd')
 module.exports.run = (client, message, args, data) => {
@@ -29,14 +29,14 @@ var mcembed = new Discord.RichEmbed()
 .addField('Do Not Disturb Member Count', '`' + dndmembers + '` / ' + '`' + members + '` [`' + Math.round(dndmembervsmember *100) + '%`]',true )
 .addField('Offline Member Count', '`' + offlinemembers + '` / `' + members + '` [`' + Math.round(offlinemembervsmember *100) + '%`]', true)
 // thanks to Felix for this
-.setFooter(embedfooter)
+// removed 
 message.channel.send({embed: mcembed}).catch(console.error);
 var mcmlembed = new Discord.RichEmbed()
   .setColor(data.embedcolor)
   .setTitle('Member Count Command Used')
   .setDescription(message.author.username)
   .setAuthor(message.author.username ,message.author.avatarURL)
-  .setFooter(embedfooter)
+  // removed 
 if(modlog) return modlog.send({embed: mcmlembed}).catch(console.error);
 }
 module.exports.help = {

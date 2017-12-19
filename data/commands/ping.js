@@ -1,7 +1,7 @@
 const RichEmbed = require("discord.js").RichEmbed;
 const Discord = require("discord.js");
 const moment = require("moment")
-const embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
+var embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
 const momentdate = moment().format('MMMM Do YYYY')
 const momentday = moment().format('dddd')
 module.exports.run = (client, message, args, data) => {
@@ -15,7 +15,7 @@ module.exports.run = (client, message, args, data) => {
         .setColor(data.embedcolor)
         .setTitle('Ping Command used')
         .setAuthor(message.author.username ,message.author.avatarURL)
-        .setFooter(embedfooter)
+        // removed 
       message.channel.send('Pinging...').then(sent => {
         sent.edit(`Pong! Took ${sent.createdTimestamp - message.createdTimestamp}ms`)
         message.delete()

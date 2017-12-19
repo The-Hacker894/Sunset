@@ -1,9 +1,8 @@
-import { settings } from "cluster";
 
 const RichEmbed = require("discord.js").RichEmbed;
 const Discord = require("discord.js");
 const moment = require("moment")
-const embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
+var embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
 const momentdate = moment().format('MMMM Do YYYY')
 const momentday = moment().format('dddd')
 const ms = require('ms')
@@ -61,7 +60,7 @@ module.exports.run = (client, message, args, data, game, announcement) => {
         .addField('Status', '```' + client.user.presence.status + '```')
     if(!setting) {
         if(modlog) {
-            modlog.send({embed: settings})
+            modlog.send({embed: settingembed})
             return message.channel.send({embed: setembed})
         }
         if(!modlog) {
@@ -74,7 +73,7 @@ module.exports.run = (client, message, args, data, game, announcement) => {
         announcement.announce = option;
       
       fs.writeFileSync("./data/brain/announcement.json", JSON.stringify(announcement), (err) => console.error);
-      message.channel.send('Set announcement to `' + option + '`')]
+      message.channel.send('Set announcement to `' + option + '`')
       if(modlog) return modlog.send({embed: settingannouncement})
     }
     if(setting.includes('color')) {

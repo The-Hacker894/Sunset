@@ -1,7 +1,7 @@
 const RichEmbed = require("discord.js").RichEmbed;
 const Discord = require("discord.js");
 const moment = require("moment")
-const embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
+var embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
 const momentdate = moment().format('MMMM Do YYYY')
 const momentday = moment().format('dddd')
 function rollyodice() {
@@ -22,7 +22,7 @@ var rollmlembed = new Discord.RichEmbed()
   .setDescription(message.author.username)
   .addField(rollyodice(), '_')
   .setAuthor(message.author.username ,message.author.avatarURL)
-  .setFooter(embedfooter)
+  // removed 
 message.channel.send(':game_die: **|** ' + rollyodice())
 if(modlog) return modlog.send({embed: rollmlembed})
 }

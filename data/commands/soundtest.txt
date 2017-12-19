@@ -1,7 +1,7 @@
 const RichEmbed = require("discord.js").RichEmbed;
 const Discord = require("discord.js");
 const moment = require("moment")
-const embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
+var embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
 const momentdate = moment().format('MMMM Do YYYY')
 const momentday = moment().format('dddd')
 module.exports.run = (client, message, args, data, game, announcement) => {
@@ -22,7 +22,7 @@ var soundtestmlembed = new Discord.RichEmbed()
   .setColor(data.embedcolor)
   .setTitle('Sound Test Command Used')
   .setDescription(message.author.username)
-  .setFooter(embedfooter)
+  // removed 
 if(modlog) return modlog.send({embed: soundtestmlembed}).catch(console.error);
 }
 module.exports.help = {

@@ -1,7 +1,7 @@
 const RichEmbed = require("discord.js").RichEmbed;
 const Discord = require("discord.js");
 const moment = require("moment")
-const embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
+var embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
 const momentdate = moment().format('MMMM Do YYYY')
 const momentday = moment().format('dddd')
 const webdict = require('webdict');
@@ -17,7 +17,7 @@ var dmhembed = new Discord.RichEmbed()
   .setColor(data.embedcolor)
   .setDescription('You must provide an error to report')
   .addField(data.prefix + 'error-report <error>','<error> = Error to report')
-  .setFooter(embedfooter)
+  // removed 
 
 if(message4hacker.length < 1) return message.channel.send({embed: dmhembed}).catch(console.error);
   message.delete()
@@ -29,7 +29,7 @@ if(message4hacker.length < 1) return message.channel.send({embed: dmhembed}).cat
     .setDescription(message.author.username)
     .addField(message4hacker, '_')
     .setAuthor(message.author.username ,message.author.avatarURL)
-    .setFooter(embedfooter)
+    // removed 
   if(modlog) return modlog.send({embed: errreprtmlembed}).catch(console.error);
 }
 module.exports.help = {

@@ -2,7 +2,7 @@ const RichEmbed = require("discord.js").RichEmbed;
 const Discord = require("discord.js");
 const boxen = require('boxen');
 const moment = require("moment")
-const embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
+var embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
 module.exports.run = (client, message, args, data, game, announcement) => {
   var commandlock = data.lock
   if(commandlock.includes('true')) {       
@@ -19,7 +19,7 @@ module.exports.run = (client, message, args, data, game, announcement) => {
     .setTitle("Announcement Command Used")
     .setDescription(announcement.announce)
     .setAuthor(message.author.username, message.author.displayAvatarURL)
-    .setFooter(embedfooter)
+    // removed 
     if(modlog) return modlog.send({embed: announcemlembed}).catch(console.error);
 }
 module.exports.help = {

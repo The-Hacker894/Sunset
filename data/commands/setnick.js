@@ -1,7 +1,7 @@
 const RichEmbed = require("discord.js").RichEmbed;
 const Discord = require("discord.js");
 const moment = require("moment")
-const embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
+var embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
 const momentdate = moment().format('MMMM Do YYYY')
 const momentday = moment().format('dddd')
 module.exports.run = (client, message, args, data, game, announcement) => {
@@ -15,12 +15,12 @@ var permerrorsnembed = new Discord.RichEmbed()
   .setColor(data.embedcolor)
   .setTitle('Set Nick Usage')
   .setDescription('You must have the permissions `CHANGE_NICKNAME` and `MANAGE_NICKNAMES`')
-  .setFooter(embedfooter)
+  // removed 
 var permboterrorsnembed = new Discord.RichEmbed()
   .setColor(data.embedcolor)
   .setTitle('Set Nick Usage')
   .setDescription('I music have the permissions `CHANGE_NICKNAME` and `MANAGE_NICKNAMES`')
-  .setFooter(embedfooter)
+  // removed 
 if(!message.member.hasPermission("CHANGE_NICKNAME")) return message.channel.send({embed: permerrorsnembed}).catch(console.error);
 if(!message.member.hasPermission("MANAGE_NICKNAMES")) return message.channel.send({embed: permerrorsnembed}).catch(console.error);
 if(!message.guild.me.hasPermission("CHANGE_NICKNAME")) return message.channel.send({embed: permboterrorsnembed}).catch(console.error);
@@ -32,13 +32,13 @@ var nickembed = new Discord.RichEmbed()
   .setColor(data.embedcolor)
   .setDescription('You must provide a nickname and a user *or bot* to set a nickname for.')
   .addField(data.prefix + 'setnick <@user> <nick>','<@user> = Mentioned user | <nick> = Nickname')
-  .setFooter(embedfooter)
+  // removed 
 var nickmlembed = new Discord.RichEmbed()
   .setTitle('Nickname Command Used')
   .setColor(data.embedcolor)
   .setDescription(message.author.username + '\n \n **User:** ' + nickuserset + '\n **Nick:** ' + usernick)
   .setAuthor(message.author.username ,message.author.avatarURL)
-  .setFooter(embedfooter)
+  // removed 
 if(nickuserset < 1) return message.channel.send({embed: nickembed}).catch(console.error);
 if(usernick < 1) return message.channel.send({embed: nickembed}).catch(console.error);
     message.guild.member(nickuserset).setNickname(usernick).catch(console.error);

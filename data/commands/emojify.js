@@ -1,7 +1,7 @@
 const RichEmbed = require("discord.js").RichEmbed;
 const Discord = require("discord.js");
 const moment = require("moment")
-const embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
+var embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
 const momentdate = moment().format('MMMM Do YYYY')
 const momentday = moment().format('dddd')
 const webdict = require('webdict');
@@ -18,14 +18,19 @@ module.exports.run = (client, message, args, data, game, announcement) => {
     .setColor(data.embedcolor)
     .setTitle("Emoji Usage Error")
     .setDescription('You must provide something to emojify')
+  var emojifyerror = new Discord.RichEmbed()
+    .setColor(data.embedcolor)
+    .setTitle('Emojify Error')
+    .setDescription('Cannot emojify ' + emsg)
   if(emsg.length < 1) return message.channel.send({embed: emojierrembed})
+  if(translate.translate(emsg) === emsg) return message.channel.send({embed: emojifyerror})
   message.channel.send(translate.translate(emsg));
   var emojimlembed = new Discord.RichEmbed()
     .setColor(data.embedcolor)
     .setTitle('Emoji Command Used')
     .setDescription(message.author.username)
     .setAuthor(message.author.username ,message.author.avatarURL)
-    .setFooter(embedfooter)
+    // removed 
     if(modlog) return modlog.send({embed: emojimlembed}).catch(console.error);
 }
 module.exports.help = {

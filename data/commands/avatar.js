@@ -1,7 +1,7 @@
 const RichEmbed = require("discord.js").RichEmbed;
 const Discord = require("discord.js");
 const moment = require("moment")
-const embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
+var embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
 module.exports.run = (client, message, args, data, game, announcement) => {
   var commandlock = data.lock
   if(commandlock.includes('true')) {       
@@ -15,19 +15,19 @@ var useravatarlengthtooshortembed = new Discord.RichEmbed()
   .setTitle('Avatar Help')
   .setDescription('You must provide a mentioned user')
   .addField(data.prefix + 'avatar <@user>','<@user> =  Mentioned User')
-  .setFooter(embedfooter)
+  // removed 
 var avatarmlembed = new Discord.RichEmbed()
   .setColor(data.embedcolor)
   .setTitle('Avatar Command Used')
   .setDescription(message.author.username)
   .setAuthor(message.author.username ,message.author.avatarURL)
-  .setFooter(embedfooter)
+  // removed 
 var avatarnomenembed = new Discord.RichEmbed()
   .setColor(data.embedcolor)
   .setTitle('Avatar of ' + message.author.username)
   .setImage(message.author.displayAvatarURL)
   .setAuthor(message.author.username ,message.author.displayAvatarURL)
-  .setFooter(embedfooter)
+  // removed 
 
 if(useravatar.length < 1) return message.channel.send({embed: avatarnomenembed})
 
@@ -36,7 +36,7 @@ if(useravatar.length < 1) return message.channel.send({embed: avatarnomenembed})
     .setTitle(' ')
     .setImage(message.mentions.users.first().displayAvatarURL)
     .setAuthor(message.author.username ,message.author.displayAvatarURL)
-    .setFooter(embedfooter)
+    // removed 
     message.channel.send({embed: avatarouembed}).catch(console.error);
 
     if(modlog) return modlog.send({embed: avatarmlembed}).catch(console.error);
