@@ -73,7 +73,7 @@ client.commands = new Discord.Collection();
    requestpn.post({
            uri: `https://discordbots.org/api/bots/${client.user.id}/stats`,
            headers: {
-               Authorization: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjM3MTA5NzIyMzk0Mjg5NzY2NSIsImJvdCI6dHJ1ZSwiaWF0IjoxNTEwOTczNTg0fQ.Buo5Ql61yXVjTObZE-o8eAVmNVYRJANX2dCyZi8EOOU`, // Insert token here
+               Authorization: ``, // Insert token here
            },
            json: true,
            body: {
@@ -141,7 +141,7 @@ client.commands = new Discord.Collection();
     requestpn.post({
             uri: `https://discordbots.org/api/bots/${client.user.id}/stats`,
             headers: {
-                Authorization: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjM3MTA5NzIyMzk0Mjg5NzY2NSIsImJvdCI6dHJ1ZSwiaWF0IjoxNTEwOTczNTg0fQ.Buo5Ql61yXVjTObZE-o8eAVmNVYRJANX2dCyZi8EOOU`, // Insert token here
+                Authorization: ``, // Insert token here
             },
             json: true,
             body: {
@@ -156,7 +156,7 @@ client.commands = new Discord.Collection();
        requestpn.post({
               uri: `https://discordbots.org/api/bots/${client.user.id}/stats`,
               headers: {
-                  Authorization: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjM3MTA5NzIyMzk0Mjg5NzY2NSIsImJvdCI6dHJ1ZSwiaWF0IjoxNTEwOTczNTg0fQ.Buo5Ql61yXVjTObZE-o8eAVmNVYRJANX2dCyZi8EOOU`, // Insert token here
+                  Authorization: ``, // Insert token here
               },
               json: true,
               body: {
