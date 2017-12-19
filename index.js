@@ -11,7 +11,7 @@ const prefix = data.prefix
 const token = data.token
 const request = require("request")
 const moment = require("moment")
-const embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
+// var  = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
 // const Attachment = require('discord.js').Attachment
 const requestpn = require('request-promise-native');
 const pusage = require('pidusage')
@@ -32,7 +32,6 @@ client.on("message", (message) => {
   const cmd = client.commands.get(command.slice(prefix.length))
   if(cmd)
     cmd.run(client, message, args, data, game, announcement, warn, warnedinfo)
-
 })
 client.on("message", (message) => {
   if(message.content.startsWith(`<@${client.user.id}>`)) {
@@ -66,7 +65,7 @@ client.commands = new Discord.Collection();
     })
   })
   client.on("ready", () => {
-    console.log('Logged on at ' + embedfooter)
+    console.log('Logged on as ' + client.user.tag)
     console.log('[Game] ' + game.game)
     console.log('[Announcement] ' + announcement.announce)
     client.user.setGame(game.game + ' | ' + data.prefix + 'help' )
@@ -94,7 +93,7 @@ client.commands = new Discord.Collection();
         .setTitle('User Banned :hammer:')
         .setDescription('The user ' + user + ' has been met with the Ban Hammer :hammer: ')
         .setAuthor(user.username ,user.avatarURL)
-        .setFooter(embedfooter)
+        
       if(modlog) {
         modlog.send({embed: newbanembed})
       }
@@ -108,7 +107,7 @@ client.commands = new Discord.Collection();
       .setColor('FFCE00')
       .setTitle('Guild Member Update')
       .setDescription(oMember + ' | ' + nMember)
-      .setFooter(embedfooter)
+      
       if(modlog) return modlog.send({embed: guildMemberUpdateembed})
   });
   client.on('guildUpdate', (oGuild, nGuild) => {
@@ -117,7 +116,7 @@ client.commands = new Discord.Collection();
       .setColor('FFCE00')
       .setTitle('Guild Updated')
       .setDescription('The Guild has been updated! \n \n **Before:** ' + oGuild + ' \n \n **After:** ' + nGuild)
-      .setFooter(embedfooter)
+      
       if(modlog) return modlog.send({embed: guildupdateembed})
   });
   client.on('guildBanRemove', (guild, user) => {
@@ -128,7 +127,7 @@ client.commands = new Discord.Collection();
       .setTitle('User Unbanned')
       .setDescription('The user ' + user + ' has been unbanned')
       .setAuthor(user.username , user.displayAvatarURL)
-      .setFooter(embedfooter)
+      
       if(modlog) {
         modlog.send({embed: newunbanembed})
       }
@@ -179,7 +178,7 @@ client.commands = new Discord.Collection();
       .setColor('FFCE00')
       .setTitle('Member Announcement')
       .setDescription('A new user has joined the server :D \nPlease welcome ' + member + '!')
-      .setFooter(embedfooter)
+      
 
       if(modlog) {
         modlog.send({embed: newuserjoinembed})
@@ -195,7 +194,7 @@ client.commands = new Discord.Collection();
         .setColor('FFCE00')
         .setTitle('Member Announcement')
         .setDescription('A user has left the server D: \nPlease say your Farewells to ' + member + '!')
-        .setFooter(embedfooter)
+        
         if(modlog) {
           modlog.send({embed: olduserjoinembed})
         }
@@ -209,7 +208,7 @@ client.commands = new Discord.Collection();
         .setColor('FFCE00')
         .setTitle('Channel Updated')
         .setDescription('**Before:** ' + oChannel + '\n **After:**' + nChannel)
-        .setFooter(embedfooter)
+        
         if(modlog) return modlog.send({embed: channelupdateeventembed})
   });
   client.on('channelPinsUpdate', (channel, time) => {
@@ -218,7 +217,7 @@ client.commands = new Discord.Collection();
         .setColor('FFCE00')
         .setTitle('Channel Pins Updated')
         .addField(channel.name, time)
-        .setFooter(embedfooter)
+        
       if(modlog) return modlog.send({embed: channelpinsupdateembed}).catch(console.error);
   });
   client.on('roleCreate', role => {
@@ -227,7 +226,7 @@ client.commands = new Discord.Collection();
       .setColor('FFCE00')
       .setTitle('Role Created')
       .setDescription(role)
-      .setFooter(embedfooter)
+      
       if(modlog) return modlog.send({embed: rolecreateembed}).catch(console.error);
   });
   client.on('roleDelete', role => {
@@ -236,7 +235,7 @@ client.commands = new Discord.Collection();
       .setColor('FFCE00')
       .setTitle('Role Deleted')
       .setDescription(role)
-      .setFooter(embedfooter)
+      
       if(modlog) return modlog.send({embed: roledeleteembed}).catch(console.error);
   });
   client.on('roleUpdate', role => {
@@ -245,16 +244,16 @@ client.commands = new Discord.Collection();
       .setColor('FFCE00')
       .setTitle('Role Updated')
       .setDescription(role)
-      .setFooter(embedfooter)
+      
       if(modlog) return modlog.send({embed: roleupdateembed}).catch(console.error);
   });
   client.on('messageUpdate', (oldMessage, newMessage) => {
-    var modlog = oldMessage.guild.channels.find('name', 'mod-log');
+    var modlog = newMessage.guild.channels.find('name', 'mod-log');
     var messageUpdateembed = new Discord.RichEmbed()
       .setColor('FFCE00')
      .setTitle("Message Edited")
       .setDescription('Edited by @' + oldMessage.author.username + ' in #' + oldMessage.channel.name + '\n \n **Before:** ' + oldMessage + '\n \n **After:** ' + newMessage)
-      .setFooter(embedfooter)
+      
   if(modlog) {
     console.log(' ')
     if(oldMessage.content !== newMessage.content) return modlog.send({embed: messageUpdateembed});
@@ -267,7 +266,7 @@ client.commands = new Discord.Collection();
      .setColor('FFCE00')
      .setTitle('Message Deleted')
      .setDescription(message.author.username + '\n \n' + message)
-     .setFooter(embedfooter)
+     
      if(modlog) return modlog.send({embed: messagedelembed}).catch(console.error);
   });
 
