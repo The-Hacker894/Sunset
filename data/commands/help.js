@@ -1,9 +1,6 @@
 const RichEmbed = require("discord.js").RichEmbed;
 const Discord = require("discord.js");
-const moment = require("moment")
-var embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
-const momentdate = moment().format('MMMM Do YYYY')
-const momentday = moment().format('dddd')
+const boxen = require('boxen');
 module.exports.run = (client, message, args, data, game, announcement) => {
   var commandlock = data.lock
   if(commandlock.includes('true')) {       
@@ -18,12 +15,14 @@ module.exports.run = (client, message, args, data, game, announcement) => {
     .addField('**Server Info**','`invite` `serverinfo` `membercount`')
     .addField('**Entertainment**','`cleverbot` `emojify` `cowthink` `cowsay` `fliptext` `figlet` `say` `2ball` `8ball`')
     .addField('**More Entertainment**', '`timer` `urbandictionary` `dictionary` `youtube` `google` `vote` `coinflip` `roll` `doubleroll`')
-    .addField('**Moderation**','`lockdown` `channelsettings` `ban` `unban` `kick` `purge` `mkchannel` `mkvoicechannel` `channeldelete` `mod-logcreate` `announcementscreate` `setnick`')
+    .addField('**File Generation**', '`qrcode` `lastqr` `createtxt` `lasttxt` `txtmp3` `lastmp3`')
+    .addField('**Moderation**','`lockdown` `channelsettings` `ban` `unban` `kick` `purge` `mkchannel` `channeldelete` `setnick`')
     .addField('**Other**','`randomcolor` `error-report` `importthis`')
     .addField('**WIP**','`warn`')
     .addField('**Owner Only Commands**','`jsexec` `flush` `settings`')
-    // removed 
+
 message.channel.send({embed: helpembed})
+console.log(boxen('[Help] ' + message.guild.name + ' | ' + message.author.tag, {padding: 1}))
 var helpmlembed = new Discord.RichEmbed()
   .setColor(data.embedcolor)
   .setTitle('Help Command Used')

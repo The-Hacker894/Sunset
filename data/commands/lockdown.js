@@ -40,6 +40,7 @@ module.exports.run = (client, message, args, data, game, announcement) => {
         SEND_MESSAGES: false
     })
     message.channel.send(`***Lockdown for ${time} seconds started***`)
+    console.log(boxen('[Lockdown Started] ' + message.guild.name + ' | ' + message.author.tag + ' | ' + time, {padding: 1}))
     if(modlog) {
         modlog.send({embed: lockdownmlembed})
     }
@@ -50,6 +51,7 @@ module.exports.run = (client, message, args, data, game, announcement) => {
             SEND_MESSAGES: true
         });
         message.channel.send('***Lockdown Done***')
+        console.log(boxen('[Lockdown Done] ' + message.guild.name + ' | ' + message.author.tag + ' | ' + time, {padding: 1}))
         if(modlog) {
             modlog.send({embed: lockdowndonemlembed})
         }

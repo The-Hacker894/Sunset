@@ -1,6 +1,7 @@
 const RichEmbed = require("discord.js").RichEmbed;
 const Discord = require("discord.js");
 const webdict = require('webdict');
+const boxen = require('boxen');
 module.exports.run = (client, message, args, data, game, announcement) => {
   var commandlock = data.lock
   if(commandlock.includes('true')) {       
@@ -15,12 +16,12 @@ webdict('urbandictionary', urbandictsearch).then(resp => {
       .setColor(data.embedcolor)
       .setTitle('Urban Dictionary Error')
       .setDescription('**No Dictionary Entry for ' + urbandictsearch + '**')
-      .addField(data.prefix + 'urban <word>','<word> = Word from the English Dictionary')
+      .addField(data.prefix + 'urbandictionary <word>','<word> = Word from the English Dictionary')
     var urbandictlengthembed = new Discord.RichEmbed()
       .setColor(data.embedcolor)
       .setTitle('Urban Dictionary Length Error')
       .setDescription('You must provide a word to search for')
-      .addField(data.prefix + 'urban <word>','<word> = Word from the English Dictionary')
+      .addField(data.prefix + 'urbandictionary <word>','<word> = Word from the English Dictionary')
       var nsfwtermserrorembed = new Discord.RichEmbed()
       .setColor(data.embedcolor)
       .setTitle('NSFW Terms')
@@ -32,7 +33,7 @@ webdict('urbandictionary', urbandictsearch).then(resp => {
       .setAuthor(message.author.username, message.author.displayAvatarURL)
       // removed 
       .setThumbnail('https://i.imgur.com/x7kfvJ5.png')
-      var nsfwterms = ['porn', 'hentai', 'pron', 'ass', 'fuck', 'piss', 'penis', 'vagina']
+var nsfwterms = data.nsfwterms
       var defcheck = resp.definition
     if(!resp.definition) return message.channel.send({embed: urbandicterrorembed}).then(message => {
       message.channel.stopTyping()
@@ -41,6 +42,7 @@ webdict('urbandictionary', urbandictsearch).then(resp => {
       message.channel.stopTyping()
     })
     if(message.channel.nsfw) {
+      console.log('[Urban] ' + message.guild.name + ' | ' + message.author.tag + ' | ' + urbandictsearch, {padding: 1})
       message.channel.send({embed: urbandictembed}).then(message => {
         message.channel.stopTyping()
       })
@@ -50,6 +52,7 @@ webdict('urbandictionary', urbandictsearch).then(resp => {
         message.channel.send({embed: nsfwtermserrorembed})
         if(modlog) return modlog.send({embed: nsfwtermserrorembed})
       } else {
+        console.log('[Urban] ' + message.guild.name + ' | ' + message.author.tag + ' | ' + urbandictsearch, {padding: 1})
         message.channel.send({embed: urbandictembed}).then(message => {
           message.channel.stopTyping()
         })

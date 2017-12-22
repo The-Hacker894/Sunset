@@ -1,9 +1,6 @@
 const RichEmbed = require("discord.js").RichEmbed;
 const Discord = require("discord.js");
-const moment = require("moment")
-var embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
-const momentdate = moment().format('MMMM Do YYYY')
-const momentday = moment().format('dddd')
+const boxen = require('boxen');
 module.exports.run = (client, message, args, data, game, announcement) => {
   var commandlock = data.lock
   if(commandlock.includes('true')) {       
@@ -22,8 +19,10 @@ if(channelname.length < 1) return message.channel.send({embed: channelnameerremb
 if(!channelinvite) return message.channel.send({embed: channelnameerrembed})
 if(!message.guild.me.hasPermission("CREATE_INSTANT_INVITE")) return message.channel.send("**I do not have permissions to do that**")
 channelinvite.createInvite().then(invite =>
-      message.channel.send(invite.url).then(message => {
-        message.channel.stopTyping()
+      message.channel.send(invite.url).then( () => {
+        console.log(boxen('[Channel Invite] ' + message.guild.name + ' | ' + message.author.tag + ' | ' + channelname + ' | ' + invite.url, {padding: 1})) .then(message => {
+          message.channel.stopTyping()
+        })
       })
   );
 }

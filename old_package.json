@@ -1,12 +1,12 @@
 {
-  "name": "sunset-bot",
-  "version": "3.0.1",
-  "description": "Multi-Purpose Discord.JS bot. Includes Moderation and some other fun commands",
-  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "pm2 start index.js --name Sunset"
-     },
+    "start": "pm2 start index.js --name Sunset",
+    "installmodules": "npm install ytdl-core write webdict snekfetch reverse-string request-promise-native request querystring qr-image pretty-ms pidusage opusscript ms moment-timezone moment moji-translate google fs flip-text figlet ffmpeg-binaries ffmpeg discord.js cowsay color-convert cleverbot.io cherrio boxen"
+  },
+  "author": "TheHacker",
+  "license": "ISC",
+  "version": "3.0",
   "dependencies": {
     "boxen": "^1.3.0",
     "cheerio": "^1.0.0-rc.2",
@@ -14,7 +14,6 @@
     "color-convert": "^1.9.1",
     "cowsay": "^1.2.1",
     "discord.js": "^11.2.1",
-    "eslint": "^4.12.1",
     "ffmpeg": "0.0.4",
     "ffmpeg-binaries": "^3.2.2-3",
     "figlet": "^1.2.0",
@@ -33,32 +32,9 @@
     "request": "^2.83.0",
     "request-promise-native": "^1.0.5",
     "reverse-string": "0.0.6",
-    "simple-tts": "^0.1.3",
-    "slot-machine": "^2.1.0",
     "snekfetch": "^3.6.0",
-    "sqlite": "^2.8.0",
     "webdict": "^0.1.0",
     "write": "^1.0.3",
-    "youtube-info": "^1.1.2",
     "ytdl-core": "^0.15.2"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/The-Hacker894/Sunset.git"
-  },
-  "keywords": [
-    "Sunset",
-    "Sunset-BETA",
-    "Discord.JS",
-    "Discord",
-    "DiscordBot",
-    "Sunset-Lite",
-    "DiscordAPI"
-  ],
-  "author": "TheHacker",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/The-Hacker894/Sunset/issues"
-  },
-  "homepage": "https://github.com/The-Hacker894/Sunset#readme"
+  }
 }

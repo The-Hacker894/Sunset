@@ -1,10 +1,6 @@
 const RichEmbed = require("discord.js").RichEmbed;
 const Discord = require("discord.js");
-const moment = require("moment")
-var embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
-const momentdate = moment().format('MMMM Do YYYY')
-const momentday = moment().format('dddd')
-const webdict = require('webdict');
+const boxen = require('boxen');
 function rollyodice() {
   var rand = ['**1**','**2**','**3**','**4**','**5**','**6**']
 
@@ -29,6 +25,7 @@ var doublerollmlembed = new Discord.RichEmbed()
   // removed 
   .addField(rollyodoubledice(), '_')
 message.channel.send(':game_die: :game_die: **|** ' + rollyodoubledice())
+console.log(boxen('[Doubleroll] ' + message.guild.name + ' | ' + message.author.tag + ' | ' + rollyodice() + ' | ' + rollyodoubledice()))
 if(modlog) return modlog.send({embed: doublerollmlembed})
 }
 module.exports.help = {

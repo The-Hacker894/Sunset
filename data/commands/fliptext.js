@@ -1,10 +1,6 @@
 const RichEmbed = require("discord.js").RichEmbed;
 const Discord = require("discord.js");
-const moment = require("moment")
-var embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
-const momentdate = moment().format('MMMM Do YYYY')
-const momentday = moment().format('dddd')
-const webdict = require('webdict');
+const boxen = require('boxen');
 const flip = require('flip-text');
 module.exports.run = (client, message, args, data, game, announcement) => {
   var commandlock = data.lock
@@ -20,6 +16,7 @@ module.exports.run = (client, message, args, data, game, announcement) => {
     .setDescription('You must provide some text to flip')
   if(flipmsg.length < 1) return message.channel.send({embed: fliperrembed})
   message.channel.send('`' + flip(flipmsg) + '`')
+  console.log(boxen('[Fliptext] ' + message.guild.name + ' | ' + message.author.tag + ' | ' + flip(flipmsg) + ' | ' + flipmsg))
   var fliptextmlembed = new Discord.RichEmbed()
     .setColor(data.embedcolor)
     .setTitle('Fliptext Command Used')

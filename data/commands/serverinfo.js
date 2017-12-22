@@ -1,9 +1,6 @@
 const RichEmbed = require("discord.js").RichEmbed;
 const Discord = require("discord.js");
-const moment = require("moment")
-var embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
-const momentdate = moment().format('MMMM Do YYYY')
-const momentday = moment().format('dddd')
+const boxen = require('boxen');
 module.exports.run = (client, message, args, data, game, announcement) => {
   var commandlock = data.lock
   if(commandlock.includes('true')) {       
@@ -41,6 +38,7 @@ var serverinfembed = new Discord.RichEmbed()
 // removed 
 
 message.channel.send({embed: serverinfembed}).catch(console.error);
+console.log(boxen('[ServerInfo] ' + message.guild.name + ' | ' + message.author.tag, {padding: 1}))
 var serverinfmlembed = new Discord.RichEmbed()
   .setColor(data.embedcolor)
   .setTitle('Server Info Command Used')

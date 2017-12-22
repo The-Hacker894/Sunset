@@ -1,9 +1,6 @@
 const RichEmbed = require("discord.js").RichEmbed;
 const Discord = require("discord.js");
-const moment = require("moment")
-var embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
-const momentdate = moment().format('MMMM Do YYYY')
-const momentday = moment().format('dddd')
+const boxen = require('boxen');
 module.exports.run = (client, message, args, data, game, announcement) => {
   var commandlock = data.lock
   if(commandlock.includes('true')) {       
@@ -44,6 +41,7 @@ if(usernick < 1) return message.channel.send({embed: nickembed}).catch(console.e
     message.guild.member(nickuserset).setNickname(usernick).catch(console.error);
     message.delete()
     message.channel.send('Check ' + nickuserset + '\'s nick/username to see if the results match ' + usernick).catch(console.error);
+    console.log(boxen('[SetNick] ' + message.guild.name + ' | ' + message.author.tag + ' | ' + nickuserset + ' | ' + usernick, {padding: 1}))
     if(modlog) return modlog.send({embed: nickmlembed}).catch(console.error);
   }
   module.exports.help = {

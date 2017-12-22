@@ -1,7 +1,6 @@
 const RichEmbed = require("discord.js").RichEmbed;
 const Discord = require("discord.js");
-const moment = require("moment")
-var embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
+const boxen = require('boxen');
 const cowsay = require('cowsay');
 module.exports.run = (client, message, args, data, game, announcement) => {
   var commandlock = data.lock
@@ -17,6 +16,7 @@ module.exports.run = (client, message, args, data, game, announcement) => {
     .setDescription('You must provide something for the cow to say')
   if(csmsg.length < 1) return message.channel.send({embed: cowsayerrembed})
     message.channel.send('```' + cowsay.say({text: csmsg, e: "oO", T: "U"}) + '```')
+    console.log(boxen('[Cowsay] ' + message.guild.name + ' | ' + message.author.tag + ' | ' + cmsg, {padding: 1}))
     var cowsaymlembed = new Discord.RichEmbed()
       .setColor(data.embedcolor)
       .setTitle('Cowsay Command Used')

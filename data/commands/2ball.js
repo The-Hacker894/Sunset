@@ -1,9 +1,6 @@
 const RichEmbed = require("discord.js").RichEmbed;
 const Discord = require("discord.js");
 const boxen = require('boxen');
-
-const moment = require("moment")
-var embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
 function do2ballVoodoo() {
   var rand = ['*Yes*','*No*','*Yes*','*No*','*Yes*','*No*','*Yes*','*No*']
   return rand[Math.floor(Math.random()*rand.length)];
@@ -22,14 +19,13 @@ var questionembed = new Discord.RichEmbed()
   let question = message.content.split(' ').slice(1).join(' ')
   if(question.length < 1) return message.channel.send({embed: questionembed}).catch(console.error);
   message.channel.send(':two: :basketball: ' + do2ballVoodoo());
-  console.log(boxen(message.guild.name + ' | ' + embedfooter + ' | ' + question + ' | ' + do2ballVoodoo(), {padding: 1}))
+  console.log(boxen('[2Ball] ' + message.guild.name + ' | ' + message.author.tag + ' | ' + question + ' | ' + do2ballVoodoo(), {padding: 1}))
   var twoballmlembed = new Discord.RichEmbed()
     .setColor(data.embedcolor)
     .setTitle('2Ball Command Used')
     .setDescription(message.author.username)
     .addField(question, do2ballVoodoo)
     .setAuthor(message.author.username ,message.author.avatarURL)
-    
     if(modlog) return modlog.send({embed: twoballmlembed}).catch(console.error);
 }
 module.exports.help = {

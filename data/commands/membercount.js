@@ -1,9 +1,6 @@
 const RichEmbed = require("discord.js").RichEmbed;
 const Discord = require("discord.js");
-const moment = require("moment")
-var embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
-const momentdate = moment().format('MMMM Do YYYY')
-const momentday = moment().format('dddd')
+const boxen = require('boxen');
 module.exports.run = (client, message, args, data) => {
   var commandlock = data.lock
   if(commandlock.includes('true')) {       
@@ -31,6 +28,7 @@ var mcembed = new Discord.RichEmbed()
 // thanks to Felix for this
 // removed 
 message.channel.send({embed: mcembed}).catch(console.error);
+console.log(boxen('[Member Count] ' + message.guild.name + ' | ' + message.author.tag + ' | ' + message.guild.memberCount, {padding: 1}))
 var mcmlembed = new Discord.RichEmbed()
   .setColor(data.embedcolor)
   .setTitle('Member Count Command Used')

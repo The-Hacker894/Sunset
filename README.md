@@ -31,5 +31,4 @@ Before trying to run Sunset you should type install all of the packages detailed
 [Sunset Discord Bots](https://discordbots.org/bot/371097223942897665)  
 
 **Do not worry about the warn `.json` files as they will be used in future version of Sunset**
-  
-
+  

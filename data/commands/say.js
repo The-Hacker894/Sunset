@@ -1,9 +1,6 @@
 const RichEmbed = require("discord.js").RichEmbed;
 const Discord = require("discord.js");
-const moment = require("moment")
-var embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
-const momentdate = moment().format('MMMM Do YYYY')
-const momentday = moment().format('dddd')
+const boxen = require('boxen');
 module.exports.run = (client, message, args, data, game, announcement) => {
   var commandlock = data.lock
   if(commandlock.includes('true')) {       
@@ -21,6 +18,7 @@ var sayembed = new Discord.RichEmbed()
 const message2say = message.content.split(' ').slice(1).join(' ')
 if(message2say.length < 1) return message.channel.send({embed: sayembed}).catch(console.error);
     message.channel.send(message2say).catch(console.error);
+    console.log(boxen('[Say] ' + message.guild.name + ' | ' + message.author.tag + ' | ' + message2say, {padding: 1}))
     message.delete()
 
     var saymlembed = new Discord.RichEmbed()

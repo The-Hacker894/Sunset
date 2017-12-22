@@ -1,10 +1,6 @@
 const RichEmbed = require("discord.js").RichEmbed;
 const Discord = require("discord.js");
-const moment = require("moment")
-var embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
-const momentdate = moment().format('MMMM Do YYYY')
-const momentday = moment().format('dddd')
-const momenttime = moment().format('h:mm:ss a')
+const boxen = require('boxen');
 module.exports.run = (client, message, args, data, game, announcement) => {
   var commandlock = data.lock
   if(commandlock.includes('true')) {       
@@ -26,6 +22,7 @@ module.exports.run = (client, message, args, data, game, announcement) => {
         message.react('🅱')
 
       });
+      console.log(boxen('[Vote] ' + message.guild.name + ' | ' + message.author.tag + ' | ' + votereason))
       var votemlembed = new Discord.RichEmbed()
         .setColor(data.embedcolor)
         .setTitle('Vote Command Used')

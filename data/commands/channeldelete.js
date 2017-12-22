@@ -1,7 +1,6 @@
 const RichEmbed = require("discord.js").RichEmbed;
 const Discord = require("discord.js");
-const moment = require("moment")
-var embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
+const boxen = require('boxen');
 module.exports.run = (client, message, args, data, game, announcement) => {
   var commandlock = data.lock
   if(commandlock.includes('true')) {       
@@ -34,7 +33,7 @@ var chnldelrsnerrorembed = new Discord.RichEmbed()
 
   message.channel.delete()
   message.author.send('Channel has been deleted').catch(console.error);
-    console.log('A channel has been deleted on ' + message.guild.name + '.')
+    console.log(boxen('[Channel Delete] ' + message.guild.name + ' | ' + message.author.tag + ' | ' + channeldelreason, {padding: 1}))
     var channeldelmlembed = new Discord.RichEmbed()
       .setColor(data.embedcolor)
       .setTitle('Channel Delete Command Used')

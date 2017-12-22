@@ -1,9 +1,6 @@
 const RichEmbed = require("discord.js").RichEmbed;
 const Discord = require("discord.js");
-/*const moment = require("moment")
-var embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
-const momentdate = moment().format('MMMM Do YYYY')
-const momentday = moment().format('dddd')*/
+const boxen = require('boxen');
 const cleverbot = require("cleverbot.io")
 const clever = new cleverbot('MzNwGnyfgL1iW54C','uZBfESqRedUjuajf0DJ78jD5LWEK5JWe');
 module.exports.run = (client, message, args, data, game, announcement) => {
@@ -21,6 +18,7 @@ clever.create(function (err, session) {
   clever.ask(clevermessage, function (err, response) {
     message.channel.send(message.author.toString() + ', ' + response);
     message.channel.stopTyping()
+    console.log(boxen('[Cleverbot] ' + message.guild.name + ' | ' + message.author.tag + ' | ' + clevermessage + ' | ' + response, {padding: 1}))
     var cleverbotmlembed = new Discord.RichEmbed()
     .setColor(data.embedcolor)
     .setTitle('CleverBot Command Used')

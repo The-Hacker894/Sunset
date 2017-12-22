@@ -1,10 +1,6 @@
 const RichEmbed = require("discord.js").RichEmbed;
 const Discord = require("discord.js");
-const moment = require("moment")
-var embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
-const momentdate = moment().format('MMMM Do YYYY')
-const momentday = moment().format('dddd')
-const momenttime = moment().format('h:mm:ss a')
+const boxen = require('boxen');
 const fs = require('fs')
 module.exports.run = (client, message, args, data, game, announcement, warn, warnedinfo) => {
   var commandlock = data.lock
@@ -35,6 +31,7 @@ const usertowarn = message.guild.member(message.mentions.users.first());
   .addField('Reason', reason)
   // removed 
   message.channel.send({embed: permerrorembed}).catch(console.error);
+  console.log(boxen('[Warn] ' + message.guild.name + ' | ' + message.author.tag + ' | ' + usertowarn + ' | ' + reason, {padding: 1}))
   var warnmlembed = new Discord.RichEmbed()
     .setColor(data.embedcolor)
     .setTitle('Warn Command Used')

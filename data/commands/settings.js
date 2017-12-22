@@ -1,10 +1,7 @@
 
 const RichEmbed = require("discord.js").RichEmbed;
 const Discord = require("discord.js");
-const moment = require("moment")
-var embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
-const momentdate = moment().format('MMMM Do YYYY')
-const momentday = moment().format('dddd')
+const boxen = require('boxen');
 const ms = require('ms')
 const fs = require('fs')
 module.exports.run = (client, message, args, data, game, announcement) => {
@@ -12,10 +9,6 @@ module.exports.run = (client, message, args, data, game, announcement) => {
     var commandlock = data.lock
     if(commandlock.includes('true')) {       
       if(message.author.id !== data.ownerid) return message.channel.send('Sorry, but a command lock is in effect. Only the owner can use commands at this time.')   
-    } 
-    var commandlock = data.lock
-    if(commandlock.includes('true')) {
-        if(message.author.id !== `lawl`) return message.channel.send('Sorry, but a command lock is in effect. Only the owner can use commands at this time.')
     } 
     var setting = args[1]
     var option = message.content.split(setting).slice(1).join(' ')
@@ -61,6 +54,7 @@ module.exports.run = (client, message, args, data, game, announcement) => {
     if(!setting) {
         if(modlog) {
             modlog.send({embed: settingembed})
+            console.log(boxen('[Settings] ' + message.guild.name + ' | ' + message.author.tag, {padding: 1}))
             return message.channel.send({embed: setembed})
         }
         if(!modlog) {
@@ -74,6 +68,7 @@ module.exports.run = (client, message, args, data, game, announcement) => {
       
       fs.writeFileSync("./data/brain/announcement.json", JSON.stringify(announcement), (err) => console.error);
       message.channel.send('Set announcement to `' + option + '`')
+      console.log(boxen('[Settings Announcement] ' + message.guild.name + ' | ' + message.author.name + ' | ' + option, {padding: 1}))
       if(modlog) return modlog.send({embed: settingannouncement})
     }
     if(setting.includes('color')) {
@@ -82,6 +77,7 @@ module.exports.run = (client, message, args, data, game, announcement) => {
         data.embedcolor = option
         fs.writeFileSync("./data/brain/data.json", JSON.stringify(data), (err) => console.error);
         message.channel.send('Set embed color to `' + data.embedcolor + '`')
+        console.log(boxen('[Settings Color] ' + message.guild.name + ' | ' + message.author.name + ' | ' + option, {padding: 1}))
         if(modlog) return modlog.send({embed: settingcolor})
     }
     if(setting.includes('game')) {
@@ -94,6 +90,7 @@ module.exports.run = (client, message, args, data, game, announcement) => {
               message.delete()
               message.channel.send('Set Game Status to `' + game.game + ' | ' + data.prefix + 'help`').catch(console.error);
               client.user.setGame(game.game + ' | ' + data.prefix + 'help')
+              console.log(boxen('[Settings Game] ' + message.guild.name + ' | ' + message.author.tag + ' | ' + option, {padding: 1}))
               if(modlog) return modlog.send({embed: settinggame})
 
     }
@@ -111,23 +108,21 @@ module.exports.run = (client, message, args, data, game, announcement) => {
         fs.writeFile("./data/brain/data.json", JSON.stringify(data), (err) => console.error)
         message.delete()
         message.channel.send('Set Command Lock to `' + data.lock + '`').catch(console.error);
+        console.log(boxen('[Settings Command Lock] ' + message.guild.name + ' | ' + message.author.name + ' | ' + option, {padding: 1}))
         if(modlog) return modlog.send({embed: settinglock})
     } 
     if(setting.includes('status')) {
         if (message.author.id !== data.ownerid) return message.channel.send(`**Owner Only Setting**`).catch(console.error);
         if(!option) return;
-        if(!option.includes('online')) {
-            if(!option.includes('idle')) {
-                if(!option.includes('dnd')) {
-                    if(!option.includes('invisible')) return message.channel.send('The status must be `online`, `idle`, `dnd`, or `invisible`')
-                }
-            }
+        var statusoptions = ['online', 'idle', 'dnd', 'invisible']
+        if(statusoptions.some(terms => option.includes(terms))) {
+            client.user.setStatus(option).catch(console.error)
+            message.channel.send('Status changed to `' + option + '`')
+            console.log(boxen('[Settings Status] ' + message.guild.name + ' | ' + message.author.tag + ' | ' + option, {padding: 1}))
+            if(modlog) return modlog.send({embed: settingstatus})
+        } else {
+            message.channel.send('The status must be `online`, `idle`, `dnd`, or `invisible`')
         }
-
-        client.user.setStatus(option).catch(console.error)
-        message.channel.send('Status changed to `' + option + '`')
-        if(modlog) return modlog.send({embed: settingstatus})
-
     }
 }
 module.exports.help = {

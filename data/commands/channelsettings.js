@@ -1,9 +1,6 @@
 const RichEmbed = require("discord.js").RichEmbed;
 const Discord = require("discord.js");
-const moment = require("moment")
-var embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
-const momentdate = moment().format('MMMM Do YYYY')
-const momentday = moment().format('dddd')
+const boxen = require('boxen');
 module.exports.run = (client, message, args, data) => {
     const modlog = message.guild.channels.find('name', 'mod-log');
     var setting = args[1]
@@ -58,28 +55,34 @@ module.exports.run = (client, message, args, data) => {
         if(!message.channel.topic) {
             if(modlog) {
                 modlog.send({embed: channelsettingmlNoTopic})
-                return message.channel.send({embed: channelsettingsNoTopic})
+                message.channel.send({embed: channelsettingsNoTopic})
+                return console.log(boxen('[Channel Settings] ' + message.guild.name + ' | ' + message.author.tag + ' | ' + message.channel.name + ' | ' + message.channel.position, {padding: 1}))
             }
             if(!modlog) {
-                return message.channel.send({embed: channelsettingsNoTopic})
+                message.channel.send({embed: channelsettingsNoTopic})
+                return console.log(boxen('[Channel Settings] ' + message.guild.name + ' | ' + message.author.tag + ' | ' + message.channel.name + ' | ' + message.channel.position, {padding: 1}))
             }
             
         }
         if(message.channel.topic === 'null') {
             if(modlog) {
                 modlog.send({embed: channelsettingmlNoTopic})
-                return message.channel.send({embed: channelsettingsNoTopic})
+                message.channel.send({embed: channelsettingsNoTopic})
+                return console.log(boxen('[Channel Settings] ' + message.guild.name + ' | ' + message.author.tag + ' | ' + message.channel.name + ' | ' + message.channel.position, {padding: 1}))
             }
             if(!modlog) {
-                return message.channel.send({embed: channelsettingsNoTopic})
+                message.channel.send({embed: channelsettingsNoTopic})
+                return console.log(boxen('[Channel Settings] ' + message.guild.name + ' | ' + message.author.tag + ' | ' + message.channel.name + ' | ' + message.channel.position, {padding: 1}))
             }
         }
         if(modlog) {
             modlog.send({embed: channelsettingmlNoTopic})
-            return message.channel.send({embed: channelsettingsNoTopic})
+            message.channel.send({embed: channelsettingsNoTopic})
+            return console.log(boxen('[Channel Settings] ' + message.guild.name + ' | ' + message.author.tag + ' | ' + message.channel.name + ' | ' + message.channel.topic + ' | ' + message.channel.position, {padding: 1}))
         }
         if(!modlog) {
-            return message.channel.send({embed: channelsettingsNoTopic})
+            message.channel.send({embed: channelsettingsNoTopic})
+            return console.log(boxen('[Channel Settings] ' + message.guild.name + ' | ' + message.author.tag + ' | ' + message.channel.name + ' | ' + message.channel.topic + ' | ' + message.channel.position, {padding: 1}))
         }
     }
     if(setting.includes('name')) {
@@ -88,6 +91,7 @@ module.exports.run = (client, message, args, data) => {
         if(!option) return;
         message.channel.setName(option)
         message.channel.send('Channel Name changed to ' + option)
+        console.log(boxen('[Channel Settings (Name)] ' + message.guild.name + ' | ' + message.author.tag + ' | ' + message.channel.name, {padding: 1}))
         if(modlog) return modlog.send({embed: channelsettingnameml})
         };
     if(setting.includes('topic')) {
@@ -96,6 +100,7 @@ module.exports.run = (client, message, args, data) => {
         if(!option) return;
         message.channel.setTopic(option)
         message.channel.send('Channel Topic changed to ' + option)
+        console.log(boxen('[Channel Settings (Topic)] ' + message.guild.name + ' | ' + message.author.tag + ' | ' + message.channel.topic, {padding: 1}))
         if(modlog) return modlog.send({embed: channelsettingtopicml})
         }
     if(setting.includes('position')) {
@@ -105,6 +110,7 @@ module.exports.run = (client, message, args, data) => {
         if(isNaN(option)) return message.channel.send('Please provide a positive integer.')
         message.channel.setPosition(option)
         message.channel.send('Channel Position changed to ' + option)
+        console.log(boxen('[Channel Settings (Position)] ' + message.guild.name + ' | ' + message.author.tag + ' | ' + message.channel.position, {padding: 1}))
         if(modlog) return modlog.send({embed: channelsettingpositionml})
             };
 

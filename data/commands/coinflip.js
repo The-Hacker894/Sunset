@@ -1,7 +1,6 @@
 const RichEmbed = require("discord.js").RichEmbed;
 const Discord = require("discord.js");
-const moment = require("moment")
-var embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
+const boxen = require('boxen');
 function coinflipping() {
 var rand = ['Heads!', 'Tails!', 'Heads!', 'Tails!','Heads!', 'Tails!','Heads!', 'Tails!',]
 return rand[Math.floor(Math.random()*rand.length)];
@@ -21,6 +20,7 @@ var coinflipmlembed = new Discord.RichEmbed()
   .setAuthor(message.author.username ,message.author.avatarURL)
   // removed 
   message.channel.send('We have, ' + coinflipping());
+  console.log(boxen('[Coinflip] ' + message.guild.name + ' | ' + message.author.tag + ' | ' + coinflipping(), {padding: 1}))
   if(modlog) return modlog.send({embed: coinflipmlembed}).catch(console.error);
 }
 module.exports.help = {

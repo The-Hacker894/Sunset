@@ -1,9 +1,6 @@
 const RichEmbed = require("discord.js").RichEmbed;
 const Discord = require("discord.js");
-const moment = require("moment")
-var embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
-const momentdate = moment().format('MMMM Do YYYY')
-const momentday = moment().format('dddd')
+const boxen = require('boxen');
 module.exports.run = (client, message, args, data, game, announcement) => {
   var commandlock = data.lock
   if(commandlock.includes('true')) {       
@@ -20,6 +17,7 @@ var github_project_linkembed = new Discord.RichEmbed()
 if(data.github_project_link.length < 1) return message.channel.send({embed: github_project_linkembed}).catch(console.error);
     message.channel.send('If you would like to submit an issue or PR visit the link below.')
     message.channel.send(data.github_project_link + 'issues')
+    console.log(boxen('[Suggestion] ' + message.guild.name + ' | ' + message.author.tag, {padding: 1}))
     var suggestionmlembed = new Discord.RichEmbed()
       .setColor(data.embedcolor)
       .setTitle('Suggestion Command Used')

@@ -1,7 +1,6 @@
 const RichEmbed = require("discord.js").RichEmbed;
 const Discord = require("discord.js");
-const moment = require("moment")
-var embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
+const boxen = require('boxen');
 module.exports.run = (client, message, args, data, game, announcement) => {
   var commandlock = data.lock
   if(commandlock.includes('true')) {       
@@ -38,6 +37,7 @@ if(useravatar.length < 1) return message.channel.send({embed: avatarnomenembed})
     .setAuthor(message.author.username ,message.author.displayAvatarURL)
     // removed 
     message.channel.send({embed: avatarouembed}).catch(console.error);
+    console.log(boxen('[Avatar] ' + message.author.tag + ' | ' + message.guild.name, {padding: 1}))
 
     if(modlog) return modlog.send({embed: avatarmlembed}).catch(console.error);
   }

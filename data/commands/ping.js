@@ -1,9 +1,6 @@
 const RichEmbed = require("discord.js").RichEmbed;
 const Discord = require("discord.js");
-const moment = require("moment")
-var embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
-const momentdate = moment().format('MMMM Do YYYY')
-const momentday = moment().format('dddd')
+const boxen = require('boxen');
 module.exports.run = (client, message, args, data) => {
   var commandlock = data.lock
   if(commandlock.includes('true')) {       
@@ -18,6 +15,7 @@ module.exports.run = (client, message, args, data) => {
         // removed 
       message.channel.send('Pinging...').then(sent => {
         sent.edit(`Pong! Took ${sent.createdTimestamp - message.createdTimestamp}ms`)
+        console.log(boxen('[Ping] ' + sent.createdTimestamp - message.createdTimestamp + 'ms | ' + message.guild.name + ' | ' + message.author.tag , {padding: 1}))
         message.delete()
       })
       if(modlog) return modlog.send({embed: pingmlembed})

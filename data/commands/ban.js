@@ -1,7 +1,6 @@
 const RichEmbed = require("discord.js").RichEmbed;
 const Discord = require("discord.js");
-const moment = require("moment")
-var embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
+const boxen = require('boxen');
 module.exports.run = (client, message, args, data, game, announcement) => {
   var commandlock = data.lock
   if(commandlock.includes('true')) {       
@@ -47,7 +46,7 @@ var banusermessageembed = new Discord.RichEmbed()
         .setAuthor(message.author.username ,message.author.avatarURL)
         // removed 
         message.channel.send({embed: embedaction})
-        console.log('Ban | ' + message.guild.name + ' | ' + message.author.username + ' | ' + banreason + ' | ' + banMember)
+        console.log(boxen('[Ban] | ' + message.guild.name + ' | ' + message.author.username + ' | ' + banreason + ' | ' + banMember.tag, {padding: 1}))
 
 
         var banmlembed = new Discord.RichEmbed()

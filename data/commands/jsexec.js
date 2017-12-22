@@ -1,9 +1,7 @@
 const RichEmbed = require("discord.js").RichEmbed;
 const Discord = require("discord.js");
-const moment = require("moment")
-var embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
-const momentdate = moment().format('MMMM Do YYYY')
-const momentday = moment().format('dddd')
+const boxen = require('boxen');
+const fs = require("fs")
 module.exports.run = (client, message, args, data, game, announcement) => {
   var commandlock = data.lock
   if(commandlock.includes('true')) {       
@@ -58,6 +56,7 @@ var jsembed = new Discord.RichEmbed()
 .addField(execute, '∎')
 // removed 
     message.channel.send({embed: jsembed}).catch(console.error);
+    console.log(boxen('[JS Execution] ' + message.guild.name + ' | ' + message.author.tag, {padding: 1}))
     if(modlog) return modlog.send({embed: jsexecmlembed}).catch(console.error);
 }
 module.exports.help = {

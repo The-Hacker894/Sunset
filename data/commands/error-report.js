@@ -1,9 +1,6 @@
 const RichEmbed = require("discord.js").RichEmbed;
 const Discord = require("discord.js");
-const moment = require("moment")
-var embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
-const momentdate = moment().format('MMMM Do YYYY')
-const momentday = moment().format('dddd')
+const boxen = require('boxen');
 const webdict = require('webdict');
 module.exports.run = (client, message, args, data, game, announcement) => {
   var commandlock = data.lock
@@ -23,6 +20,7 @@ if(message4hacker.length < 1) return message.channel.send({embed: dmhembed}).cat
   message.delete()
   client.users.get(data.ownerid).send('A message from the user ' + message.author.username + ' has arrived.')
   client.users.get(data.ownerid).send(message4hacker)
+  console.log(boxen('[Error Report] ' + message.guild.name + ' | ' + message.author.tag + ' | ' + message4hacker))
   var errreprtmlembed = new Discord.RichEmbed()
     .setColor(data.embedcolor)
     .setTitle('Error Report Command Used')

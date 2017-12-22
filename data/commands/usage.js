@@ -1,10 +1,6 @@
 const RichEmbed = require("discord.js").RichEmbed;
 const Discord = require("discord.js");
-const moment = require("moment")
-var embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
-const momentdate = moment().format('MMMM Do YYYY')
-const momentday = moment().format('dddd')
-const momenttime = moment().format('h:mm:ss a')
+const boxen = require('boxen');
 const pusage = require('pidusage')
 module.exports.run = (client, message, args, data, game, announcement) => {
   var commandlock = data.lock
@@ -23,6 +19,7 @@ module.exports.run = (client, message, args, data, game, announcement) => {
     message.channel.send({embed: pusageembed}).then( () => {
       pusage.unmonitor(process.pid)
     })
+    console.log(boxen('[Usage] ' + message.guild.name + ' | ' + message.author.tag + ' | CPU: ' + cpuusage + '% Memory: ' + memusage + 'MB', {padding: 1}))
     var pusagemlembed = new Discord.RichEmbed()
       .setColor(data.embedcolor)
       .setTitle('Usage Command Used')

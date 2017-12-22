@@ -1,9 +1,6 @@
 const RichEmbed = require("discord.js").RichEmbed;
 const Discord = require("discord.js");
-const moment = require("moment")
-var embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
-const momentdate = moment().format('MMMM Do YYYY')
-const momentday = moment().format('dddd')
+const boxen = require('boxen');
 const request = require("request")
 const cheerio = require('cheerio')
 const snekfetch = require('snekfetch')
@@ -60,9 +57,10 @@ return snekfetch.get(searchUrl).then((result) => {
       .setAuthor(message.author.username ,message.author.avatarURL)
       
     var checkGoogleData = googleData.q
-    var nsfwterms = ['porn', 'hentai', 'pron', 'ass', 'fuck', 'piss', 'penis', 'vagina']
+    var nsfwterms = data.nsfwterms
     if(message.channel.nsfw){
       message.channel.send({embed: googleresultembed})
+      console.log(boxen('[Google] ' + message.guild.name + ' | ' + message.author.tag + ' | ' + googlesearch + ' | ' + googleData.q, {padding: 1}))
       if(modlog) return message.channel.send({embed: googlemlembed})
       }else{
         if(nsfwterms.some(terms => checkGoogleData.includes(terms))) {

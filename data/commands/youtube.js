@@ -1,10 +1,6 @@
 const RichEmbed = require("discord.js").RichEmbed;
 const Discord = require("discord.js");
-const moment = require("moment")
-var embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
-const momentdate = moment().format('MMMM Do YYYY')
-const momentday = moment().format('dddd')
-const momenttime = moment().format('h:mm:ss a')
+const boxen = require('boxen');
 const request = require("request")
 const cheerio = require('cheerio')
 const snekfetch = require('snekfetch')
@@ -57,9 +53,10 @@ module.exports.run = (client, message, args, data, game, announcement) => {
         .setColor(data.embedcolor)
         .setTitle('NSFW Term Error')
         .setDescription('NSFW Term used in Non-NSFW Channel')
-      var nsfwterms = ['porn', 'hentai', 'pron', 'ass', 'fuck', 'piss', 'penis', 'vagina']
+var nsfwterms = data.nsfwterms
       var ytcheck = youtubegoogleData.q
       if(message.channel.nsfw) {
+        console.log(boxen('[YouTube] ' + message.guild.name + ' | ' + message.author.tag + ' | ' + youtubegoogleData.q + ' | ' + ytsimplegooglesearch, {padding: 1}))
         message.channel.send({embed: youtuberesultembed}).catch(console.error);
         if(modlog) return modlog.send({embed: youtubemlembed}).catch(console.error);
       } else {

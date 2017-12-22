@@ -3,10 +3,7 @@ const pusage = require('pidusage')
 const RichEmbed = require("discord.js").RichEmbed;
 const Attachment = require("discord.js").Attachment;
 const Discord = require("discord.js");
-const moment = require("moment")
-var embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
-const momentdate = moment().format('MMMM Do YYYY')
-const momentday = moment().format('dddd')
+const boxen = require('boxen');
 module.exports.run = (client, message, args, data, game, announcement) => {
   var commandlock = data.lock
   if(commandlock.includes('true')) {       
@@ -47,6 +44,7 @@ var infosembed = new Discord.RichEmbed()
     message.channel.send({embed: infosembed}).then( () => {
       pusage.unmonitor(process.pid)
     })
+    console.log(boxen('[Info] ' + message.guild.name + ' | ' + message.author.tag, {padding: 1}))
     var infosmlembed = new Discord.RichEmbed()
       .setColor(data.embedcolor)
       .setTitle('Info Command Used')

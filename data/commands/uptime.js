@@ -1,10 +1,6 @@
 const RichEmbed = require("discord.js").RichEmbed;
 const Discord = require("discord.js");
-const moment = require("moment")
-var embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
-const momentdate = moment().format('MMMM Do YYYY')
-const momentday = moment().format('dddd')
-const momenttime = moment().format('h:mm:ss a')
+const boxen = require('boxen');
 const prettyMs = require('pretty-ms');
 module.exports.run = (client, message, args, data, game, announcement) => {
   var commandlock = data.lock
@@ -25,6 +21,7 @@ module.exports.run = (client, message, args, data, game, announcement) => {
   .setAuthor(message.author.username ,message.author.avatarURL)
   // removed 
   message.channel.send({embed: uptimeembed})
+  console.log(boxen('[Uptime] ' + message.guild.name + ' | ' + message.author.tag + ' | ' + prettyMs(client.uptime, {verbose: true}), {padding: 1}))
   if(modlog) return modlog.send(uptimemlembed)
 }
 module.exports.help = {

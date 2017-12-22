@@ -1,9 +1,6 @@
 const RichEmbed = require("discord.js").RichEmbed;
 const Discord = require("discord.js");
-const moment = require("moment")
-var embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
-const momentdate = moment().format('MMMM Do YYYY')
-const momentday = moment().format('dddd')
+const boxen = require('boxen');
 module.exports.run = (client, message, args, data, game, announcement) => {
   var commandlock = data.lock
   if(commandlock.includes('true')) {       
@@ -62,7 +59,7 @@ var embedbotkpermreturn = new Discord.RichEmbed()
     message.channel.send({embed: embedaction}).catch(console.error);
         message.delete()
         message.guild.member(kickMember).kick(kickreason);
-          console.log('Kick | ' + message.guild.name + ' | ' + message.author.username + ' | ' + kickreason + ' | ' + kickMember)
+          console.log(boxen('[Kick] | ' + message.guild.name + ' | ' + message.author.tag + ' | ' + kickreason + ' | ' + kickMember.tag, {padding: 1}))
           var kickmlembed = new Discord.RichEmbed()
             .setColor(data.embedcolor)
             .setDescription('**A user has been Kicked** \n \n **User:** ' + kickMember + '\n **Moderator:** ' + message.author.username + ' \n **Reason:** ' + kickreason + ' \n **Server:** ' + message.guild.name)

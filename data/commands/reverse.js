@@ -4,11 +4,7 @@ const pusage = require('pidusage')
 const RichEmbed = require("discord.js").RichEmbed;
 const Attachment = require("discord.js").Attachment;
 const Discord = require("discord.js");
-const moment = require("moment")
-var embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
-const momentdate = moment().format('MMMM Do YYYY')
-const momentday = moment().format('dddd')
-
+const boxen = require('boxen');
 module.exports.run = (client, message, args, data, game, announcement) => {
   var commandlock = data.lock
   if(commandlock.includes('true')) {       
@@ -23,6 +19,7 @@ module.exports.run = (client, message, args, data, game, announcement) => {
     .setDescription("Please provide something to reverse")
   if(rmsg.length < 1) return message.channel.send({embed: reverseerrembed})
   message.channel.send(reverse(rmsg))
+  console.log(boxen('[Reverse] ' + message.guild.name + ' | ' + message.author.tag + ' | ' + rmsg, {padding: 1}))
   var reversemlembed = new Discord.RichEmbed()
     .setColor(data.embedcolor)
     .setTitle('Reverse Command Used')

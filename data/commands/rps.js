@@ -1,9 +1,6 @@
 const RichEmbed = require("discord.js").RichEmbed;
 const Discord = require("discord.js");
-const moment = require("moment")
-var embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
-const momentdate = moment().format('MMMM Do YYYY')
-const momentday = moment().format('dddd')
+const boxen = require('boxen');
 function botrock() {
     var rand = ['Rock','Paper','Scissors','Paper','Scissors','Paper','Scissors','Paper','Scissors','Paper','Scissors']
     return rand[Math.floor(Math.random()*rand.length)];
@@ -43,13 +40,37 @@ var rpsitemlengtherrorembed = new Discord.RichEmbed()
   // removed 
 
 const rpsitem = message.content.split(' ').slice(1).join(' ')
-  if(rpsitem === "rock") return message.channel.send('I choose...').then(sent => {sent.edit(botrock())})
-  if(rpsitem === "paper") return message.channel.send('I choose...').then(sent => {sent.edit(botpaper())})
-  if(rpsitem === "scissors") return message.channel.send('I choose...').then(sent => {sent.edit(botscissors())})
-  if(rpsitem === "scissor") return message.channel.send('I choose...').then(sent => {sent.edit(botscissors())})
-  if(rpsitem === "gun") return message.channel.send('>:(').then(sent => {sent.edit(message.author.username + ' :gun:')})
-  if(rpsitem.length > 1) return message.channel.send({embed: rpsitemlengtherrorembed})
-  if(modlog) return modlog.send({embed: rpsmlargembed})
+  if(rpsitem === "rock") {
+    message.channel.send('I choose...').then(sent => {sent.edit(botrock())})
+    console.log(boxen('[RPS Rock] ' + message.guild.name + ' | ' + message.author.tag + ' | ' + rpsitem + ' | ' + botrock()))
+    if(modlog) return modlog.send({embed: rpsmlargembed})
+  }
+  if(rpsitem === "paper") {
+    message.channel.send('I choose...').then(sent => {sent.edit(botpaper())})
+    console.log(boxen('[RPS Paper] ' + message.guild.name + ' | ' + message.author.tag + ' | ' + rpsitem + ' | ' + botpaper()))    
+    if(modlog) return modlog.send({embed: rpsmlargembed})
+  }
+  if(rpsitem === "scissors") {
+    message.channel.send('I choose...').then(sent => {sent.edit(botscissors())})
+    console.log(boxen('[RPS Scissors] ' + message.guild.name + ' | ' + message.author.tag + ' | ' + rpsitem + ' | ' + botscissors()))    
+    if(modlog) return modlog.send({embed: rpsmlargembed})
+  }
+  if(rpsitem === "scissor") {
+    message.channel.send('I choose...').then(sent => {sent.edit(botscissors())})
+    console.log(boxen('[RPS Scissoirs] ' + message.guild.name + ' | ' + message.author.tag + ' | ' + rpsitem + ' | ' + botscissors()))    
+    if(modlog) return modlog.send({embed: rpsmlargembed})
+  }
+  if(rpsitem === "gun") {
+    message.channel.send('>:(').then(sent => {sent.edit(message.author.username + ' :gun:')})
+    console.log(boxen('[RPS Gun] ' + message.guild.name + ' | ' + message.author.tag + ' | ' + rpsitem))   
+    if(modlog) return modlog.send({embed: rpsmlargembed})
+  }
+  if(rpsitem.length > 1) {
+    message.channel.send({embed: rpsitemlengtherrorembed})
+    console.log(boxen('[RPS] ' + message.guild.name + ' | ' + message.author.tag))    
+    if(modlog) return modlog.send({embed: rpsmlargembed})
+  }
+
 }
 module.exports.help = {
   name: "rps",

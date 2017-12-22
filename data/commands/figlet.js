@@ -1,10 +1,7 @@
 const figlet = require('figlet');
 const RichEmbed = require("discord.js").RichEmbed;
 const Discord = require("discord.js");
-const moment = require("moment")
-var embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
-const momentdate = moment().format('MMMM Do YYYY')
-const momentday = moment().format('dddd')
+const boxen = require('boxen');
 const webdict = require('webdict');
 module.exports.run = (client, message, args, data, game, announcement) => {
   var commandlock = data.lock
@@ -26,6 +23,7 @@ module.exports.run = (client, message, args, data, game, announcement) => {
         return;
     }
     message.channel.send('```' + data + '```')
+    console.log(boxen('[Figlet] ' + message.guild.name + ' | ' + message.author.tag + ' | ' + fmsg))
     var figletmlembed = new Discord.RichEmbed()
       .setColor(data.embedcolor)
       .setTitle('Figlet Command Used')

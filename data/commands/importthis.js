@@ -1,10 +1,7 @@
 const Attachment = require('discord.js').Attachment
 const RichEmbed = require("discord.js").RichEmbed;
 const Discord = require("discord.js");
-const moment = require("moment")
-var embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
-const momentdate = moment().format('MMMM Do YYYY')
-const momentday = moment().format('dddd')
+const boxen = require('boxen');
 module.exports.run = (client, message, args, data, game, announcement) => {
   var commandlock = data.lock
   if(commandlock.includes('true')) {       
@@ -13,6 +10,7 @@ module.exports.run = (client, message, args, data, game, announcement) => {
   const modlog = message.guild.channels.find('name', 'mod-log');
   const announcements = message.guild.channels.find('name', 'announcements')
 message.channel.send({file: new Attachment('./data/files/images/memes/importthis.jpg', 'importthis.jpg')})
+console.log(boxen('[Import This] ' + message.guild.name + ' | ' + message.author.tag, {padding: 1}))
 var importtmlembed = new Discord.RichEmbed()
   .setColor(data.embedcolor)
   .setTitle('Import This Command Used')

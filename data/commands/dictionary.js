@@ -1,10 +1,7 @@
 
 const RichEmbed = require("discord.js").RichEmbed;
 const Discord = require("discord.js");
-const moment = require("moment")
-const embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
-const momentdate = moment().format('MMMM Do YYYY')
-const momentday = moment().format('dddd')
+const boxen = require('boxen');
 const webdict = require('webdict');
 module.exports.run = (client, message, args, data, game, announcement) => {
   var commandlock = data.lock
@@ -36,6 +33,7 @@ webdict('dictionary', dictsearch).then(resp => {
       .setFooter(embedfooter)
       .setThumbnail('https://i.imgur.com/yVw1L69.jpg')
     message.channel.send({embed: dictembed})
+    console.log(boxen('[Dictionary] ' + message.guild.name + ' | ' + message.author.tag + ' | ' + dictsearch))
     var dictmlembed = new Discord.RichEmbed()
       .setColor(data.embedcolor)
       .setTitle('Dictionary Command Used')

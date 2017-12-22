@@ -1,9 +1,6 @@
 const RichEmbed = require("discord.js").RichEmbed;
 const Discord = require("discord.js");
-const moment = require("moment")
-var embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
-const momentdate = moment().format('MMMM Do YYYY')
-const momentday = moment().format('dddd')
+const boxen = require('boxen');
 module.exports.run = (client, message, args, data, game, announcement) => {
   var commandlock = data.lock
   if(commandlock.includes('true')) {       
@@ -42,8 +39,8 @@ var profileembed = new Discord.RichEmbed()
   .addField('Joined Timestamp', message.guild.member(message.mentions.users.first()).joinedTimestamp, true)
   .addField('Status', message.guild.member(message.mentions.members.first()).presence.status, true)
   .setThumbnail(message.mentions.users.first().displayAvatarURL)
-  // removed 
   message.channel.send({embed: profileembed}).catch(console.error);
+  console.log(boxen('[Profile] ' + message.guild.name + ' | ' + message.author.tag, {padding: 1}))
 
   if(modlog) return modlog.send({embed: profilemlembed}).catch(console.error);
 }

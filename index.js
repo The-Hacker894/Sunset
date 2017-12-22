@@ -11,10 +11,9 @@ const prefix = data.prefix
 const token = data.token
 const request = require("request")
 const moment = require("moment")
-// var  = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
-// const Attachment = require('discord.js').Attachment
 const requestpn = require('request-promise-native');
 const pusage = require('pidusage')
+const DBLToken = data.dbltoken
 
 const botjoinembed = new Discord.RichEmbed()
   .setColor(data.embedcolor)
@@ -65,7 +64,8 @@ client.commands = new Discord.Collection();
     })
   })
   client.on("ready", () => {
-    console.log('Logged on as ' + client.user.tag)
+    console.log('[Logged in] ' + client.user.tag)
+    console.log('[Time] ' + moment().format('MMMM Do YYYY, h:mm:ss a'))
     console.log('[Game] ' + game.game)
     console.log('[Announcement] ' + announcement.announce)
     client.user.setGame(game.game + ' | ' + data.prefix + 'help' )
@@ -73,7 +73,7 @@ client.commands = new Discord.Collection();
    requestpn.post({
            uri: `https://discordbots.org/api/bots/${client.user.id}/stats`,
            headers: {
-               Authorization: ``, // Insert token here
+               Authorization: DBLToken, // Insert token here
            },
            json: true,
            body: {
@@ -137,11 +137,10 @@ client.commands = new Discord.Collection();
   });
   client.on("guildDelete", guild => {
     console.log('Removed from 1 server | ' + guild)
-    client.user.setGame(game.game + ' | ' + data.prefix + 'help' )
-    requestpn.post({
+      requestpn.post({
             uri: `https://discordbots.org/api/bots/${client.user.id}/stats`,
             headers: {
-                Authorization: ``, // Insert token here
+                Authorization: DBLToken, // Insert token here
             },
             json: true,
             body: {
@@ -156,7 +155,7 @@ client.commands = new Discord.Collection();
        requestpn.post({
               uri: `https://discordbots.org/api/bots/${client.user.id}/stats`,
               headers: {
-                  Authorization: ``, // Insert token here
+                  Authorization: DBLToken, // Insert token here
               },
               json: true,
               body: {

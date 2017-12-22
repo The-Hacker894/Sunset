@@ -1,9 +1,6 @@
 const RichEmbed = require("discord.js").RichEmbed;
 const Discord = require("discord.js");
-const moment = require("moment")
-var embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
-const momentdate = moment().format('MMMM Do YYYY')
-const momentday = moment().format('dddd')
+const boxen = require("boxen")
 module.exports.run = (client, message, args, data, game, announcement) => {
   var commandlock = data.lock
   if(commandlock.includes('true')) {       
@@ -56,7 +53,7 @@ var roundedpurgearg = Math.round(purgearg / 2)
   message.delete()
   message.guild.member(message.channel.bulkDelete(roundedpurgearg))
     message.guild.member(message.channel.bulkDelete(roundedpurgearg))
-  console.log('Purge | ' + roundedpurgearg + ' | ' + message.guild.name + ' | ' + message.author.username)
+  console.log(boxen('[Purge] | ' + roundedpurgearg + ' | ' + message.guild.name + ' | ' + message.author.username, {padding: 1}))
   var purgemlembed = new Discord.RichEmbed()
     .setColor('FFCE00')
     .setTitle('Purge Command Used')

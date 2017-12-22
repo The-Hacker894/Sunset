@@ -1,9 +1,6 @@
 const RichEmbed = require("discord.js").RichEmbed;
 const Discord = require("discord.js");
-const moment = require("moment")
-var embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
-const momentdate = moment().format('MMMM Do YYYY')
-const momentday = moment().format('dddd')
+const boxen = require('boxen');
 const ms = require('ms')
 module.exports.run = (client, message, args, data, game, announcement) => {
     var commandlock = data.lock
@@ -33,6 +30,7 @@ module.exports.run = (client, message, args, data, game, announcement) => {
     }
     }
     message.channel.send('**Timer for ' + time + ' started**')
+    console.log(boxen('[Timer Started] ' + message.guild.name + ' | ' + message.author.tag + ' | ' + time, {padding: 1}))
 
     if(modlog) {
         modlog.send({embed: timemlembed})
@@ -41,6 +39,7 @@ module.exports.run = (client, message, args, data, game, announcement) => {
     function Timer() {
         message.reply('***Timer Done*** :white_check_mark: \n ***Time:*** ' + time + '\n ***Milliseconds:*** ' + ms(time))
         message.author.send('***' + time + '\n ***Milliseconds:*** ' + ms(time) + ' second timer done*** :white_check_mark:')
+        console.log(boxen('[Timer Done] ' + message.guild.name + ' | ' + message.author.tag + ' | ' + time))
         if(modlog) {
             modlog.send({embed: timedonemlembed})
         }

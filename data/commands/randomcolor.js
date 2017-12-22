@@ -1,9 +1,6 @@
 const RichEmbed = require("discord.js").RichEmbed;
 const Discord = require("discord.js");
-const moment = require("moment")
-var embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
-const momentdate = moment().format('MMMM Do YYYY')
-const momentday = moment().format('dddd')
+const boxen = require('boxen');
 const convert = require('color-convert');
 module.exports.run = (client, message, args, data, game, announcement) => {
   var commandlock = data.lock
@@ -18,6 +15,7 @@ var rhembed = new Discord.RichEmbed()
     .setDescription(`**Hex** #${color} \n **RGB** ${convert.hex.rgb(color)} \n **LAB** ${convert.hex.lab(color)} \n **CMYK** ${convert.hex.cmyk(color)}`)
     .setColor(`#${color}`);
 message.channel.send({embed: rhembed});
+console.log(boxen('[Random Color] ' + message.guild.name + ' | ' + message.author.tag + ' | ' + color, {padding: 1}))
 var rhmlembed = new Discord.RichEmbed()
   .setColor(`#${color}`)
   .setTitle('Random Color Command Used')
