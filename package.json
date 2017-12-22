@@ -1,6 +1,6 @@
 {
   "name": "sunset-bot",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "description": "Multi-Purpose Discord.JS bot. Includes Moderation and some other fun commands",
   "main": "index.js",
   "scripts": {
