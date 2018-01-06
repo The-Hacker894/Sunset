@@ -15,6 +15,10 @@ const requestpn = require('request-promise-native');
 const pusage = require('pidusage')
 const DBLToken = data.dbltoken
 
+
+//Credits for this code go to Felix, Corbs, Danny, and Jackalope :)
+
+
 const botjoinembed = new Discord.RichEmbed()
   .setColor(data.embedcolor)
   .setTitle('From Sunrise to Sunset I\'ll be there ;)')
