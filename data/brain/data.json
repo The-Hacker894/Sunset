@@ -1,5 +1,5 @@
 {"name":"Sunset",
-    "newversion":"3.0.1",
+    "newversion":"3.1",
     "description":"Sunset is the best bot your could ever have",
     "owner":"`TheHacker",
     "owner_discriminator":"#1072`",
@@ -17,6 +17,8 @@
     "embedcolor":"#FFA500",
     "lock":"false",
     "nsfwterms": ["porn", "hentai", "pron", "ass", "fuck", "piss", "penis", "vagina", "dick", "nude", "nut", "ejaculate", "cum"],
-    "dbltoken": ""
+    "dbltoken": "",
+    "googlAPIKey":"",
+    "translateKey": ""
 }
   
