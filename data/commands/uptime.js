@@ -11,7 +11,7 @@ module.exports.run = (client, message, args, data, game, announcement) => {
   const announcements = message.guild.channels.find('name', 'announcements')
   var uptimeembed = new Discord.RichEmbed()
   .setColor(data.embedcolor)
-  .setTitle(data.name + ' Uptime')
+  .setTitle(client.user.username + ' Uptime')
   .setDescription('Uptime: ' + prettyMs(client.uptime, {verbose: true}))
   // removed 
   var uptimemlembed = new Discord.RichEmbed()

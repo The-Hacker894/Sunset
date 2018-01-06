@@ -14,7 +14,7 @@ module.exports.run = (client, message, args, data, game, announcement) => {
 var embedccpermreturn = new Discord.RichEmbed()
   .setColor(data.embedcolor)
   .setTitle('Channel Create Usage')
-  .setDescription('You must have the permission `MANAGE_CHANNELS`')
+  .setDescription('You must have the permission `MANAGE_CHANNELS`') 
   .addField(data.prefix + 'mkchannel <name>','<name> = Name for Channel | <reason> = Reason for Channel Creation')
   var embedbotccpermreturn = new Discord.RichEmbed()
   .setColor(data.embedcolor)

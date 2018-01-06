@@ -9,13 +9,13 @@ module.exports.run = (client, message, args, data, game, announcement) => {
   const modlog = message.guild.channels.find('name', 'mod-log');
   const announcements = message.guild.channels.find('name', 'announcements')
   const votereason = message.content.split(' ').slice(1).join(' ')
+  if(!votereason) return message.channel.send('Please provide something to vote for')
   var voteembed = new Discord.RichEmbed()
     .setTitle('Vote')
     .setAuthor(message.author.username ,message.author.avatarURL)
     .setColor(data.embedcolor)
     .setDescription(votereason)
     .addField('Instructions', ':a: = Yes | :b: = No')
-    .setFooter('Poll setup at ' + embedfooter)
     message.delete()
     message.channel.send({embed: voteembed}).then(function (message) {
         message.react('🅰')

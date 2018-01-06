@@ -17,6 +17,8 @@ var sayembed = new Discord.RichEmbed()
 
 const message2say = message.content.split(' ').slice(1).join(' ')
 if(message2say.length < 1) return message.channel.send({embed: sayembed}).catch(console.error);
+if(message2say.includes('@')) return;
+if(message2say.includes('<')) return;
     message.channel.send(message2say).catch(console.error);
     console.log(boxen('[Say] ' + message.guild.name + ' | ' + message.author.tag + ' | ' + message2say, {padding: 1}))
     message.delete()

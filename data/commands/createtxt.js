@@ -5,6 +5,7 @@ const boxen = require("boxen")
 const writeFile = require("write")
 const talkedRecently = new Set();
 module.exports.run = (client, message, args, data, game, announcement) => {
+    const modlog = message.guild.channels.find('name', 'mod-log');
     if (talkedRecently.has(message.author.id))
     return;
   
@@ -25,6 +26,12 @@ function Timer() {
     message.channel.send(new Attachment(`./data/textfiles/${message.author.id}.txt`, `textfile.txt`)).then(message => {
         message.channel.stopTyping()
     });
+    console.log(boxen('[CreateTXT] ' + message.guild.name + ' | ' + message.author.tag, {padding: 1}))
+    var lastqrmlembed = new Discord.RichEmbed()
+        .setColor(data.embedcolor)
+        .setTitle('CreateTXT Command Used')
+        .setAuthor(message.author.username, message.author.displayAvatarURL)
+        if(modlog) return modlog.send({embed: lastqrmlembed})
 }
 }
 module.exports.help = {

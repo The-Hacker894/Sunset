@@ -7,7 +7,7 @@ const fs = require('fs')
 module.exports.run = (client, message, args, data, game, announcement) => {
     message.channel.startTyping()
     
-
+    const modlog = message.guild.channels.find('name', 'mod-log');    
     fs.exists(`./data/qrcode/${message.author.id}.png`, function(exists) {
         if (exists) {
           fs.stat(`./data/textfiles/${message.author.id}.txt`, function(err, stats) { 
@@ -21,6 +21,12 @@ module.exports.run = (client, message, args, data, game, announcement) => {
           })
         }
       });
+      console.log(boxen('[LastTXT] ' + message.guild.name + ' | ' + message.author.tag, {padding: 1}))
+      var lastqrmlembed = new Discord.RichEmbed()
+          .setColor(data.embedcolor)
+          .setTitle('Last TXT Command Used')
+          .setAuthor(message.author.username, message.author.displayAvatarURL)
+          if(modlog) return modlog.send({embed: lastqrmlembed})
 }
 module.exports.help = {
     name: "lasttxt",

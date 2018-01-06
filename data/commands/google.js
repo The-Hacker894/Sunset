@@ -45,7 +45,6 @@ return snekfetch.get(searchUrl).then((result) => {
     .setTitle('Here\'s what I found for')
     .setDescription(googlesearch + '\n \n ' + googleData.q)
     .setThumbnail('https://i.imgur.com/kUSeXDX.png')
-    .setFooter('Google Search Result at ' + embedfooter)
     var googlemlembed = new Discord.RichEmbed()
     .setColor(data.embedcolor)
     .setTitle('Google Command Used')

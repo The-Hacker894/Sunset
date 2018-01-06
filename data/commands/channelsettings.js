@@ -10,21 +10,27 @@ module.exports.run = (client, message, args, data) => {
         .setTitle('Permission Error')
         .setDescription('I must have the permission `MANAGE_CHANNELS`')
     var permerrorsnembed = new Discord.RichEmbed()
-        .setColor(data.embedcolor)
+        .setColor(data.embedcolor) 
         .setTitle('Permission Error')
         .setDescription('You must have the permission `MANAGE_CHANNELS`')
     var channelsettings = new Discord.RichEmbed()
         .setColor(data.embedcolor)
         .setTitle('Channel Settings')
+        .setDescription('Please note that at this time NSFW and Type cannot be changed by a bot')
         .addField('**Name**', '```' + message.channel.name + '```')
         .addField('**Topic**', '```' + message.channel.topic + '```')
         .addField('**Position**', '```' + message.channel.position + '```')
+        .addField('**Type**', '```' + message.channel.type + '```')
+        .addField('**NSFW**', '```' + message.channel.nsfw + '```')
     var channelsettingsNoTopic = new Discord.RichEmbed()
         .setColor(data.embedcolor)
         .setTitle('Channel Settings')
+        .setDescription('Please note that at this time NSFW and Type cannot be changed by a bot')
         .addField('**Name**', '```' + message.channel.name + '```')
         .addField('**Topic**', '*No Topic Set*')
         .addField('**Position**', '```' + message.channel.position + '```')
+        .addField('**Type**', '```' + message.channel.type + '```')
+        .addField('**NSFW**', '```' + message.channel.nsfw + '```')
     var channelsettingml =  new Discord.RichEmbed()
         .setColor(data.embedcolor)
         .setTitle('Channel Settings Command Used')
@@ -76,12 +82,12 @@ module.exports.run = (client, message, args, data) => {
             }
         }
         if(modlog) {
-            modlog.send({embed: channelsettingmlNoTopic})
-            message.channel.send({embed: channelsettingsNoTopic})
+            modlog.send({embed: channelsettingml})
+            message.channel.send({embed: channelsettings})
             return console.log(boxen('[Channel Settings] ' + message.guild.name + ' | ' + message.author.tag + ' | ' + message.channel.name + ' | ' + message.channel.topic + ' | ' + message.channel.position, {padding: 1}))
         }
         if(!modlog) {
-            message.channel.send({embed: channelsettingsNoTopic})
+            message.channel.send({embed: channelsettings})
             return console.log(boxen('[Channel Settings] ' + message.guild.name + ' | ' + message.author.tag + ' | ' + message.channel.name + ' | ' + message.channel.topic + ' | ' + message.channel.position, {padding: 1}))
         }
     }

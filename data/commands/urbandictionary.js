@@ -42,7 +42,7 @@ var nsfwterms = data.nsfwterms
       message.channel.stopTyping()
     })
     if(message.channel.nsfw) {
-      console.log('[Urban] ' + message.guild.name + ' | ' + message.author.tag + ' | ' + urbandictsearch, {padding: 1})
+      console.log(boxen('[Urban] ' + message.guild.name + ' | ' + message.author.tag + ' | ' + urbandictsearch, {padding: 1}))
       message.channel.send({embed: urbandictembed}).then(message => {
         message.channel.stopTyping()
       })
@@ -52,7 +52,7 @@ var nsfwterms = data.nsfwterms
         message.channel.send({embed: nsfwtermserrorembed})
         if(modlog) return modlog.send({embed: nsfwtermserrorembed})
       } else {
-        console.log('[Urban] ' + message.guild.name + ' | ' + message.author.tag + ' | ' + urbandictsearch, {padding: 1})
+        console.log(boxen('[Urban Dictionary] ' + message.guild.name + ' | ' + message.author.tag + ' | ' + urbandictsearch, {padding: 1}))
         message.channel.send({embed: urbandictembed}).then(message => {
           message.channel.stopTyping()
         })

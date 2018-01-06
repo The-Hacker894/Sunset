@@ -23,7 +23,7 @@ var embedbotcdpermreturn = new Discord.RichEmbed()
   // removed 
 var chnldelrsnerrorembed = new Discord.RichEmbed()
   .setColor(data.embedcolor)
-  .setTitle('Channel Delete Usage')
+  .setTitle('Channel Delete Usage') 
   .setDescription('You must provide a reason for the channel deletion')
   .addField(data.prefix + 'channeldelete <reason>','<reason> = Reason for Channel Deletion')
 
