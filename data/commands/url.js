@@ -8,6 +8,16 @@ module.exports.run = (client, message, args, data, game, announcement) => {
     var userurl = args[2]
     var optionaloptions = ['shorten', 'expand']
     const modlog = message.guild.channels.find('name', 'mod-log');
+
+    var optionerror = new Discord.RichEmbed()
+        .setColor(data.embedcolor)
+        .setTitle('Error')
+        .setDescription('You must specify whether you would like to `shorten` or `expand` a URL.')
+    
+    var userurlerror = new Discord.RichEmbed()
+        .setColor(data.embedcolor)
+        .setTitle('Error')
+        .setDescription('You must provide a URL to `shorten` or `expand`.')
     
     var longurlerror = new Discord.RichEmbed()
         .setColor(data.embedcolor)
@@ -17,7 +27,7 @@ module.exports.run = (client, message, args, data, game, announcement) => {
         if(optionaloptions.some(viableoptions => option.includes(viableoptions))) {
 
             if(option === 'shorten') {
-                if(!userurl) return message.channel.send('```' + boxen('You must specify whether or not you would like to shorten or expand a goo.gl URL', {padding: 1}) +'```')
+                if(!userurl) return message.channel.send({embed: userurlerror})
             googl.setKey(data.googlAPIKey);
 
             googl.getKey();
@@ -29,8 +39,8 @@ module.exports.run = (client, message, args, data, game, announcement) => {
 
             }
        if(option.includes('expand')) {
-                if(!userurl) return message.channel.send('```' + boxen('You must provide a URL to shorten or expand', {padding: 1}) +'```')
-                if(!userurl.includes('goo.gl')) return message.channel.send('```' + boxen('You must provide a `goo.gl` URL to expand', {padding: 1}) +'```')
+                if(!userurl) return message.channel.send({embed: userurlerror})
+                if(!userurl.includes('goo.gl')) return message.channel.send({embed: longurlerror})
                 googl.setKey(data.googlAPIKey);
     
                 googl.getKey();
@@ -43,7 +53,7 @@ module.exports.run = (client, message, args, data, game, announcement) => {
             
         } else { 
             
-            message.channel.send('```' + boxen('You must specify whether or not you would like to shorten or expand a goo.gl URL', {padding: 1}) +'```')
+            message.channel.send({embed: longurlerror})
                 
 
         }

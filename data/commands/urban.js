@@ -43,6 +43,7 @@ var nsfwterms = data.nsfwterms
     })
     if(message.channel.nsfw) {
       console.log(boxen('[Urban] ' + message.guild.name + ' | ' + message.author.tag + ' | ' + urbandictsearch, {padding: 1}))
+      if(resp.definition.length > 2048) return message.channel.send('Definition too long for Discord. :(')
       message.channel.send({embed: urbandictembed}).then(message => {
         message.channel.stopTyping()
       })
@@ -52,11 +53,18 @@ var nsfwterms = data.nsfwterms
         message.channel.send({embed: nsfwtermserrorembed})
         if(modlog) return modlog.send({embed: nsfwtermserrorembed})
       } else {
-        console.log(boxen('[Urban] ' + message.guild.name + ' | ' + message.author.tag + ' | ' + urbandictsearch, {padding: 1}))
+        if(nsfwterms.some(terms => urbandictsearch.includes(terms))) {
+          message.channel.send({embed: nsfwtermserrorembed})
+          if(modlog) return modlog.send({embed: nsfwtermserrorembed})
+        } else {
+          console.log(boxen('[Urban] ' + message.guild.name + ' | ' + message.author.tag + ' | ' + urbandictsearch, {padding: 1}))
+        if(resp.definition.length > 2048) return message.channel.send('Definition too long for Discord. :(')
         message.channel.send({embed: urbandictembed}).then(message => {
           message.channel.stopTyping()
         })
         if(modlog) return modlog.send({embed: urbandictmlembed})
+        }
+        
       }
     }
     var urbandictmlembed = new Discord.RichEmbed()
