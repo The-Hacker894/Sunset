@@ -13,8 +13,6 @@
     "color-convert": "^1.9.1",
     "cowsay": "^1.2.1",
     "discord.js": "^11.3.0",
-    "ffmpeg": "0.0.4",
-    "ffmpeg-binaries": "^3.2.2-3",
     "figlet": "^1.2.0",
     "flip-text": "^1.1.0",
     "fs": "0.0.1-security",
@@ -37,7 +35,6 @@
     "translate": "^1.0.1",
     "webdict": "^0.1.0",
     "write": "^1.0.3",
-    "youtube-info": "^1.1.2",
     "ytdl-core": "^0.15.2"
   }
 }
