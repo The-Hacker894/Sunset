@@ -25,6 +25,8 @@ If you would like to know how to run Sunset yourself visit the [Sunset Website](
   
 `npm install pm2 -g` to install  
 [PM2 GitHub Page](https://github.com/Unitech/pm2)  
+
+## Other
   
 Before trying to run Sunset you should type install all of the packages detailed in the `package.json`
   
@@ -33,5 +35,12 @@ Before trying to run Sunset you should type install all of the packages detailed
 [Sunset Website](https://hackerhubsite.weebly.com/sunset.html)  
 [Sunset Discord Bots](https://discordbots.org/bot/371097223942897665)  
 
-**Do not worry about the warn `.json` files as they will be used in future version of Sunset**
+Folders to add in `./data/` directory
+`base64files`
+`binaryfiles`
+`qrcode`
+`rule`
+`textfiles`
+`warns`
+
   
