@@ -20,6 +20,7 @@ module.exports.run = (client, message, args, data) => {
         .addField('**Name**', '```' + message.channel.name + '```')
         .addField('**Topic**', '```' + message.channel.topic + '```')
         .addField('**Position**', '```' + message.channel.position + '```')
+        .addField('**Category/Parent**', '```' + message.channel.parent.name + ' | ' + message.channel.parent.id +'```')
         .addField('**Type**', '```' + message.channel.type + '```')
         .addField('**NSFW**', '```' + message.channel.nsfw + '```')
     var channelsettingsNoTopic = new Discord.RichEmbed()
@@ -29,6 +30,7 @@ module.exports.run = (client, message, args, data) => {
         .addField('**Name**', '```' + message.channel.name + '```')
         .addField('**Topic**', '*No Topic Set*')
         .addField('**Position**', '```' + message.channel.position + '```')
+        .addField('**Category/Parent**', '```' + message.channel.parent.name + ' | ' + message.channel.parent.id +'```')
         .addField('**Type**', '```' + message.channel.type + '```')
         .addField('**NSFW**', '```' + message.channel.nsfw + '```')
     var channelsettingml =  new Discord.RichEmbed()
@@ -56,6 +58,15 @@ module.exports.run = (client, message, args, data) => {
         .setTitle('Channel Position Changed')
         .setDescription('**Position** \n ' + message.channel.position)
         .setAuthor(message.author.username, message.author.displayAvatarURL)
+    var channelsettingparentml = new Discord.RichEmbed()
+        .setColor(data.embedcolor)
+        .setTitle('Channel Parent Changed')
+        .setDescription('**Parent**\n' + message.channel.parent.name)
+        .setAuthor(message.author.username, message.author.displayAvatarURL)
+    var parenterror = new Discord.RichEmbed()
+        .setColor(data.embedcolor)
+        .setTitle('Channel Parent Error')
+        .setDescription('At this time you must use the Category/Parent ID to set the current channel\'s category/parent')
     
     if(!setting) {
         if(!message.channel.topic) {
@@ -100,6 +111,16 @@ module.exports.run = (client, message, args, data) => {
         console.log(boxen('[Channel Settings (Name)] ' + message.guild.name + ' | ' + message.author.tag + ' | ' + message.channel.name, {padding: 1}))
         if(modlog) return modlog.send({embed: channelsettingnameml})
         };
+    if(setting.includes('parent')) {
+        if(!message.member.hasPermission("MANAGE_CHANNELS")) return message.channel.send({embed: permerrorsnembed}).catch(console.error);
+        if(!message.guild.me.hasPermission("MANAGE_CHANNELS")) return message.channel.send({embed: permboterrorsnembed}).catch(console.error);
+        if(!option) return;
+        if(isNaN(option)) return message.channel.send({embed: parenterror})
+        message.channel.setParent(option).catch(console.error)
+        message.channel.send('Channel Parent changed to ' + option)
+        console.log(boxen('[Channel Settings (Parent)] ' + message.guild.name + ' | ' + message.author.tag + ' | ' + message.channel.name, {padding: 1}))
+        if(modlog) return modlog.send({embed: channelsettingparentml})
+    }
     if(setting.includes('topic')) {
         if(!message.member.hasPermission("MANAGE_CHANNELS")) return message.channel.send({embed: permerrorsnembed}).catch(console.error);
         if(!message.guild.me.hasPermission("MANAGE_CHANNELS")) return message.channel.send({embed: permboterrorsnembed}).catch(console.error);

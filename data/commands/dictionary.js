@@ -30,7 +30,6 @@ webdict('dictionary', dictsearch).then(resp => {
       .setTitle('Dictionary Definition')
       .setDescription('**Word:** ' + dictsearch + '\n **Definition:** ' + resp.definition + '\n **Type:** ' + resp.type + '\n **Source:** ' + resp.source)
       .setAuthor(message.author.username, message.author.displayAvatarURL)
-      .setFooter(embedfooter)
       .setThumbnail('https://i.imgur.com/yVw1L69.jpg')
     message.channel.send({embed: dictembed})
     console.log(boxen('[Dictionary] ' + message.guild.name + ' | ' + message.author.tag + ' | ' + dictsearch))
@@ -39,7 +38,6 @@ webdict('dictionary', dictsearch).then(resp => {
       .setTitle('Dictionary Command Used')
       .setDescription('**Word:** ' + dictsearch + '\n **Definition:** ' + resp.definition + '\n **Type:** ' + resp.type + '\n **Source:** ' + resp.source)
       .setAuthor(message.author.username, message.author.displayAvatarURL)
-      .setFooter(embedfooter)
       message.channel.stopTyping()
     if(modlog) return modlog.channel.send({embed: dictmlembed})
   });

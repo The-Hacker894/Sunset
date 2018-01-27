@@ -5,7 +5,6 @@ const boxen = require('boxen');
 const fs = require('fs')
 module.exports.run = (client, message, args, data, game, announcement) => {
     console.log('Beginning')
-    if (!message.member.hasPermission('MANAGE_GUILD')) return message.channel.send('MANAGE_GUILD permission required').catch(console.error);
     var ruleset = args[1]
     var rulestoset = message.content.split(ruleset).slice(1).join(' ')
     if(!ruleset) {
@@ -18,7 +17,11 @@ module.exports.run = (client, message, args, data, game, announcement) => {
                     if (err) {
                         return console.log(err)
                     }
-                    message.channel.send('```' + data +'```')
+                    var ruled = new Discord.RichEmbed()
+                        .setColor(data.embedcolor)
+                        .setDescription(data)
+                        .setAuthor(message.guild.name, message.guild.iconURL)
+                    message.channel.send({embed: ruled})
                     console.log('send data')
                   });
             } else {
@@ -29,6 +32,8 @@ module.exports.run = (client, message, args, data, game, announcement) => {
         }
         
     if(ruleset === 'set') {
+        if (!message.member.hasPermission('MANAGE_GUILD')) return message.channel.send('MANAGE_GUILD permission required').catch(console.error);
+
         console.log('if ruleset equal set')
         if(!rulestoset) return;
         console.log('if no rulestoset')
@@ -42,6 +47,7 @@ module.exports.run = (client, message, args, data, game, announcement) => {
             console.log('file written')
         }); 
         }
+
     
 }
 module.exports.help = {

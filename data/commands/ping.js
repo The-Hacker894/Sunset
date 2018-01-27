@@ -12,9 +12,17 @@ module.exports.run = (client, message, args, data) => {
         .setColor(data.embedcolor)
         .setTitle('Ping Command used')
         .setAuthor(message.author.username ,message.author.avatarURL)
-        // removed 
-      message.channel.send('Pinging...').then(sent => {
-        sent.edit(`Pong! Took ${sent.createdTimestamp - message.createdTimestamp}ms`)
+      var pingstart = new Discord.RichEmbed()
+        .setColor(data.embedcolor)
+        .setDescription('Pinging...')
+        .setAuthor(message.author.username, message.author.displayAvatarURL)
+      message.channel.send({embed: pingstart}).then(sent => {
+        var pinged = new Discord.RichEmbed()
+          .setColor(data.embedcolor)
+          .setTitle('**Pong!**')
+          .setDescription(`${sent.createdTimestamp - message.createdTimestamp}ms`)
+//`Pong! Took ${sent.createdTimestamp - message.createdTimestamp}ms`
+        sent.edit({embed: pinged})
         console.log(boxen('[Ping] ' + sent.createdTimestamp - message.createdTimestamp + 'ms | ' + message.guild.name + ' | ' + message.author.tag , {padding: 1}))
         message.delete()
       })

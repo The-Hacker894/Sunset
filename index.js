@@ -1,6 +1,6 @@
 const Discord = require("discord.js");
 const RichEmbed = require("discord.js").RichEmbed;
-const client = new Discord.Client();
+const client = new Discord.Client({autoReconnect:true});
 const data = require("./data/brain/data.json");
 const announcement = require("./data/brain/announcement.json");
 const game = require("./data/brain/game.json");
@@ -10,19 +10,53 @@ const fs = require("fs");
 const prefix = data.prefix
 const token = data.token
 const request = require("request")
-const moment = require("moment")
 const requestpn = require('request-promise-native');
 const pusage = require('pidusage')
 const DBLToken = data.dbltoken
+const moment = require('moment')
 
 
-//Credits for this code go to Felix, Corbs, Danny, and Jackalope :)
+var dataPath = './data/'
+var base64filesPath = './data/base64files/'
+var binaryfilesPath = './data/binaryfiles/'
+var qrcodePath = './data/qrcode/'
+var scriptsPath = './data/scripts/'
+var textfilesPath = './data/textfiles/'
+
+if (!fs.existsSync(dataPath)) {
+ console.log('Could not find the ./data/ folder')
+ process.exit(0)
+}
+if (!fs.existsSync(base64filesPath)) {
+console.log('Could not find the ./data/base64files/ folder')
+process.exit(0)
+}
+if (!fs.existsSync(binaryfilesPath)) {
+console.log('Could not find the ./data/binaryfiles/ folder')
+process.exit(0)
+}
+if (!fs.existsSync(qrcodePath)) {
+console.log('Could not find the ./data/qrcode/ folder')
+process.exit(0)
+}
+if (!fs.existsSync(scriptsPath)) {
+console.log('Could not find the ./data/scripts/ folder')
+process.exit(0)
+}
+if (!fs.existsSync(textfilesPath)) {
+console.log('Could not find the ./data/textfiles/ folder')
+process.exit(0)
+}
+
+
+// Credits for this code go to Felix, Corbs, Danny, and Jackalope :)
+// Mostly Felix and Danny
 
 
 const botjoinembed = new Discord.RichEmbed()
   .setColor(data.embedcolor)
   .setTitle('From Sunrise to Sunset I\'ll be there ;)')
-  .setDescription('Thank you for inviting Sunset to your server. \n I want you to know that I am **always** recieving updates so you may see some new features pop up here and there. \n I also log some data for moderation and for quality assurance, but I don\'t thnk that will be a problem.')
+  .setDescription('Thank you for inviting Sunset to your server. \n I want you to know that I am **always** recieving updates so you may see some new features pop up here and there.\nI also have a feature to set server-specific rules. All you have to do is send `rules set <rules>` and your done! \nI also log some data for moderation and for quality assurance, but I don\'t thnk that will be a problem.')
   .addField('**Here is the current Announcement**', '```' + announcement.announce + '```')
   .addField('**Current Version**', '```' + data.newversion + '```')
 client.on("message", (message) => {
@@ -70,9 +104,7 @@ client.commands = new Discord.Collection();
   client.on("ready", () => {
     console.log('[Logged in] ' + client.user.tag)
     console.log('[Time] ' + moment().format('MMMM Do YYYY, h:mm:ss a'))
-    console.log('[Game] ' + game.game)
     console.log('[Announcement] ' + announcement.announce)
-    client.user.setGame(game.game + ' | ' + data.prefix + 'help' )
     pusage.unmonitor(process.pid)
    requestpn.post({
            uri: `https://discordbots.org/api/bots/${client.user.id}/stats`,
@@ -84,6 +116,7 @@ client.commands = new Discord.Collection();
                server_count: client.guilds.size,
            },
        });
+      
 
 
   });
@@ -95,14 +128,14 @@ client.commands = new Discord.Collection();
       var newbanembed = new Discord.RichEmbed()
         .setColor('FFCE00')
         .setTitle('User Banned :hammer:')
-        .setDescription('The user ' + user + ' has been met with the Ban Hammer :hammer: ')
+        .setDescription('The user ' + user.tag + ' has been met with the Ban Hammer :hammer: ')
         .setAuthor(user.username ,user.avatarURL)
         
       if(modlog) {
-        modlog.send({embed: newbanembed})
+        modlog.send({embed: newbanembed}).catch(console.error);
       }
       if (announcements) {
-       announcements.send({embed: newbanembed})
+       announcements.send({embed: newbanembed}).catch(console.error);
       }
   });
   client.on('guildMemberUpdate', (message, oMember, nMember) => {
@@ -112,7 +145,7 @@ client.commands = new Discord.Collection();
       .setTitle('Guild Member Update')
       .setDescription(oMember + ' | ' + nMember)
       
-      if(modlog) return modlog.send({embed: guildMemberUpdateembed})
+      if(modlog) return modlog.send({embed: guildMemberUpdateembed}).catch(console.error);
   });
   client.on('guildUpdate', (oGuild, nGuild) => {
     var modlog = oGuild.channels.find('name', 'mod-log')
@@ -121,7 +154,7 @@ client.commands = new Discord.Collection();
       .setTitle('Guild Updated')
       .setDescription('The Guild has been updated! \n \n **Before:** ' + oGuild + ' \n \n **After:** ' + nGuild)
       
-      if(modlog) return modlog.send({embed: guildupdateembed})
+      if(modlog) return modlog.send({embed: guildupdateembed}).catch(console.error);
   });
   client.on('guildBanRemove', (guild, user) => {
     var modlog = guild.channels.find('name', 'mod-log')
@@ -129,18 +162,18 @@ client.commands = new Discord.Collection();
     var newunbanembed = new Discord.RichEmbed()
       .setColor('FFCE00')
       .setTitle('User Unbanned')
-      .setDescription('The user ' + user + ' has been unbanned')
+      .setDescription('The user ' + user.tag + ' has been unbanned')
       .setAuthor(user.username , user.displayAvatarURL)
       
       if(modlog) {
-        modlog.send({embed: newunbanembed})
+        modlog.send({embed: newunbanembed}).catch(console.error);
       }
       if (announcements) {
-       announcements.send({embed: newunbanembed})
+       announcements.send({embed: newunbanembed}).catch(console.error);
       }
   });
   client.on("guildDelete", guild => {
-    console.log('Removed from 1 server | ' + guild)
+    console.log('Removed from 1 server | ' + guild).catch(console.error);
       requestpn.post({
             uri: `https://discordbots.org/api/bots/${client.user.id}/stats`,
             headers: {
@@ -172,10 +205,6 @@ client.commands = new Discord.Collection();
 
     var modlog = member.guild.channels.find('name', 'mod-log');
   var announcements = member.guild.channels.find('name', 'announcements');
-  var newusermessageembed = new Discord.RichEmbed()
-    .setColor("FFCE00")
-    .setTitle('**Welcome to the server**')
-    .setDescription('Some things that you may want to know about this server is that everything you do here is logged. This is done for *quality assurance* and moderation. If you disagree with this sort of thing you should leave this server now.')
 
     var newuserjoinembed = new Discord.RichEmbed()
       .setColor('FFCE00')
@@ -184,10 +213,10 @@ client.commands = new Discord.Collection();
       
 
       if(modlog) {
-        modlog.send({embed: newuserjoinembed})
+        modlog.send({embed: newuserjoinembed}).catch(console.error);
       }
       if (announcements) {
-       announcements.send({embed: newuserjoinembed})
+       announcements.send({embed: newuserjoinembed}).catch(console.error);
       }
   });
   client.on('guildMemberRemove', member => {
@@ -199,10 +228,10 @@ client.commands = new Discord.Collection();
         .setDescription('A user has left the server D: \nPlease say your Farewells to ' + member + '!')
         
         if(modlog) {
-          modlog.send({embed: olduserjoinembed})
+          modlog.send({embed: olduserjoinembed}).catch(console.error);
         }
         if (announcements) {
-         announcements.send({embed: olduserjoinembed})
+         announcements.send({embed: olduserjoinembed}).catch(console.error);
         }
   });
   client.on('channelUpdate', (oChannel, nChannel) => {
@@ -212,7 +241,7 @@ client.commands = new Discord.Collection();
         .setTitle('Channel Updated')
         .setDescription('**Before:** ' + oChannel + '\n **After:**' + nChannel)
         
-        if(modlog) return modlog.send({embed: channelupdateeventembed})
+        if(modlog) return modlog.send({embed: channelupdateeventembed}).catch(console.error);
   });
   client.on('channelPinsUpdate', (channel, time) => {
     var modlog = channel.guild.channels.find('name', 'mod-log');
@@ -250,8 +279,8 @@ client.commands = new Discord.Collection();
       
       if(modlog) return modlog.send({embed: roleupdateembed}).catch(console.error);
   });
-  client.on('messageUpdate', (oldMessage, newMessage) => {
-    var modlog = newMessage.guild.channels.find('name', 'mod-log');
+  /*client.on('messageUpdate', (oldMessage, newMessage) => {
+    var modlog = oldMessage.guild.channels.find('name', 'mod-log');
     var messageUpdateembed = new Discord.RichEmbed()
       .setColor('FFCE00')
      .setTitle("Message Edited")
@@ -259,16 +288,17 @@ client.commands = new Discord.Collection();
       
   if(modlog) {
     console.log(' ')
-    if(oldMessage.content !== newMessage.content) return modlog.send({embed: messageUpdateembed});
+    if(oldMessage.content !== newMessage.content) return modlog.send({embed: messageUpdateembed}).catch(console.error);
   }
 
-  });
+  }); */
   client.on('messageDelete', message => {
     var modlog = message.guild.channels.find('name', 'mod-log');
      var messagedelembed = new Discord.RichEmbed()
      .setColor('FFCE00')
      .setTitle('Message Deleted')
-     .setDescription(message.author.username + '\n \n' + message)
+     .setDescription(message.author.tag + '\n \n' + message)
+     .setAuthor(message.author.username, message.author.displayAvatarURL)
      
      if(modlog) return modlog.send({embed: messagedelembed}).catch(console.error);
   });

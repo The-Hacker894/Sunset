@@ -36,7 +36,7 @@ var embedccpermreturn = new Discord.RichEmbed()
     var channeltypeerror = new Discord.RichEmbed()
     .setColor(data.embedcolor)
     .setTitle('Channel Type Error')
-    .setDescription('You must proivde a channel type `voice` or `text`')
+    .setDescription('You must proivde a channel type `voice` `text` or `category`')
     var channelcremlembed = new Discord.RichEmbed()
     .setColor(data.embedcolor)
     .setTitle('Make Channel Command Used')
@@ -47,7 +47,7 @@ var embedccpermreturn = new Discord.RichEmbed()
       .setTitle('Channel Created')
       .setDescription('Channel Type: ' + channeltype + '\nChannel Name: ' + channelname)
       .setAuthor(message.author.username, message.author.displayAvatarURL)
-    var channeltypes = ['voice', 'text']
+    var channeltypes = ['voice', 'text', 'category']
 
   if(!channeltype) return message.channel.send({embed: channeltypeerror})
   if(!channelname) return message.channel.send({embed: channelnameerror})

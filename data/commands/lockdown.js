@@ -21,7 +21,18 @@ module.exports.run = (client, message, args, data, game, announcement) => {
         .setTitle('Lockdown Done')
         .setDescription(time)
         .setAuthor(message.author.username, message.author.displayAvatarURL)
+        var lockdownstopped = new Discord.RichEmbed()
+            .setColor(data.embedcolor)
+            .setTitle('Lockdown Stopped')
+            .setAuthor(message.author.username, message.author.displayAvatarURL)
         var mstime = ms(time)
+        if(time === 'unlock') {
+            message.channel.overwritePermissions(message.guild.id, {
+                SEND_MESSAGES: true
+            }).catch(console.error)
+            if(modlog) return modlog.send({embed: lockdownstopped})
+            if(!modlog) return;
+        }
         if(ms(time) > 43200 * 1000) return message.channel.send('Please provide something less than 12 hours (720 minutes; 43200 seconds; ' + 43200 * 1000 + ' milliseconds)') 
          if(isNaN(mstime)) return message.channel.send('Please provide a positive integer.')
         if(ms(time) < 1) return message.channels.send('Cannot set a timer for ' + time)
@@ -35,14 +46,15 @@ module.exports.run = (client, message, args, data, game, announcement) => {
     
     message.channel.overwritePermissions(message.guild.id, {
         SEND_MESSAGES: false
-    })
-    message.channel.send(`***Lockdown for ${time} seconds started***`)
-    console.log(boxen('[Lockdown Started] ' + message.guild.name + ' | ' + message.author.tag + ' | ' + time, {padding: 1}))
+    }).catch(console.error)
+
+    message.channel.send(`***Lockdown for ${mstime} seconds started***`)
+    console.log(boxen('[Lockdown Started] ' + message.guild.name + ' | ' + message.author.tag + ' | ' + mstime, {padding: 1}))
     if(modlog) {
         modlog.send({embed: lockdownmlembed})
     }
 
-    setTimeout(Timer, time * 1000)
+    setTimeout(Timer, ms(time) * 1000)
     function Timer() {
         message.channel.overwritePermissions(message.guild.id, {
             SEND_MESSAGES: true

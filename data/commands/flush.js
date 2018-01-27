@@ -18,6 +18,7 @@ module.exports.run = (client, message, args, data, game, announcement) => {
     .setTitle("Flush Info")
     .setDescription('This command is used to reload certain things')
     .addField('Game',data.prefix + 'flush game')
+    .addField('Activity', data.prefix + 'flush activity')
     .addField('Session', data.prefix + 'flush session')
     .addField('Process', data.prefix + 'flush process')
   if(flushmessage.length < 1) return message.channel.send({embed: flushinfoembed})
@@ -26,7 +27,15 @@ module.exports.run = (client, message, args, data, game, announcement) => {
       .setColor(data.embedcolor)
       .setTitle('Flushed Game')
       .setAuthor(message.author.username, message.author.displayAvatarURL)
-    client.user.setGame(game.game + ' | ' + data.prefix + 'help')
+    client.user.setGame(game.game + ' | ' + data.prefix + 'help', { type: game.activity })
+      message.channel.send({embed: flushgamesuccessembed})
+  }
+  if(flushmessage === `activity`) {
+    var flushgamesuccessembed = new Discord.RichEmbed()
+      .setColor(data.embedcolor)
+      .setTitle('Flushed Activity')
+      .setAuthor(message.author.username, message.author.displayAvatarURL)
+    client.user.setGame(game.game + ' | ' + data.prefix + 'help', { type: game.activity })
       message.channel.send({embed: flushgamesuccessembed})
   }
   if(flushmessage === `session`) {
