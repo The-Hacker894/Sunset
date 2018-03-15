@@ -35,12 +35,6 @@ Before trying to run Sunset you should type install all of the packages detailed
 [Sunset Website](https://hackerhubsite.weebly.com/sunset.html)  
 [Sunset Discord Bots](https://discordbots.org/bot/371097223942897665)  
 
-Folders to add in `./data/` directory
-`base64files`
-`binaryfiles`
-`qrcode`
-`rule`
-`textfiles`
-`warns`
+- When you first start using Sunset it may be a little slow as it has to create some system files
 
   
