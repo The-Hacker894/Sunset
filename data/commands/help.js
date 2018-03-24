@@ -12,7 +12,7 @@ module.exports.run = (client, message, args, data, game, announcement) => {
   .setColor(data.embedcolor)
     .setTitle('Commands')
     .addField('**Information**','`help` `ping` `info` `usage` `uptime`')
-    .addField('**Server Info**','`invite` `serverinfo` `avatar` `profile`')
+    .addField('**Server Info**','`serversettings` `invite` `serverinfo` `avatar` `profile`')
     .addField('**Entertainment**','`tweet` `translate` `cleverbot` `emojify` `cowthink` `cowsay` `fliptext` `figlet` `say` `2ball` `8ball`')
     .addField('**More Entertainment**', '`timer` `urbandictionary` `dictionary` `google` `coinflip` `roll`')
     .addField('**Economy**', '`atm` `bal` `pay` `freemoney` `lottery` `rob` `clearmoney`')
