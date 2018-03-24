@@ -6,39 +6,66 @@ module.exports.run = (client, message, args, data, announcement) => {
     var warnMember = message.guild.member(message.mentions.users.first());
     var messagecontent = message.content.split(' ').slice(1).join(' ')
     var warnReason = message.content.split(/\s+/g).slice(2).join(" ");
-    if (!fs.existsSync(`./data/warns/${message.guild.id}`)){
-        fs.mkdirSync(`./data/warns/${message.guild.id}`);
+
+    if(!warnMember) {
+        var noargs = new Discord.RichEmbed()
+            .setColor(data.embedcolor)
+            .setDescription('Please provide a member to check warnings for')
+            return message.channel.send({embed: noargs});
     }
+
     
 
                     if(warnReason === 'clear') {
-                        fs.exists(`./data/warns/${message.guild.id}/${warnMember.id}.txt`, function(exists) {
+                        fs.exists(`./data/serverdata/${message.guild.id}/warns/${warnMember.id}.txt`, function(exists) {
                             if (exists) {
-                                fs.unlink(`./data/warns/${message.guild.id}/${warnMember.id}.txt`, function(err) {
+                                fs.unlink(`./data/serverdata/${message.guild.id}/warns/${warnMember.id}.txt`, function(err) {
                                  if (err) {
                                      return message.channel.send(err)
                                  }
+                                 var warnscleared = new Discord.RichEmbed()
+                                    .setColor(data.embedcolor)
+                                    .setTitle('Cleared Warns')
+                                    .setDescription(`Warns cleared for ${warnMember.user.tag}`)
+                                    .setAuthor(warnMember.user.tag, warnMember.user.displayAvatarURL)
+                                var warnsclearedDM = new Discord.RichEmbed()
+                                 .setColor(data.embedcolor)
+                                 .setTitle(`Cleared Warns [${message.guild.name}]`)
+                                 .setDescription(`Your warns have been cleared on ${message.guild.name}`)
+                                 .setFooter(`Warns cleared by ${message.author.tag}`)
 
-                                 message.channel.send('Warns cleared for ' + warnMember)
-                                 warnMember.send('***Warns have been cleared on ' + message.guild.name + '!***')
+                                 message.channel.send({embed: warnscleared})
+                                 warnMember.send({embed: warnsclearedDM})
                                  console.log('send data')
                                });
                              } else {
-                                 return message.channel.send('```' + boxen('That user has no warns', {padding: 1}) +'```')
+                                 var otherwarnerror = new Discord.RichEmbed()
+                                    .setColor(data.embedcolor)
+                                    .setDescription(`${warnMember.user.tag} has no warns on this guild.`)
+                                .setAuthor(warnMember.user.tag, warnMember.user.displayAvatarURL)
+                                 return message.channel.send({embed: otherwarnerror})
      
                              }
                          });
                     } else {
-                    fs.exists(`./data/warns/${message.guild.id}/${warnMember.id}.txt`, function(exists) {
+                    fs.exists(`./data/serverdata/${message.guild.id}/warns/${warnMember.id}.txt`, function(exists) {
                        if (exists) {
-                        fs.readFile(`./data/warns/${message.guild.id}/${warnMember.id}.txt`, 'utf8', function(err, data) {
+                        fs.readFile(`./data/serverdata/${message.guild.id}/warns/${warnMember.id}.txt`, 'utf8', function(err, data) {
                             if (err) {
                                 return message.channel.send(err)
                             }
-                            message.channel.send('```' + data + '```')
+                            var warndata = new Discord.RichEmbed()
+                                .setColor(data.embedcolor)
+                                .setTitle(`Warnings ${warnMember.user.tag}`)
+                                .setDescription(data)
+                            message.channel.send({embed: warndata})
                             console.log('send data')
                           });
                         } else {
+                            var warnerror = new Discord.RichEmbed()
+                                .setColor(data.embedcolor)
+                                .setDescription(`${warnMember.user.tag} has no warns on this guild.`)
+                                .setAuthor(warnMember.user.tag, warnMember.user.displayAvatarURL)
                             message.channel.send({embed: warnerror})
 
                         }

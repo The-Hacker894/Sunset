@@ -7,10 +7,10 @@ const fs = require("fs")
 module.exports.run = (client, message, args, data, game, announcement) => {
     const modlog = message.guild.channels.find('name', 'mod-log');    
     message.channel.startTyping()
-    fs.exists(`./data/qrcode/${message.author.id}.png`, function(exists) {
+    fs.exists(`./data/serverdata/${message.guild.id}/qrcode/${message.author.id}.png`, function(exists) {
         if (exists) {
-          fs.stat(`./data/qrcode/${message.author.id}.png`, function(err, stats) { 
-            message.channel.send(new Attachment(`./data/qrcode/${message.author.id}.png`, `qrcode.png`)).then(message => {
+          fs.stat(`./data/serverdata/${message.guild.id}/qrcode/${message.author.id}.png`, function(err, stats) { 
+            message.channel.send(new Attachment(`./data/serverdata/${message.guild.id}/qrcode/${message.author.id}.png`, `qrcode.png`)).then(message => {
                 message.channel.stopTyping()
             });
           });

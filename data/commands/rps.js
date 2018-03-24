@@ -2,12 +2,14 @@ const RichEmbed = require("discord.js").RichEmbed;
 const Discord = require("discord.js");
 const boxen = require('boxen');
 const request = require('request')
-function botrps() {
-    var rand = ['Rock','Paper','Scissors','Rock','Paper','Scissors','Rock','Paper','Scissors','Rock','Paper','Scissors','Rock','Paper','Scissors','Rock','Paper','Scissors',]
-    return rand[Math.floor(Math.random()*rand.length)];
-    }
+    const fs = require('fs')
+
 
 module.exports.run = (client, message, args, data, game, announcement) => {
+  console.log('start')
+  if (!fs.existsSync(`./data/economy/${message.guild.id}`)){
+    fs.mkdirSync(`./data/economy/${message.guild.id}`);
+}
   var commandlock = data.lock
   if(commandlock.includes('true')) {       
     if(message.author.id !== data.ownerid) return message.channel.send('Sorry, but a command lock is in effect. Only the owner can use commands at this time.')   
@@ -27,58 +29,89 @@ var rpsitemlengtherrorembed = new Discord.RichEmbed()
   // Credits to https://github.com/LouieK22/rps-bot/blob/master/app.js
 
   if (!args[1] || wins[args[1]] == null) return message.channel.send({embed: rpsitemlengtherrorembed})
-  message.channel.startTyping()
   request('https://www.random.org/integers/?num=1&min=0&max=2&base=10&col=1&format=plain&rnd=new', function (error, response, body) {
-    const botChoice = opts[Number(body)];
-
+    console.log('request')
+    
+   /* fs.exists(`./data/economy/${message.guild.id}/${message.author.id}.txt`, function(exists) {
+      console.log('fs.exists')
+      if (exists) {
+        console.log('if exists')
+        fs.readFile(`./data/economy/${message.guild.id}/${message.author.id}.txt`, 'utf8', function(err, data) {
+          console.log('readfile') */
+          const botChoice = opts[Number(body)];
+    /*const parsedmoney = parseFloat(Math.floor(Math.random() * 100) + 1)
+    const parsedData = parseFloat(data)
+    const losstax = parseFloat(Math.floor(Math.random() * 100) + 1)*/
 
     var rpschosen = new Discord.RichEmbed()
-      .setColor(data.embedcolor)
-      .setTitle('RPS')
-      .setDescription(`I choose **${botChoice.toUpperCase()}**`)
-      .setAuthor(message.author.username, message.author.displayAvatarURL)
-    var rpsiwon = new Discord.RichEmbed()
-      .setColor(data.embedcolor)
-      .setTitle('RPS')
-      .setDescription(`I choose **${botChoice.toUpperCase()}**\n\nI won :tada:`)
-      .setAuthor(message.author.username, message.author.displayAvatarURL)
-    var rpswetied = new Discord.RichEmbed()
-      .setColor(data.embedcolor)
-      .setTitle('RPS')
-      .setDescription(`I choose **${botChoice.toUpperCase()}**\n\nWe tied :checkered_flag: `)
-      .setAuthor(message.author.username, message.author.displayAvatarURL)
-    var rpsyouwon = new Discord.RichEmbed()
-      .setColor(data.embedcolor)
-      .setTitle('RPS')
-      .setDescription(`I choose **${botChoice.toUpperCase()}**\n\nYou won :flag_white: `)
-      .setAuthor(message.author.username, message.author.displayAvatarURL)
+    .setColor(data.embedcolor)
+    .setTitle('RPS')
+    .setDescription(`I choose **${botChoice.toUpperCase()}**`)
+    .setAuthor(message.author.username, message.author.displayAvatarURL)
+  var rpsiwon = new Discord.RichEmbed()
+    .setColor(data.embedcolor)
+    .setTitle('RPS')
+    .setDescription(`I choose **${botChoice.toUpperCase()}**\n\nI won :tada:`) //\nMoney Loss: ${losstax}
+    .setAuthor(message.author.username, message.author.displayAvatarURL)
+  var rpswetied = new Discord.RichEmbed()
+    .setColor(data.embedcolor)
+    .setTitle('RPS')
+    .setDescription(`I choose **${botChoice.toUpperCase()}**\n\nWe tied :checkered_flag:`) //\nMoney Payout: ${parsedmoney}
+    .setAuthor(message.author.username, message.author.displayAvatarURL)
+  var rpsyouwon = new Discord.RichEmbed()
+    .setColor(data.embedcolor)
+    .setTitle('RPS')
+    .setDescription(`I choose **${botChoice.toUpperCase()}**\n\nYou won :flag_white:`) //\nMoney Payout: ${parsedmoney}
+    .setAuthor(message.author.username, message.author.displayAvatarURL)
+
+  message.channel.send({embed: rpschosen}).then(message => {
+    console.log('rpschosen')
+
+    if(wins[botChoice] == args[1]){
+      message.edit({embed: rpsiwon})
+
+  /*    fs.writeFile(`./data/economy/${message.guild.id}/${message.author.id}.txt`, parsedData - losstax, function(err) {
+        console.log('writing loss')
+        if(err) {
+          message.channel.send(err)
+        }
+      }); */
+    }else if(botChoice == args[1]){
+      message.edit({embed: rpswetied})
+    /*  fs.writeFile(`./data/economy/${message.guild.id}/${message.author.id}.txt`, parsedData + parsedmoney, function(err) {
+        console.log('writing tie')
+        if(err) {
+          message.channel.send(err)
+        }
+      }); */
+    }else{
+      message.edit({embed: rpsyouwon})
+    /*  fs.writeFile(`./data/economy/${message.guild.id}/${message.author.id}.txt`, parsedData + parsedmoney, function(err) {
+        console.log('righting win')
+        if(err) {
+          message.channel.send(err)
+        }
+      
+    });*/
+    }
+  /*});  
   
-    message.channel.send({embed: rpschosen}).then(message => {
-      message.channel.stopTyping()
 
-      if(wins[botChoice] == args[1]){
-        message.edit({embed: rpsiwon}).then(message => {
-          message.channel.stopTyping()
-        })
-      }else if(botChoice == args[1]){
-        message.edit({embed: rpswetied}).then(message => {
-          message.channel.stopTyping()
-        })
-      }else{
-        message.edit({embed: rpsyouwon}).then(message => {
-          message.channel.stopTyping()
-        })
-      }
-    })
-  
-    
-});
-
-  
-
-  
-
-
+        }); 
+    /* } else {
+        fs.writeFile(`./data/economy/${message.guild.id}/${message.author.id}.txt`, '0', function(err) {
+          if(err) {
+            message.channel.send(err)
+          }
+          var noaccount = new Discord.RichEmbed()
+            .setColor(data.embedcolor)
+            .setTitle('No Bank Account Found')
+            .setDescription('No Bank Account Found\nCreating new file\nTry using this command again.')
+            message.channel.send({embed: noaccount})
+      });
+     } */
+      });
+    });
 }
 module.exports.help = {
   name: "rps",

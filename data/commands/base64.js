@@ -32,14 +32,14 @@ module.exports.run = (client, message, args, data, game, announcement) => {
             if(!text) return message.channel.send({embed: texterror}).then(message => {
                 message.channel.stopTyping()
             })
-            fs.writeFile(`./data/base64files/${message.author.id}.txt`, base64url.encode(text), function(err) {
+            fs.writeFile(`./data/serverdata/${message.guild.id}/base64/${message.author.id}.txt`, base64url.encode(text), function(err) {
                 if(err) {
                     message.channel.send('An exception occured while writing your encoded text to a text file. ' + err).then(message => {
                         message.channel.stopTyping()
                     })
                     return console.log(err);
                 } else {
-                    message.channel.send(new Attachment(`./data/base64files/${message.author.id}.txt`, `base64_encode.txt`)).then(message => {
+                    message.channel.send(new Attachment(`./data/serverdata/${message.guild.id}/base64/${message.author.id}.txt`, `base64_encode.txt`)).then(message => {
                         message.channel.stopTyping()
                     })
                 }
@@ -49,24 +49,24 @@ module.exports.run = (client, message, args, data, game, announcement) => {
             if(!text) return message.channel.send({embed: texterror}).then(message => {
                 message.channel.stopTyping()
             })
-            fs.writeFile(`./data/base64files/${message.author.id}.txt`, base64url.decode(text), function(err) {
+            fs.writeFile(`./data/serverdata/${message.guild.id}/base64/${message.author.id}.txt`, base64url.decode(text), function(err) {
                 if(err) {
                     message.channel.send('An exception occured while writing your decoded text to a text file. ' + err).then(message => {
                         message.channel.stopTyping()
                     })
                     return console.log(err);
                 } else {
-                    message.channel.send(new Attachment(`./data/base64files/${message.author.id}.txt`, `base64_decode.txt`)).then(message => {
+                    message.channel.send(new Attachment(`./data/serverdata/${message.guild.id}/base64/${message.author.id}.txt`, `base64_decode.txt`)).then(message => {
                         message.channel.stopTyping()
                     })
                 }
             });
         }
         if(code === 'recover') {
-            fs.exists(`./data/base64files/${message.author.id}.txt`, function(exists) {
+            fs.exists(`./data/serverdata/${message.guild.id}/base64/${message.author.id}.txt`, function(exists) {
                 if (exists) {
-                  fs.stat(`./data/base64files/${message.author.id}.txt`, function(err, stats) { 
-                    message.channel.send(new Attachment(`./data/base64files/${message.author.id}.txt`, `base64_recover.txt`)).then(message => {
+                  fs.stat(`./data/serverdata/${message.guild.id}/base64/${message.author.id}.txt`, function(err, stats) { 
+                    message.channel.send(new Attachment(`./data/serverdata/${message.guild.id}/base64/${message.author.id}.txt`, `base64_recover.txt`)).then(message => {
                         message.channel.stopTyping()
                     });
                   });

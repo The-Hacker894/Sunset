@@ -18,12 +18,12 @@ module.exports.run = (client, message, args, data, game, announcement) => {
 message.channel.startTyping()
 var text = message.content.split(' ').slice(1).join(' ')
 if(text.length < 1) return message.channel.send('Please provide text to write')
-writeFile(`./data/textfiles/${message.author.id}.txt`, text, function(err) {
+writeFile(`./data/serverdata/${message.guild.id}/textfiles/${message.author.id}.txt`, text, function(err) {
     if (err) console.log(err);
   });
 setTimeout(Timer, 1500);
 function Timer() {
-    message.channel.send(new Attachment(`./data/textfiles/${message.author.id}.txt`, `textfile.txt`)).then(message => {
+    message.channel.send(new Attachment(`./data/serverdata/${message.guild.id}/textfiles/${message.author.id}.txt`, `textfile.txt`)).then(message => {
         message.channel.stopTyping()
     });
     console.log(boxen('[CreateTXT] ' + message.guild.name + ' | ' + message.author.tag, {padding: 1}))

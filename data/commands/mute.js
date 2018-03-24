@@ -7,6 +7,7 @@ module.exports.run = (client, message, args, data, game, announcement) => {
 var messagecontent = message.content.split(' ').slice(1).join(' ')
 var muteMember = message.guild.member(message.mentions.users.first());
 const muteRole = message.guild.roles.find('name', 'Muted by SUNSET')
+const muteRoleExists = message.guild.roles.exists('name', 'Muted by SUNSET')
 const modlog = message.guild.channels.find('name', 'mod-log');
 
  var mutetime = message.content.split(/\s+/g).slice(2).join(" ");
@@ -14,12 +15,12 @@ const modlog = message.guild.channels.find('name', 'mod-log');
  if(!message.member.hasPermission("MANAGE_CHANNELS")) return message.channel.send('You must have the `MANAGE_CHANNELS` permission')
  if(!message.guild.me.hasPermission("MANAGE_CHANNELS")) return message.channel.send('I do not have the `MANAGE_CHANNELS` permission')
 
- if(mutetime.length < 1) return message.channel.send('Please provide the amount of time for the mute')
+ if(!mutetime) return message.channel.send('Please provide the amount of time for the mute')
  var msMuteTime = ms(mutetime)
-    if(muteMember.length < 1) return message.channel.send('Please provide a member to mute')
+    if(!muteMember) return message.channel.send('Please provide a member to mute')
     
 
-    if(!muteRole) {
+    if(!muteRoleExists) {
         message.guild.createRole({
             name: 'Muted by SUNSET',
             color: 'ORANGE',
@@ -65,19 +66,30 @@ const modlog = message.guild.channels.find('name', 'mod-log');
         .setColor(data.embedcolor)
         .setDescription(`I cannot mute ${muteMember} because they have the same role or a higher role than me.`)
         .setAuthor(message.author.username, message.author.displayAvatarURL)
+        console.log(message.member.highestRole.position + '||||||||         1')
+        console.log(muteMember.highestRole.position + '||||||||         2')
+        console.log(message.guild.me.highestRole.position + '||||||||         3')
 
 
-    if(muteMember.roles.has(muteRole.id)) {
-        return message.channel.send({embed: muteerror})
+    if(muteMember.roles.has(muteRoleExists.id)) {
+        return message.channel.send({embed: muteerror}).catch(err => {
+            message.channel.send('An error occured: ' + err)
+        })
     }
     if(muteMember.id === message.author.id) {
-        return message.channel.send({embed: muteself})
+        return message.channel.send({embed: muteself}).catch(err => {
+            message.channel.send('An error occured: ' + err)
+        })
     }
     if(muteMember.highestRole.position >= message.member.highestRole.position) {
-        return message.channel.send({embed: highestrolemember})
+        return message.channel.send({embed: highestrolemember}).catch(err => {
+            message.channel.send('An error occured: ' + err)
+        })
     }
-    if(client.user.highestRole.position >= message.member.highestRole.position) {
-        return message.channel.send({embed: highestroleclient})
+    if(message.guild.me.highestRole.position <= muteMember.highestRole.position) {
+        return message.channel.send({embed: highestroleclient}).catch(err => {
+            message.channel.send('An error occured: ' + err)
+        })
     }
     muteMember.addRole(muteRole).catch(err => {
         message.channel.send('An error occured: ' + err)

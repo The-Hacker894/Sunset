@@ -32,7 +32,7 @@ if(useravatar.length < 1) return message.channel.send({embed: avatarnomenembed})
 
   var avatarouembed = new Discord.RichEmbed()
     .setColor(data.embedcolor)
-    .setTitle(' ')
+    .setTitle('Avatar of ' + otheruser.user.username)
     .setImage(message.mentions.users.first().displayAvatarURL)
     .setAuthor(message.author.username ,message.author.displayAvatarURL)
     // removed 

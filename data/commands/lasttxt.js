@@ -8,10 +8,10 @@ module.exports.run = (client, message, args, data, game, announcement) => {
     message.channel.startTyping()
     
     const modlog = message.guild.channels.find('name', 'mod-log');    
-    fs.exists(`./data/qrcode/${message.author.id}.png`, function(exists) {
+    fs.exists(`./data/serverdata/${message.guild.id}/text/${message.author.id}.txt`, function(exists) {
         if (exists) {
-          fs.stat(`./data/textfiles/${message.author.id}.txt`, function(err, stats) { 
-            message.channel.send(new Attachment(`./data/textfiles/${message.author.id}.txt`, `textfile.txt`)).then(message => {
+          fs.stat(`./data/serverdata/${message.guild.id}/text/${message.author.id}.txt`, function(err, stats) { 
+            message.channel.send(new Attachment(`./data/serverdata/${message.guild.id}/text/${message.author.id}.txt`, `textfile.txt`)).then(message => {
                 message.channel.stopTyping()
             });
           });

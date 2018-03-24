@@ -1,12 +1,28 @@
+
+/*
+   ________  ___  ___  ________   ________  _______  _________                
+ |\   ____\|\  \|\  \|\   ___  \|\   ____\|\  ___ \|\___   ___\              
+ \ \  \___|\ \  \\\  \ \  \\ \  \ \  \___|\ \   __/\|___ \  \_|              
+  \ \_____  \ \  \\\  \ \  \\ \  \ \_____  \ \  \_|/__  \ \  \               
+   \|____|\  \ \  \\\  \ \  \\ \  \|____|\  \ \  \_|\ \  \ \  \              
+     ____\_\  \ \_______\ \__\\ \__\____\_\  \ \_______\  \ \__\             
+    |\_________\|_______|\|__| \|__|\_________\|_______|   \|__|             
+    \|_________|                   \|_________|
+
+*/  
+const fs = require("fs");
+fs.readFile(`./data/brain/startup.txt`, 'utf8', function(err, data) {
+  console.log(data)
+})
+
 const Discord = require("discord.js");
 const RichEmbed = require("discord.js").RichEmbed;
 const client = new Discord.Client({autoReconnect:true});
 const data = require("./data/brain/data.json");
+const datajson = require('./data/brain/data.json')
 const announcement = require("./data/brain/announcement.json");
 const game = require("./data/brain/game.json");
-const warn = require("./data/brain/warn.json");
-const warnedinfo = require("./data/brain/warnedinfo.json");
-const fs = require("fs");
+
 const prefix = data.prefix
 const token = data.token
 const request = require("request")
@@ -16,41 +32,12 @@ const DBLToken = data.dbltoken
 const moment = require('moment')
 
 
-var dataPath = './data/'
-var base64filesPath = './data/base64files/'
-var binaryfilesPath = './data/binaryfiles/'
-var qrcodePath = './data/qrcode/'
-var scriptsPath = './data/scripts/'
-var textfilesPath = './data/textfiles/'
 
-if (!fs.existsSync(dataPath)) {
- console.log('Could not find the ./data/ folder')
- process.exit(0)
-}
-if (!fs.existsSync(base64filesPath)) {
-console.log('Could not find the ./data/base64files/ folder')
-process.exit(0)
-}
-if (!fs.existsSync(binaryfilesPath)) {
-console.log('Could not find the ./data/binaryfiles/ folder')
-process.exit(0)
-}
-if (!fs.existsSync(qrcodePath)) {
-console.log('Could not find the ./data/qrcode/ folder')
-process.exit(0)
-}
-if (!fs.existsSync(scriptsPath)) {
-console.log('Could not find the ./data/scripts/ folder')
-process.exit(0)
-}
-if (!fs.existsSync(textfilesPath)) {
-console.log('Could not find the ./data/textfiles/ folder')
-process.exit(0)
-}
 
 
 // Credits for this code go to Felix, Corbs, Danny, and Jackalope :)
 // Mostly Felix and Danny
+// Mostly Felix
 
 
 const botjoinembed = new Discord.RichEmbed()
@@ -68,22 +55,158 @@ client.on("message", (message) => {
   if(!command.startsWith(prefix)) return;
   const cmd = client.commands.get(command.slice(prefix.length))
   if(cmd)
-    cmd.run(client, message, args, data, game, announcement, warn, warnedinfo)
+    cmd.run(client, message, args, data, game, announcement, datajson)
 })
 client.on("message", (message) => {
+  if(message.author.bot) return;
+  if(message.channel.type === 'dm') return;
   if(message.content.startsWith(`<@${client.user.id}>`)) {
     var mentionedembed = new Discord.RichEmbed()
       .setColor(data.embedcolor)
       .setTitle('Prefix')
       .setDescription('```' + prefix + '```')
+      .setFooter(prefix + 'help')
       message.channel.send({embed: mentionedembed})
   }
-})
-client.on("message", function(message) {
-  var Attachment = (message.attachments).array();
-  Attachment.forEach(function(attachment) {
-    console.log(attachment.url);
-  })
+  var guild = message.guild
+  if (!fs.existsSync(`./data/serverdata/${guild.id}`)) {
+    fs.mkdirSync(`./data/serverdata/${guild.id}`);
+ }
+ if (!fs.existsSync(`./data/serverdata/${guild.id}/settings`)) {
+  fs.mkdirSync(`./data/serverdata/${guild.id}/settings`);
+}
+ if (!fs.existsSync(`./data/serverdata/${guild.id}/base64`)) {
+  fs.mkdirSync(`./data/serverdata/${guild.id}/base64`);
+}
+if (!fs.existsSync(`./data/serverdata/${guild.id}/binary`)) {
+fs.mkdirSync(`./data/serverdata/${guild.id}/binary`);
+}
+if (!fs.existsSync(`./data/serverdata/${guild.id}/economy`)) {
+fs.mkdirSync(`./data/serverdata/${guild.id}/economy`);
+}
+if (!fs.existsSync(`./data/serverdata/${guild.id}/economy/atm`)) {
+fs.mkdirSync(`./data/serverdata/${guild.id}/economy/atm`);
+}if (!fs.existsSync(`./data/serverdata/${guild.id}/qrcode`)) {
+fs.mkdirSync(`./data/serverdata/${guild.id}/qrcode`);
+}  
+if (!fs.existsSync(`./data/serverdata/${guild.id}/rule`)) {
+fs.mkdirSync(`./data/serverdata/${guild.id}/rule`);
+}
+if (!fs.existsSync(`./data/serverdata/${guild.id}/text`)) {
+fs.mkdirSync(`./data/serverdata/${guild.id}/text`);
+}
+if (!fs.existsSync(`./data/serverdata/${guild.id}/warns`)) {
+fs.mkdirSync(`./data/serverdata/${guild.id}/warns`);
+}
+if (!fs.existsSync(`./data/serverdata/timer/`)) {
+  fs.mkdirSync(`./data/serverdata/timer/`);
+  }
+if (!fs.existsSync(`./data/serverdata/timer/${guild.id}/`)) {
+  fs.mkdirSync(`./data/serverdata/timer/${guild.id}/`);
+  }
+  if (!fs.existsSync(`./data/serverdata/economy/`)) {
+    fs.mkdirSync(`./data/serverdata/economy/`);
+    }
+  if (!fs.existsSync(`./data/serverdata/economy/${guild.id}/`)) {
+    fs.mkdirSync(`./data/serverdata/economy/${guild.id}/`);
+    }
+fs.exists(`./data/serverdata/${guild.id}/economy/${message.author.id}.txt`, function(exists) {
+  if (!exists) {
+      fs.writeFile(`./data/serverdata/${guild.id}/economy/${message.author.id}.txt`, '0', function(err) {
+      });
+  }
+});
+fs.exists(`./data/serverdata/${guild.id}/economy/atm/${message.author.id}.txt`, function(exists) {
+  if (!exists) {
+      fs.writeFile(`./data/serverdata/${guild.id}/economy/atm/${message.author.id}.txt`, '0', function(err) {
+      });
+  }
+});
+fs.exists(`./data/serverdata/${guild.id}/settings/currency.txt`, function(exists) {
+  if (!exists) {
+      fs.writeFile(`./data/serverdata/${guild.id}/settings/currency.txt`, '$', function(err) {
+      });
+  }
+});
+fs.exists(`./data/serverdata/${guild.id}/settings/lotterychance.txt`, function(exists) {
+  if (!exists) {
+      fs.writeFile(`./data/serverdata/${guild.id}/settings/lotterychance.txt`, '0.08', function(err) {
+      });
+  }
+});
+fs.exists(`./data/serverdata/${guild.id}/settings/lotterypayout.txt`, function(exists) {
+  if (!exists) {
+      fs.writeFile(`./data/serverdata/${guild.id}/settings/lotterypayout.txt`, '5000', function(err) {
+      });
+  }
+});
+fs.exists(`./data/serverdata/${guild.id}/settings/2ballcost.txt`, function(exists) {
+  if (!exists) {
+      fs.writeFile(`./data/serverdata/${guild.id}/settings/2ballcost.txt`, '10', function(err) {
+      });
+  }
+});
+fs.exists(`./data/serverdata/${guild.id}/settings/2ballpayout.txt`, function(exists) {
+  if (!exists) {
+      fs.writeFile(`./data/serverdata/${guild.id}/settings/2ballpayout.txt`, '25', function(err) {
+      });
+  }
+});
+fs.exists(`./data/serverdata/${guild.id}/settings/8ballpayout.txt`, function(exists) {
+          if (!exists) {
+              fs.writeFile(`./data/serverdata/${guild.id}/settings/8ballpayout.txt`, '50', function(err) {
+              });
+          }
+        });
+         fs.exists(`./data/serverdata/${guild.id}/settings/8ballcost.txt`, function(exists) {
+          if (!exists) {
+              fs.writeFile(`./data/serverdata/${guild.id}/settings/8ballcost.txt`, '10', function(err) {
+              });
+          }
+        });
+fs.exists(`./data/serverdata/${guild.id}/settings/8ballcost.txt`, function(exists) {
+  if (!exists) {
+      fs.writeFile(`./data/serverdata/${guild.id}/settings/8ballcost.txt`, '20', function(err) {
+      });
+  }
+});
+fs.exists(`./data/serverdata/${guild.id}/settings/8ballpayout.txt`, function(exists) {
+  if (!exists) {
+      fs.writeFile(`./data/serverdata/${guild.id}/settings/8ballpayout.txt`, '35', function(err) {
+      });
+  }
+});
+fs.exists(`./data/serverdata/${guild.id}/settings/lotterycost.txt`, function(exists) {
+  if (!exists) {
+      fs.writeFile(`./data/serverdata/${guild.id}/settings/lotterycost.txt`, '500', function(err) {
+      });
+  }
+});
+fs.exists(`./data/serverdata/${guild.id}/settings/freemoneypayout.txt`, function(exists) {
+  if (!exists) {
+      fs.writeFile(`./data/serverdata/${guild.id}/settings/freemoneypayout.txt`, '50', function(err) {
+      });
+  }
+});
+fs.exists(`./data/serverdata/${guild.id}/settings/robpayout.txt`, function(exists) {
+  if (!exists) {
+      fs.writeFile(`./data/serverdata/${guild.id}/settings/robpayout.txt`, '.11', function(err) {
+      });
+  }
+});
+fs.exists(`./data/serverdata/${guild.id}/settings/workwait.txt`, function(exists) {
+  if (!exists) {
+      fs.writeFile(`./data/serverdata/${guild.id}/settings/workwait.txt`, '5000', function(err) {
+      });
+  }
+});
+fs.exists(`./data/serverdata/${guild.id}/settings/workpayout.txt`, function(exists) {
+  if (!exists) {
+      fs.writeFile(`./data/serverdata/${guild.id}/settings/workpayout.txt`, '1000', function(err) {
+      });
+  }
+});
+
 })
 
 client.commands = new Discord.Collection();
@@ -102,24 +225,50 @@ client.commands = new Discord.Collection();
     })
   })
   client.on("ready", () => {
+    
     console.log('[Logged in] ' + client.user.tag)
     console.log('[Time] ' + moment().format('MMMM Do YYYY, h:mm:ss a'))
     console.log('[Announcement] ' + announcement.announce)
+    console.log('[Game]', game.game)
+    console.log('[Activity]', game.activity)
     pusage.unmonitor(process.pid)
-   requestpn.post({
-           uri: `https://discordbots.org/api/bots/${client.user.id}/stats`,
-           headers: {
-               Authorization: DBLToken, // Insert token here
-           },
-           json: true,
-           body: {
-               server_count: client.guilds.size,
-           },
-       });
-      
-
-
+    requestpn.post({
+            uri: `https://discordbots.org/api/bots/${client.user.id}/stats`,
+            headers: {
+                Authorization: DBLToken, // Insert token here
+            },
+            json: true,
+            body: {
+                server_count: client.guilds.size,
+            },
+        });
+    if(game.activity.includes('PLAYING')) {
+      client.user.setActivity(game.game + ' | ' + data.prefix + 'help', { type: 'PLAYING' })
+      return;
+  }
+  if(game.activity.includes('STREAMING')) {
+      client.user.setActivity(game.game + ' | ' + data.prefix + 'help', { type: 'STREAMING' })
+      return;
+  }
+  if(game.activity.includes('LISTENING')) {
+      client.user.setActivity(game.game + ' | ' + data.prefix + 'help', { type: 'LISTENING' })
+      return;
+  }
+  if(game.activity.includes('WATCHING')) {
+      client.user.setActivity(game.game + ' | ' + data.prefix + 'help', { type: 'WATCHING' })
+      return;
+  }
+  if (fs.existsSync(`./data/serverdata/timer/`)) {
+    fs.unlinkSync(`./data/serverdata/timer/`);
+    }
+    if (fs.existsSync(`./data/serverdata/economy/`)) {
+      fs.unlinkSync(`./data/serverdata/economy/`);
+      }
   });
+  client.on('disconnect', event => {
+    console.log('[DISCONNECTED] Attempting to reconnecting')
+    client.login(token)
+  })
   client.on('guildBanAdd', (guild, user) => {
     var modlog = guild.channels.find('name', 'mod-log')
     var announcements = guild.channels.find('name', 'announcements');
@@ -188,7 +337,6 @@ client.commands = new Discord.Collection();
   });
   client.on("guildCreate", guild => {
     guild.owner.send({embed: botjoinembed}).catch(console.error);
-        client.user.setGame(game.game + ' | ' + data.prefix + 'help' )
        requestpn.post({
               uri: `https://discordbots.org/api/bots/${client.user.id}/stats`,
               headers: {
@@ -199,6 +347,135 @@ client.commands = new Discord.Collection();
                   server_count: client.guilds.size,
               },
           });
+          if (!fs.existsSync(`./data/serverdata/${guild.id}`)) {
+            fs.mkdirSync(`./data/serverdata/${guild.id}`);
+         }
+         if (!fs.existsSync(`./data/serverdata/${guild.id}/settings`)) {
+          fs.mkdirSync(`./data/serverdata/${guild.id}/settings`);
+        }
+         if (!fs.existsSync(`./data/serverdata/${guild.id}/base64`)) {
+          fs.mkdirSync(`./data/serverdata/${guild.id}/base64`);
+        }
+        if (!fs.existsSync(`./data/serverdata/${guild.id}/binary`)) {
+        fs.mkdirSync(`./data/serverdata/${guild.id}/binary`);
+        }
+        if (!fs.existsSync(`./data/serverdata/${guild.id}/economy`)) {
+        fs.mkdirSync(`./data/serverdata/${guild.id}/economy`);
+        }
+        if (!fs.existsSync(`./data/serverdata/${guild.id}/economy/atm`)) {
+        fs.mkdirSync(`./data/serverdata/${guild.id}/economy/atm`);
+        }if (!fs.existsSync(`./data/serverdata/${guild.id}/qrcode`)) {
+        fs.mkdirSync(`./data/serverdata/${guild.id}/qrcode`);
+        }  
+
+        if (!fs.existsSync(`./data/serverdata/${guild.id}/rule`)) {
+        fs.mkdirSync(`./data/serverdata/${guild.id}/rule`);
+        }
+        if (!fs.existsSync(`./data/serverdata/${guild.id}/text`)) {
+        fs.mkdirSync(`./data/serverdata/${guild.id}/text`);
+        }
+        if (!fs.existsSync(`./data/serverdata/${guild.id}/warns`)) {
+        fs.mkdirSync(`./data/serverdata/${guild.id}/warns`);
+        }
+        if (!fs.existsSync(`./data/serverdata/timer/`)) {
+          fs.mkdirSync(`./data/serverdata/timer/`);
+          }
+        if (!fs.existsSync(`./data/serverdata/timer/${guild.id}/`)) {
+          fs.mkdirSync(`./data/serverdata/timer/${guild.id}/`);
+          }
+          if (!fs.existsSync(`./data/serverdata/economy/`)) {
+            fs.mkdirSync(`./data/serverdata/economy/`);
+            }
+          if (!fs.existsSync(`./data/serverdata/economy/${guild.id}/`)) {
+            fs.mkdirSync(`./data/serverdata/economy/${guild.id}/`);
+            }
+
+        fs.exists(`./data/serverdata/${guild.id}/settings/currency.txt`, function(exists) {
+          if (!exists) {
+              fs.writeFile(`./data/serverdata/${guild.id}/settings/currency.txt`, '$', function(err) {
+              });
+          }
+        }); 
+        
+        fs.exists(`./data/serverdata/${guild.id}/settings/lotterychance.txt`, function(exists) {
+          if (!exists) {
+              fs.writeFile(`./data/serverdata/${guild.id}/settings/lotterychance.txt`, '0.08', function(err) {
+              });
+          }
+        });
+        fs.exists(`./data/serverdata/${guild.id}/settings/lotterycost.txt`, function(exists) {
+          if (!exists) {
+              fs.writeFile(`./data/serverdata/${guild.id}/settings/lotterycost.txt`, '500', function(err) {
+              });
+          }
+        });
+        fs.exists(`./data/serverdata/${guild.id}/settings/2ballcost.txt`, function(exists) {
+          if (!exists) {
+              fs.writeFile(`./data/serverdata/${guild.id}/settings/2ballcost.txt`, '10', function(err) {
+              });
+          }
+        });
+        fs.exists(`./data/serverdata/${guild.id}/settings/2ballpayout.txt`, function(exists) {
+          if (!exists) {
+              fs.writeFile(`./data/serverdata/${guild.id}/settings/2ballpayout.txt`, '25', function(err) {
+              });
+          }
+        });
+        fs.exists(`./data/serverdata/${guild.id}/settings/8ballpayout.txt`, function(exists) {
+          if (!exists) {
+              fs.writeFile(`./data/serverdata/${guild.id}/settings/8ballpayout.txt`, '50', function(err) {
+              });
+          }
+        });
+         fs.exists(`./data/serverdata/${guild.id}/settings/8ballcost.txt`, function(exists) {
+          if (!exists) {
+              fs.writeFile(`./data/serverdata/${guild.id}/settings/8ballcost.txt`, '10', function(err) {
+              });
+          }
+        });
+        fs.exists(`./data/serverdata/${guild.id}/settings/8ballcost.txt`, function(exists) {
+          if (!exists) {
+              fs.writeFile(`./data/serverdata/${guild.id}/settings/8ballcost.txt`, '20', function(err) {
+              });
+          }
+        });
+        fs.exists(`./data/serverdata/${guild.id}/settings/8ballpayout.txt`, function(exists) {
+          if (!exists) {
+              fs.writeFile(`./data/serverdata/${guild.id}/settings/8ballpayout.txt`, '35', function(err) {
+              });
+          }
+        });
+        
+        fs.exists(`./data/serverdata/${guild.id}/settings/lotterypayout.txt`, function(exists) {
+          if (!exists) {
+              fs.writeFile(`./data/serverdata/${guild.id}/settings/lotterypayout.txt`, '5000', function(err) {
+              });
+          }
+        });
+        fs.exists(`./data/serverdata/${guild.id}/settings/freemoneypayout.txt`, function(exists) {
+          if (!exists) {
+              fs.writeFile(`./data/serverdata/${guild.id}/settings/freemoneypayout.txt`, '50', function(err) {
+              });
+          }
+        });
+        fs.exists(`./data/serverdata/${guild.id}/settings/robpayout.txt`, function(exists) {
+          if (!exists) {
+              fs.writeFile(`./data/serverdata/${guild.id}/settings/robpayout.txt`, '.11', function(err) {
+              });
+          }
+        });
+        fs.exists(`./data/serverdata/${guild.id}/settings/workwait.txt`, function(exists) {
+          if (!exists) {
+              fs.writeFile(`./data/serverdata/${guild.id}/settings/workwait.txt`, '5000', function(err) {
+              });
+          }
+        });
+        fs.exists(`./data/serverdata/${guild.id}/settings/workpayout.txt`, function(exists) {
+          if (!exists) {
+              fs.writeFile(`./data/serverdata/${guild.id}/settings/workpayout.txt`, '1000', function(err) {
+              });
+          }
+        });
 
   });
   client.on('guildMemberAdd', member => {
@@ -209,7 +486,7 @@ client.commands = new Discord.Collection();
     var newuserjoinembed = new Discord.RichEmbed()
       .setColor('FFCE00')
       .setTitle('Member Announcement')
-      .setDescription('A new user has joined the server :D \nPlease welcome ' + member + '!')
+      .setDescription('A new user has joined the server :D \nPlease welcome ' + member.user.tag + ' !')
       
 
       if(modlog) {
@@ -225,7 +502,7 @@ client.commands = new Discord.Collection();
       var olduserjoinembed = new Discord.RichEmbed()
         .setColor('FFCE00')
         .setTitle('Member Announcement')
-        .setDescription('A user has left the server D: \nPlease say your Farewells to ' + member + '!')
+        .setDescription('A user has left the server D: \nPlease say your Farewells to ' + member.user.tag + ' !')
         
         if(modlog) {
           modlog.send({embed: olduserjoinembed}).catch(console.error);

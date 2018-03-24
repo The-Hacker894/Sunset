@@ -26,7 +26,7 @@ module.exports.run = (client, message, args, data, game, announcement) => {
         if(!option) return message.channel.send({embed: optionerror})
         if(optionaloptions.some(viableoptions => option.includes(viableoptions))) {
 
-            if(option === 'shorten') {
+            if(option.includes ('shorten')) {
                 if(!userurl) return message.channel.send({embed: userurlerror})
             googl.setKey(data.googlAPIKey);
 
@@ -36,6 +36,7 @@ module.exports.run = (client, message, args, data, game, announcement) => {
                 .then(function (shortUrl) {
                     message.channel.send(shortUrl)
                 })
+                return;
 
             }
        if(option.includes('expand')) {
@@ -49,6 +50,7 @@ module.exports.run = (client, message, args, data, game, announcement) => {
                     .then(function (longUrl) {
                         message.channel.send(longUrl)
                     })
+                    return;
                 }
             
         } else { 

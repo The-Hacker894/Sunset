@@ -1,0 +1,49 @@
+const RichEmbed = require("discord.js").RichEmbed;
+const Discord = require("discord.js");
+const boxen = require("boxen")
+const fs = require('fs')
+const moment = require("moment")
+module.exports.run = (client, message, args, data, announcement) => {
+
+    fs.readFile(`./data/serverdata/${message.guild.id}/settings/currency.txt`, function(err, currency) {
+
+    if(message.author.id !== data.ownerid) return;
+
+    var balMember = message.guild.member(message.mentions.users.first());
+    const modlog = message.guild.channels.find('name', 'mod-log');
+    const payment = args[2]
+
+    var nomemberprov = new Discord.RichEmbed()
+        .setColor(data.embedcolor)
+        .setDescription('Please provide a member to set money amount')
+
+    if(!balMember) return message.channel.send({embed: nomemberprov})
+
+    fs.exists(`./data/serverdata/${message.guild.id}/economy/${balMember.id}.txt`, function(exists) {
+        if (exists) {
+         fs.readFile(`./data/serverdata/${message.guild.id}/economy/${balMember.id}.txt`, 'utf8', function(err, data) {
+            const parsedPayment = parseFloat(payment)
+            fs.writeFile(`./data/serverdata/${message.guild.id}/economy/${balMember.id}.txt`, parsedPayment, function(err,data) {
+                var success = new Discord.RichEmbed()
+               //     .setColor(data.embedcolor)
+                    .setTitle('Successfully Set Money!')
+                    .setDescription(`User: ${balMember.user.tag}\nAmount: ${currency}${parsedPayment}`)
+                    message.channel.send({embed: success})
+            })
+         });
+         } else {
+            fs.writeFile(`./data/serverdata/${message.guild.id}/economy/${balMember.id}.txt`, '0', function(err,data) {
+                message.channel.send('Created Bank File')
+            });
+         }
+        });
+    });
+
+
+
+}
+module.exports.help = {
+    name: "setmoney",
+    info: "Set the amount for the mentioned user",
+    usage: "setmoney <@user>"
+}

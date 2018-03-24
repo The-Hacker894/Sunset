@@ -9,10 +9,10 @@ module.exports.run = (client, message, args, data, game, announcement) => {
     var rulestoset = message.content.split(ruleset).slice(1).join(' ')
     if(!ruleset) {
         console.log('if no ruleset')
-        fs.exists(`./data/rule/${message.guild.id}.txt`, function(exists) {
+        fs.exists(`./data/serverdata/${message.guild.id}/rule/${message.guild.id}.txt`, function(exists) {
             if (exists) {
                 console.log('if exists')
-                fs.readFile(`./data/rule/${message.guild.id}.txt`, 'utf8', function(err, data) {
+                fs.readFile(`./data/serverdata/${message.guild.id}/rule/${message.guild.id}.txt`, 'utf8', function(err, data) {
                     console.log('read file')
                     if (err) {
                         return console.log(err)
@@ -37,7 +37,7 @@ module.exports.run = (client, message, args, data, game, announcement) => {
         console.log('if ruleset equal set')
         if(!rulestoset) return;
         console.log('if no rulestoset')
-        fs.writeFile(`./data/rule/${message.guild.id}.txt`, rulestoset, function(err) {
+        fs.writeFile(`./data/serverdata/${message.guild.id}/rule/${message.guild.id}.txt`, rulestoset, function(err) {
             console.log('write file')
             if(err) {
                 return console.log(err);

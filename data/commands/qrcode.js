@@ -19,11 +19,11 @@ message.channel.startTyping()
 var qrtext = message.content.split(' ').slice(1).join(' ')
 if(qrtext.length < 1) return message.channel.send('Please provide text to transform into a QR Code')
 var qr_svg = qr.image(qrtext, { type: 'png' });
-qr_svg.pipe(require('fs').createWriteStream('./data/qrcode/' + message.author.id + '.png'))
+qr_svg.pipe(require('fs').createWriteStream(`./data/serverdata/${message.guild.id}/qrcode/${message.author.id}.png`))
 var svg_string = qr.imageSync(qrtext, { type: 'png' });
 setTimeout(Timer, 1000);
 function Timer() {
-    message.channel.send(new Attachment(`./data/qrcode/${message.author.id}.png`, `qrcode.png`)).then(message => {
+    message.channel.send(new Attachment(`./data/serverdata/${message.guild.id}/qrcode/${message.author.id}.png`, `qrcode.png`)).then(message => {
         message.channel.stopTyping()
     });
 }
