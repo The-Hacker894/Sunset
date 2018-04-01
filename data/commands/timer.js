@@ -78,6 +78,7 @@ if(data === 'true') {
     if(ms(time) > 43200 * 1000) return message.channel.send('Please provide something less than 12 hours (720 minutes; 43200 seconds; ' + 43200 * 1000 + ' milliseconds)') 
      if(isNaN(mstime)) return message.channel.send('Please provide a positive integer.')
     if(ms(time) < 1) return message.channels.send('Cannot set a timer for ' + time)
+    if(ms(time) <= 0 ) return message.channels.send('Cannot set a timer for ' + time)
         if(!message.content.includes('second')) {
         if(!message.content.includes('minute')) {
             if(!message.content.includes('hour')) return message.channel.send(`***Clarification needed*** \n **Suggestions** \n ${time} seconds \n ${time} minutes \n ${time} hours`)

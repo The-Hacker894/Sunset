@@ -6,6 +6,10 @@ const request = require('request')
 
 
 module.exports.run = (client, message, args, data, game, announcement) => {
+  var commandlock = data.lock
+  if(commandlock.includes('true')) {       
+    if(message.author.id !== data.ownerid) return message.channel.send('Sorry, but a command lock is in effect. Only the owner can use commands at this time.')   
+  } 
   console.log('start')
   if (!fs.existsSync(`./data/economy/${message.guild.id}`)){
     fs.mkdirSync(`./data/economy/${message.guild.id}`);

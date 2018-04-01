@@ -3,9 +3,8 @@ const Discord = require("discord.js");
 const boxen = require('boxen');
 const fs = require("fs")
 module.exports.run = (client, message, args, data, game, announcement) => {
-  if (message.author.id !== '270375857384587264') {
-    message.channel.send({embed: wronguserembed}).catch(console.error)
-  }
+  if(message.author.id !== data.ownerid) return message.channel.send('**Owner-Only Commands**')   
+
   var commandlock = data.lock
   if(commandlock.includes('true')) {       
     if(message.author.id !== data.ownerid) return message.channel.send('Sorry, but a command lock is in effect. Only the owner can use commands at this time.')   

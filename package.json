@@ -35,6 +35,8 @@
     "snekfetch": "^3.6.0",
     "translate": "^1.0.1",
     "twit": "^2.2.9",
-    "webdict": "^0.1.0"
+    "webdict": "^0.1.0",
+    "write": "^1.0.3",
+    "ytdl-core": "^0.15.2"
   }
 }

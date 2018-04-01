@@ -12,7 +12,7 @@ const dictsearch = message.content.split(' ').slice(1).join(' ')
 const modlog = message.guild.channels.find('name', 'mod-log');
 const announcements = message.guild.channels.find('name', 'announcements')
 webdict('dictionary', dictsearch).then(resp => {
-  message.channel.startTyping()
+  
     var dicterrorembed = new Discord.RichEmbed()
       .setColor(data.embedcolor)
       .setTitle('Dictionary Error')
@@ -38,7 +38,7 @@ webdict('dictionary', dictsearch).then(resp => {
       .setTitle('Dictionary Command Used')
       .setDescription('**Word:** ' + dictsearch + '\n **Definition:** ' + resp.definition + '\n **Type:** ' + resp.type + '\n **Source:** ' + resp.source)
       .setAuthor(message.author.username, message.author.displayAvatarURL)
-      message.channel.stopTyping()
+
     if(modlog) return modlog.channel.send({embed: dictmlembed})
   });
 }

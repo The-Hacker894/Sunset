@@ -5,6 +5,10 @@ const boxen = require("boxen")
 const writeFile = require("write")
 const talkedRecently = new Set();
 module.exports.run = (client, message, args, data, game, announcement) => {
+    var commandlock = data.lock
+  if(commandlock.includes('true')) {       
+    if(message.author.id !== data.ownerid) return message.channel.send('Sorry, but a command lock is in effect. Only the owner can use commands at this time.')   
+  } 
     const modlog = message.guild.channels.find('name', 'mod-log');
     if (talkedRecently.has(message.author.id))
     return;
@@ -15,7 +19,7 @@ module.exports.run = (client, message, args, data, game, announcement) => {
     // Removes the user from the set after 2.5 seconds
     talkedRecently.delete(message.author.id);
   }, 1650);
-message.channel.startTyping()
+
 var text = message.content.split(' ').slice(1).join(' ')
 if(text.length < 1) return message.channel.send('Please provide text to write')
 writeFile(`./data/serverdata/${message.guild.id}/textfiles/${message.author.id}.txt`, text, function(err) {

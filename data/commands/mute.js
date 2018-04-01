@@ -4,6 +4,11 @@ const boxen = require('boxen');
 const ms = require('ms')
 module.exports.run = (client, message, args, data, game, announcement) => {
 
+    var commandlock = data.lock
+  if(commandlock.includes('true')) {       
+    if(message.author.id !== data.ownerid) return message.channel.send('Sorry, but a command lock is in effect. Only the owner can use commands at this time.')   
+  } 
+
 var messagecontent = message.content.split(' ').slice(1).join(' ')
 var muteMember = message.guild.member(message.mentions.users.first());
 const muteRole = message.guild.roles.find('name', 'Muted by SUNSET')

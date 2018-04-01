@@ -4,6 +4,11 @@ const boxen = require("boxen")
 const fs = require('fs')
 const moment = require("moment")
 module.exports.run = (client, message, args, data, announcement) => {
+
+    var commandlock = data.lock
+  if(commandlock.includes('true')) {       
+    if(message.author.id !== data.ownerid) return message.channel.send('Sorry, but a command lock is in effect. Only the owner can use commands at this time.')   
+  } 
     message.channel.startTyping()
     const balMember = message.guild.member(message.mentions.users.first());
     const modlog = message.guild.channels.find('name', 'mod-log');

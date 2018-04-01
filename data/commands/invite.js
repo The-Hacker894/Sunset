@@ -6,7 +6,6 @@ module.exports.run = (client, message, args, data, game, announcement) => {
   if(commandlock.includes('true')) {       
     if(message.author.id !== data.ownerid) return message.channel.send('Sorry, but a command lock is in effect. Only the owner can use commands at this time.')   
   } 
-  message.channel.startTyping()
   const modlog = message.guild.channels.find('name', 'mod-log');
   const announcements = message.guild.channels.find('name', 'announcements')
 const channelname = message.content.split(' ').slice(1).join(' ')
@@ -21,7 +20,6 @@ if(!message.guild.me.hasPermission("CREATE_INSTANT_INVITE")) return message.chan
 channelinvite.createInvite().then(invite =>
       message.channel.send(invite.url).then( () => {
         console.log(boxen('[Channel Invite] ' + message.guild.name + ' | ' + message.author.tag + ' | ' + channelname + ' | ' + invite.url, {padding: 1})) .then(message => {
-          message.channel.stopTyping()
         })
       })
   );

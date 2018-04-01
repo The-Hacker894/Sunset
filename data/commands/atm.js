@@ -4,6 +4,10 @@ const boxen = require("boxen")
 const fs = require('fs')
 const moment = require("moment")
 module.exports.run = (client, message, args, data, announcement) => {
+    var commandlock = data.lock
+  if(commandlock.includes('true')) {       
+    if(message.author.id !== data.ownerid) return message.channel.send('Sorry, but a command lock is in effect. Only the owner can use commands at this time.')   
+  } 
     message.channel.startTyping()
     var balMember = message.guild.member(message.mentions.users.first());
     var balaction = args[2]
@@ -17,12 +21,22 @@ module.exports.run = (client, message, args, data, announcement) => {
     fs.exists(`./data/serverdata/${message.guild.id}/economy/${message.author.id}.txt`, function(exists) {
         if (!exists) {
             fs.writeFile(`./data/serverdata/${message.guild.id}/economy/${message.author.id}.txt`, '0', function(err) {
+                if(err) {
+                    message.channel.send('An unexpected error occured: ' + err).then(message => {
+                        message.channel.stopTyping()
+                    })
+                }
             });
         }
     });
     fs.exists(`./data/serverdata/${message.guild.id}/economy/atm/${message.author.id}.txt`, function(exists) {
         if (!exists) {
             fs.writeFile(`./data/serverdata/${message.guild.id}/economy/atm/${message.author.id}.txt`, '0', function(err) {
+                if(err) {
+                    message.channel.send('An unexpected error occured: ' + err).then(message => {
+                        message.channel.stopTyping()
+                    })
+                }
             });
         }
     });
@@ -32,12 +46,27 @@ if(!balMember) {
         fs.exists(`./data/serverdata/${message.guild.id}/economy/atm/${message.author.id}.txt`, function(exists) {
             if (exists) {
              fs.readFile(`./data/serverdata/${message.guild.id}/economy/atm/${message.author.id}.txt`, 'utf8', function(err, data) {
-                fs.readFile(`./data/serverdata/${message.guild.id}/economy/${message.author.id}.txt`, 'utf8', function(err, newdata) {
+                fs.readFile(`./data/serverdata/${message.guild.id}/economy/${message.author.id}.txt`, 'utf8', function(nerr, newdata) {
+                    if(err) {
+                        message.channel.send('An unexpected error occured: ' + err).then(message => {
+                            message.channel.stopTyping()
+                        })
+                    }
+                    if(nerr) {
+                        message.channel.send('An unexpected error occured: ' + nerr).then(message => {
+                            message.channel.stopTyping()
+                        })
+                    }
                  var parsedATM = parseFloat(data)
                  var parsedBAL = parseFloat(newdata)
                  var parsedNW = parseFloat(parsedBAL + parsedATM)
                  if(parsedBAL > 9999999999999) {
                     fs.writeFile(`./data/serverdata/${message.guild.id}/economy/${message.author.id}.txt`, 9999999999999 , function(err) {
+                        if(err) {
+                            message.channel.send('An unexpected error occured: ' + err).then(message => {
+                                message.channel.stopTyping()
+                            })
+                        }
                     });
                 }
                 var atm = new Discord.RichEmbed()
@@ -79,8 +108,18 @@ if(!balMember) {
         
             
         if(!other) return message.channel.send({embed: nodepprov})
-        fs.readFile(`./data/serverdata/${message.guild.id}/economy/atm/${message.author.id}.txt`, 'utf8', function(err, depATMdata) {
+        fs.readFile(`./data/serverdata/${message.guild.id}/economy/atm/${message.author.id}.txt`, 'utf8', function(atmerr, depATMdata) {
             fs.readFile(`./data/serverdata/${message.guild.id}/economy/${message.author.id}.txt`, 'utf8', function(err, depdata) {
+                if(err) {
+                    message.channel.send('An unexpected error occured: ' + err).then(message => {
+                        message.channel.stopTyping()
+                    })
+                }
+                if(atmerr) {
+                    message.channel.send('An unexpected error occured: ' + atmerr).then(message => {
+                        message.channel.stopTyping()
+                    })
+                }
                 var newparsedATM = parseFloat(depATMdata)
                  var newparsedBAL = parseFloat(depdata)
                  var parsedDEP = parseFloat(other)
@@ -114,8 +153,18 @@ if(!balMember) {
         
             
         if(!other) return message.channel.send({embed: dnodepprov})
-        fs.readFile(`./data/serverdata/${message.guild.id}/economy/atm/${message.author.id}.txt`, 'utf8', function(err, depositATMdata) {
+        fs.readFile(`./data/serverdata/${message.guild.id}/economy/atm/${message.author.id}.txt`, 'utf8', function(atmerr, depositATMdata) {
             fs.readFile(`./data/serverdata/${message.guild.id}/economy/${message.author.id}.txt`, 'utf8', function(err, depositdata) {
+                if(err) {
+                    message.channel.send('An unexpected error occured: ' + err).then(message => {
+                        message.channel.stopTyping()
+                    })
+                }
+                if(atmerr) {
+                    message.channel.send('An unexpected error occured: ' + atmerr).then(message => {
+                        message.channel.stopTyping()
+                    })
+                }
                 var newparseddATM = parseFloat(depositATMdata)
                  var newparseddBAL = parseFloat(depositdata)
                  var parsedDEPOSIT = parseFloat(other)
@@ -146,8 +195,18 @@ if(!balMember) {
             .setColor(data.embedcolor)
             .setDescription('No Withdrawal Provided')
         if(!other) return message.channel.send({embed: nowithprov})
-        fs.readFile(`./data/serverdata/${message.guild.id}/economy/atm/${message.author.id}.txt`, 'utf8', function(err, withATMdata) {
+        fs.readFile(`./data/serverdata/${message.guild.id}/economy/atm/${message.author.id}.txt`, 'utf8', function(atmerr, withATMdata) {
             fs.readFile(`./data/serverdata/${message.guild.id}/economy/${message.author.id}.txt`, 'utf8', function(err, withdata) {
+                if(err) {
+                    message.channel.send('An unexpected error occured: ' + err).then(message => {
+                        message.channel.stopTyping()
+                    })
+                }
+                if(atmerr) {
+                    message.channel.send('An unexpected error occured: ' + err).then(message => {
+                        message.channel.stopTyping()
+                    })
+                }
 
                 var parsedWithData = parseFloat(withdata)
                 var parsedWithATMData = parseFloat(withATMdata)
@@ -160,8 +219,18 @@ if(!balMember) {
                     .addField('Balance: ', `${currency}${parsedWithATMData}`)
                 if(parsedWITH > parsedWithATMData) return message.channel.send({embed: notenoughmoneyWITH})
 
-                fs.writeFile(`./data/serverdata/${message.guild.id}/economy/atm/${message.author.id}.txt`, parsedWithATMData - parsedWITH, function(err) {
+                fs.writeFile(`./data/serverdata/${message.guild.id}/economy/atm/${message.author.id}.txt`, parsedWithATMData - parsedWITH, function(serr) {
                     fs.writeFile(`./data/serverdata/${message.guild.id}/economy/${message.author.id}.txt`, parsedWithData + parsedWITH, function(err) {
+                        if(err) {
+                            message.channel.send('An unexpected error occured: ' + err).then(message => {
+                                message.channel.stopTyping()
+                            })
+                        }
+                        if(serr) {
+                            message.channel.send('An unexpected error occured: ' + serr).then(message => {
+                                message.channel.stopTyping()
+                            })
+                        }
                         var withdrawalsuccess = new Discord.RichEmbed()
                             .setColor(data.embedcolor)
                             .setTitle('Successfully Withdrawn Money')
@@ -181,12 +250,22 @@ if(!balMember) {
 fs.exists(`./data/serverdata/${message.guild.id}/economy/${balMember.id}.txt`, function(exists) {
     if (!exists) {
         fs.writeFile(`./data/serverdata/${message.guild.id}/economy/${balMember.id}.txt`, '0', function(err) {
+            if(err) {
+                message.channel.send('An unexpected error occured: ' + err).then(message => {
+                    message.channel.stopTyping()
+                })
+            }
         });
     }
 });
 fs.exists(`./data/serverdata/${message.guild.id}/economy/atm/${balMember.id}.txt`, function(exists) {
     if (!exists) {
         fs.writeFile(`./data/serverdata/${message.guild.id}/economy/atm/${balMember.id}.txt`, '0', function(err) {
+            if(err) {
+                message.channel.send('An unexpected error occured: ' + err).then(message => {
+                    message.channel.stopTyping()
+                })
+            }
         });
     }
 });
@@ -199,6 +278,11 @@ fs.exists(`./data/serverdata/${message.guild.id}/economy/atm/${balMember.id}.txt
          var balparsedBAL = parseFloat(balnewdata)
          if(balparsedBAL > 9999999999999) {
             fs.writeFile(`./data/serverdata/${message.guild.id}/economy/${balMember.id}.txt`, 9999999999999 , function(err) {
+                if(err) {
+                    message.channel.send('An unexpected error occured: ' + err).then(message => {
+                        message.channel.stopTyping()
+                    })
+                }
             });
         }
         var atm = new Discord.RichEmbed()
@@ -215,6 +299,7 @@ fs.exists(`./data/serverdata/${message.guild.id}/economy/atm/${balMember.id}.txt
     });
      } else {
      fs.writeFile(`./data/serverdata/${message.guild.id}/economy/atm/${balMember.id}.txt`, '0', function(err) {
+         
         if(err) {
             return console.log(err).then(message => {
                 message.channel.stopTyping()

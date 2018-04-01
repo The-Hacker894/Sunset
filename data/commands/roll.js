@@ -6,7 +6,10 @@ const request = require('request')
   const fs = require('fs')
 
 module.exports.run = (client, message, args, data) => {
-
+  var commandlock = data.lock
+  if(commandlock.includes('true')) {       
+    if(message.author.id !== data.ownerid) return message.channel.send('Sorry, but a command lock is in effect. Only the owner can use commands at this time.')   
+  } 
   fs.readFile(`./data/serverdata/${message.guild.id}/settings/currency.txt`, function(err, currency) {
 
 

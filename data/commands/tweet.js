@@ -4,6 +4,7 @@ const boxen = require('boxen');
 const Twit = require('twit')
 module.exports.run = (client, message, args, game, announcement, datajson) => {
 
+
     var T = new Twit({
         consumer_key:         '',
         consumer_secret:      "",
@@ -40,11 +41,10 @@ module.exports.run = (client, message, args, game, announcement, datajson) => {
       /*    var Twiturl = url.replace('"', ' ')
           var statusCount = JSON.stringify(data.statuses_count)
           var otherstatusCount = statusCount.replace('"', ' ')
-          var newstatusCount = parseFloat(otherstatusCount) + 1 
-          */
+          var newstatusCount = parseFloat(otherstatusCount) + 1 */
           var success = new Discord.RichEmbed()
             .setTitle('Posted to Twitter!')
-            .setDescription(`Message: ${Twitmessage}\nCheck it out here: https://twitter.com/Sunset_Bot1`)
+            .setDescription(`Message: ${Tweet}\nCheck it out here: https://twitter.com/Sunset_Bot1`)
             .setAuthor(message.author.tag, message.author.displayAvatarURL)
             message.channel.send({embed: success})
             console.log(data)

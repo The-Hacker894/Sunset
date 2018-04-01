@@ -10,7 +10,7 @@ module.exports.run = (client, message, args, data, game, announcement) => {
   const announcements = message.guild.channels.find('name', 'announcements')
   var helpembed = new Discord.RichEmbed()
   .setColor(data.embedcolor)
-    .setTitle('Commands')
+    .setTitle('Sunset Commands')
     .addField('**Information**','`help` `ping` `info` `usage` `uptime`')
     .addField('**Server Info**','`serversettings` `invite` `serverinfo` `avatar` `profile`')
     .addField('**Entertainment**','`tweet` `translate` `cleverbot` `emojify` `cowthink` `cowsay` `fliptext` `figlet` `say` `2ball` `8ball`')

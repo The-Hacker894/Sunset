@@ -27,6 +27,7 @@ const prefix = data.prefix
 const token = data.token
 const request = require("request")
 const requestpn = require('request-promise-native');
+ 
 const pusage = require('pidusage')
 const DBLToken = data.dbltoken
 const moment = require('moment')
@@ -57,6 +58,9 @@ client.on("message", (message) => {
   if(cmd)
     cmd.run(client, message, args, data, game, announcement, datajson)
 })
+client.on("error", (error) => {
+console.log('A WebSocket error has occured: ' + error)
+});
 client.on("message", (message) => {
   if(message.author.bot) return;
   if(message.channel.type === 'dm') return;
@@ -473,6 +477,12 @@ client.commands = new Discord.Collection();
         fs.exists(`./data/serverdata/${guild.id}/settings/workpayout.txt`, function(exists) {
           if (!exists) {
               fs.writeFile(`./data/serverdata/${guild.id}/settings/workpayout.txt`, '1000', function(err) {
+              });
+          }
+        });
+        fs.exists(`./data/serverdata/${guild.id}/settings/lightmode.txt`, function(exists) {
+          if (!exists) {
+              fs.writeFile(`./data/serverdata/${guild.id}/settings/lightmode.txt`, 'false', function(err) {
               });
           }
         });

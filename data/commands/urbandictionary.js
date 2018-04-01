@@ -11,7 +11,6 @@ module.exports.run = (client, message, args, data, game, announcement) => {
   const announcements = message.guild.channels.find('name', 'announcements')
 const urbandictsearch = message.content.split(' ').slice(1).join(' ')
 webdict('urbandictionary', urbandictsearch).then(resp => {
-  message.channel.startTyping()
     var urbandicterrorembed = new Discord.RichEmbed()
       .setColor(data.embedcolor)
       .setTitle('Urban Dictionary Error')
