@@ -20,8 +20,8 @@ If you would like to know how to run Sunset yourself visit the [Sunset Website](
 Before trying to run Sunset you should type install all of the packages detailed in the `package.json`
   
 **If any errors are encountered you may need to edit the `data.json` `announcements.json` `game.json` and constants at the beginning of `index.js`.**   
-[Sunset Invite](http://hacker-hub.com/sunset/invite)  
-[Sunset Website](http://hacker-hub.com/sunset)  
+[Sunset Invite](http://hacker-hub.github.io/sunset/invite)  
+[Sunset Website](http://hacker-hub.github.io/sunset)  
 [Sunset Discord Bots Page](https://discordbots.org/bot/371097223942897665)  
 
 - When you first start using Sunset it may be a little slow as it has to create some system files  
