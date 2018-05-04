@@ -1,0 +1,58 @@
+const RichEmbed = require("discord.js").RichEmbed;
+const Discord = require("discord.js");
+const boxen = require('boxen');
+const scalc = require('scalc')
+const fs = require('fs')
+module.exports.run = (client, message, args, data, game, announcement, colors) => {
+  var commandlock = data.lock
+ // if(commandlock.includes('true')) {       
+    if(message.author.id !== data.ownerid) return message.channel.send('Sorry, but this command is locked to the public')   
+ // } 
+  fs.readFile(`./data/serverdata/${message.guild.id}/litemode.txt`, function (err, litedata) {
+    if (!litedata.includes('true')) {
+  const modlog = message.guild.channels.find('name', 'mod-log');
+  var expression = message.content.split(' ').slice(1).join(' ')
+  var result = scalc(expression)
+  var answer = parseFloat(result)
+  var mathHelp = new Discord.RichEmbed()
+.setColor(colors.system)
+.setTitle('Math Usage')
+.setDescription('You must provide an problem\n**Example:**\n`math 9 + 10`')
+  if(expression.length < 3) return message.channel.send({embed: mathHelp})
+
+  var calculatedExpression = new Discord.RichEmbed()
+    .setColor(colors.system)
+    .setDescription('`' + expression + '`\n' +
+      '`' + answer + '`')
+    .setAuthor(message.author.tag, message.author.displayAvatarURL)
+
+    message.channel.send({embed: calculatedExpression})
+
+    console.log(boxen('[Math] ' + message.guild.name + ' | ' + message.author.tag + ' | ' + expression, {padding: 1}))
+    message.delete()
+
+    var mathmlembed = new Discord.RichEmbed()
+      .setColor(colors.system)
+      .setTitle('Math Command Used')
+      .setDescription(answer)
+      .setAuthor(message.author.username ,message.author.avatarURL)
+      // removed 
+    if(modlog) return modlog.send({embed: mathmlembed}).catch(console.error);
+    } else {
+      // LiteMode
+      var expression = message.content.split(' ').slice(1).join(' ')
+  var result = scalc(expression)
+  var answer = parseFloat(result)
+
+  if(expression.length < 3) return message.channel.send('You must provide an problem\n**Example:**\n`math 9 + 10`')
+
+    message.channel.send('```' + boxen('`' + expression + '`\n' + '`' + answer + '`') + '```')
+    message.delete()
+    } 
+  });
+}
+module.exports.help = {
+    name: "math",
+    info: "Solve math problem",
+    usage: "math <equation>"
+}
