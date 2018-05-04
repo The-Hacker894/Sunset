@@ -3,11 +3,13 @@ const Discord = require("discord.js");
 const boxen = require("boxen")
 const fs = require('fs')
 const moment = require("moment")
-module.exports.run = (client, message, args, data, announcement) => {
+module.exports.run = (client, message, args, data, announcement, colors) => {
     var commandlock = data.lock
   if(commandlock.includes('true')) {       
     if(message.author.id !== data.ownerid) return message.channel.send('Sorry, but a command lock is in effect. Only the owner can use commands at this time.')   
   } 
+  fs.readFile(`./data/serverdata/${message.guild.id}/litemode.txt`, function (err, litedata) {
+    if (!litedata.includes('true')) {
     if (!fs.existsSync(`./data/serverdata/economy/${message.guild.id}/`)) {
         fs.mkdirSync(`./data/serverdata/economy/${message.guild.id}/`);
         }
@@ -16,7 +18,7 @@ module.exports.run = (client, message, args, data, announcement) => {
     
     const balMember = message.guild.member(message.mentions.users.first());
     var nouserob = new Discord.RichEmbed()
-        .setColor(data.embedcolor)
+        .setColor(colors.critical)
         .setDescription('Please provide a user to rob')
     if(!balMember) return message.channel.send({embed: nouserob})
     if(balMember.id === message.author.id) return message.channel.send('You cannot rob yourself')
@@ -38,7 +40,7 @@ module.exports.run = (client, message, args, data, announcement) => {
                 
 
                 var nomoneytorob = new Discord.RichEmbed()
-                    .setColor(data.embedcolor)
+                    .setColor(colors.critical)
                     .setTitle('Failed Rob Attempt')
                     .setDescription(`You attempted to rob ${balMember.user.tag} but they have no money for you to take`)
 
@@ -49,7 +51,7 @@ module.exports.run = (client, message, args, data, announcement) => {
                 if(data.includes('NaN')) {
                     fs.unlink(`./data/serverdata/${message.guild.id}/economy/${balMember.id}.txt`)
                     var balerror = new Discord.RichEmbed()
-                        .setColor(data.embedcolor)
+                        .setColor(colors.critical)
                         .setDescription('Your balance had a error, so it was fixed')
                     return message.channel.send({embed: balerror})
                 }
@@ -57,7 +59,7 @@ module.exports.run = (client, message, args, data, announcement) => {
                 if(parsedRob === 2) {
                     fs.writeFile(`./data/serverdata/${message.guild.id}/economy/${balMember.id}.txt`, parsedData - halfPData, function(err) { 
                         var successfulrob = new Discord.RichEmbed()
-                            .setColor(data.embedcolor)
+                            .setColor(colors.success)
                             .setTitle('Successful Rob')
                             .setDescription(`You have successfully robbed ${balMember.user.tag} and received ${currency}${halfPData} from it`)
                             message.channel.send({embed: successfulrob})
@@ -87,13 +89,13 @@ module.exports.run = (client, message, args, data, announcement) => {
                                 if(parsedFRData === 'NaN') {
                                     fs.unlink(`./data/serverdata/${message.guild.id}/economy/${balMember.id}.txt`)
                                     var balerror = new Discord.RichEmbed()
-                                        .setColor(data.embedcolor)
+                                        .setColor(colors.critical)
                                         .setDescription(balMember.user.tag + '\'s balance had a error, so it was fixed')
                                     return message.channel.send({embed: balerror})
                                 }
                                 fs.writeFile(`./data/serverdata/${message.guild.id}/economy/${message.author.id}.txt`, parsedFRData - parsedFine, function(err) { 
                                     var failedrob = new Discord.RichEmbed()
-                                        .setColor(data.embedcolor)
+                                        .setColor(colors.critical)
                                         .setTitle('Failed Robbery Attempt')
                                         .setDescription(`You have failed to rob ${balMember.user.tag} and were fined ${currency}${parsedFine}`)
                                         message.channel.send({embed: failedrob})
@@ -109,7 +111,7 @@ module.exports.run = (client, message, args, data, announcement) => {
         } else {
             fs.writeFile(`./data/serverdata/${message.guild.id}/economy/${balMember.id}.txt`, '0' , function(err) { 
                 var newbal = new Discord.RichEmbed()
-                .setColor(data.embedcolor)
+                .setColor(colors.critical)
                 .setDescription('No money was found; creating new bank file for ' + balMember.user.tag)                               
             console.log("The file was saved!");
             message.channel.send({embed: newbal}).then(message => {
@@ -120,7 +122,10 @@ module.exports.run = (client, message, args, data, announcement) => {
     })
     });
 
-        
+} else {
+    message.channel.send('This command is not availble for Sunset LiteMode')
+}
+  });
 
 
 

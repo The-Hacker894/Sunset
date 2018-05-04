@@ -2,12 +2,15 @@ const RichEmbed = require("discord.js").RichEmbed;
 const Discord = require("discord.js");
 const boxen = require('boxen');
 const ms = require('ms')
-module.exports.run = (client, message, args, data, game, announcement) => {
+const fs = require('fs')
+module.exports.run = (client, message, args, data, game, announcement, colors) => {
 
     var commandlock = data.lock
   if(commandlock.includes('true')) {       
     if(message.author.id !== data.ownerid) return message.channel.send('Sorry, but a command lock is in effect. Only the owner can use commands at this time.')   
   } 
+  fs.readFile(`./data/serverdata/${message.guild.id}/litemode.txt`, function (err, litedata) {
+    if (!litedata.includes('true')) {
 
     var messagecontent = message.content.split(' ').slice(1).join(' ')
 var muteMember = message.guild.member(message.mentions.users.first());
@@ -29,7 +32,7 @@ if(!muteRole) {
       })
         .then(role => {
             var createdrole = new Discord.RichEmbed()
-            .setColor(data.embedcolor)
+            .setColor(colors.success)
             .setTitle('Created Role')
             .setDescription(`Created role ${role}`)
             .setAuthor(message.author.username, message.author.displayAvatarURL)
@@ -40,12 +43,12 @@ if(!muteRole) {
         })
 }
     var unmutedmember = new Discord.RichEmbed()
-        .setColor(data.embedcolor)
+        .setColor(colors.success)
         .setTitle('UnMuted')
         .setDescription('Unmuted ' + muteMember)
         .setAuthor(message.author.username, message.author.displayAvatarURL)
         var unmuteerror = new Discord.RichEmbed()
-            .setColor(data.embedcolor)
+            .setColor(colors.critical)
             .setDescription(muteMember + ' is not muted.')
         if(!muteMember.roles.has(muteRole.id)) {
             return message.channel.send({embed: unmuteerror})
@@ -59,6 +62,13 @@ muteMember.removeRole(muteRole)
     .catch(err => {
     message.channel.send('An error occured: ' + err)
 })
+    } else {
+        // LiteMode
+        
+        message.channel.send('This command is not available for Sunset LiteMode')
+
+    }   
+});
 
 
 }

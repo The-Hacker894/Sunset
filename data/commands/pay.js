@@ -3,12 +3,14 @@ const Discord = require("discord.js");
 const boxen = require("boxen")
 const fs = require('fs')
 const moment = require("moment")
-module.exports.run = (client, message, args, data, announcement) => {
+module.exports.run = (client, message, args, data, announcement,colors) => {
 
     var commandlock = data.lock
   if(commandlock.includes('true')) {       
     if(message.author.id !== data.ownerid) return message.channel.send('Sorry, but a command lock is in effect. Only the owner can use commands at this time.')   
   } 
+  fs.readFile(`./data/serverdata/${message.guild.id}/litemode.txt`, function (err, litedata) {
+    if (!litedata.includes('true')) {
     message.channel.startTyping()
     const balMember = message.guild.member(message.mentions.users.first());
     const modlog = message.guild.channels.find('name', 'mod-log');
@@ -28,14 +30,14 @@ module.exports.run = (client, message, args, data, announcement) => {
          if(newparseddata === 'NaN') {
             fs.unlink(`./data/serverdata/${message.guild.id}/economy/${balMember.id}.txt`)
             var balerror = new Discord.RichEmbed()
-                .setColor(data.embedcolor)
+                .setColor(colors.critical)
                 .setDescription('Your balance had a error, so it was fixed')
             return message.channel.send({embed: balerror})
         }
 
          if(newparsedamount > newparseddata) {
              var nofunds = new Discord.RichEmbed()
-                .setColor(data.embedcolor)
+                .setColor(colors.critical)
                 .setTitle('Insufficient Funds')
                 .setDescription('You do not have enough funds to complete the payment.')
                 message.channel.send({embed: nofunds}).then(message => {
@@ -76,7 +78,7 @@ module.exports.run = (client, message, args, data, announcement) => {
                      if(parseddata === 'NaN') {
                         fs.unlink(`./data/economy/${message.guild.id}/${balMember.id}.txt`)
                         var balerror = new Discord.RichEmbed()
-                            .setColor(data.embedcolor)
+                            .setColor(colors.critical)
                             .setDescription('Your balance had a error, so it was fixed')
                         return message.channel.send({embed: balerror})
                     }
@@ -90,14 +92,14 @@ module.exports.run = (client, message, args, data, announcement) => {
                     
                    });
                    var paymentsuccess = new Discord.RichEmbed()
-                   .setColor(data.embedcolor)
+                   .setColor(colors.success)
                    .setTitle('Payment Receipt')
                    .setAuthor(message.author.tag, message.author.displayAvatarURL)
                    .addField('Payment Source', message.author.tag, true)
                    .addField('Payment Target', balMember.user.tag, true)
                    .addField('Payment Amount', currency + parseFloat(payamount), true)
                    var paymentnotifiy = new Discord.RichEmbed()
-                    .setColor(data.embedcolor)
+                    .setColor(colors.success)
                     .setTitle('You have recieved a payment')
                     .setAuthor(message.author.tag, message.author.displayAvatarURL)
                     .addField('Payment Source', message.author.tag, true)
@@ -121,7 +123,7 @@ module.exports.run = (client, message, args, data, announcement) => {
                             })
                         }
                         var newbal = new Discord.RichEmbed()
-                            .setColor(data.embedcolor)
+                            .setColor(colors.critical)
                             .setDescription('No money was found; creating new bank file for ' + balMember)                               
                         console.log("The file was saved!");
                         message.channel.send({embed: newbal}).then(message => {
@@ -134,8 +136,12 @@ module.exports.run = (client, message, args, data, announcement) => {
          }
         });
            
-       
+    
    
+});
+} else {
+         message.channel.send('This command is not available for Sunset LiteMode')
+}
 });
 
                     

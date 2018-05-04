@@ -3,11 +3,13 @@ const Discord = require("discord.js");
 const boxen = require("boxen")
 const fs = require('fs')
 const moment = require("moment")
-module.exports.run = (client, message, args, data, announcement) => {
+module.exports.run = (client, message, args, data, announcement, colors) => {
     var commandlock = data.lock
   if(commandlock.includes('true')) {       
     if(message.author.id !== data.ownerid) return message.channel.send('Sorry, but a command lock is in effect. Only the owner can use commands at this time.')   
   } 
+        fs.readFile(`./data/serverdata/${message.guild.id}/litemode.txt`, function(err, litedata) {
+            if(!litedata.includes('true')) {
     message.channel.startTyping()
     var balMember = message.guild.member(message.mentions.users.first());
     const modlog = message.guild.channels.find('name', 'mod-log');
@@ -46,14 +48,14 @@ module.exports.run = (client, message, args, data, announcement) => {
                              if(parsedData === 'NaN') {
                                 fs.unlink(`./data/serverdata/${message.guild.id}/economy/${message.author.id}.txt`)
                                 var balerror = new Discord.RichEmbed()
-                                    .setColor(data.embedcolor)
+                                    .setColor(colors.critical)
                                     .setDescription('Your balance had a error, so it was fixed')
                                 return message.channel.send({embed: balerror})
                             }
                             if(atmparsedData === 'NaN') {
                                 fs.unlink(`./data/serverdata/economy/${message.guild.id}/atm/${message.author.id}.txt`)
                                 var atmmbalerror = new Discord.RichEmbed()
-                                    .setColor(data.embedcolor)
+                                    .setColor(colors.critical)
                                     .setDescription('Your ATM Balance had a error, so it was fixed')
                                 return message.channel.send({embed: atmmbalerror})
                             }
@@ -62,7 +64,7 @@ module.exports.run = (client, message, args, data, announcement) => {
                                 });
                             }
                              var balance = new Discord.RichEmbed()
-                                .setColor(data.embedcolor)
+                                .setColor(colors.system)
                                 .addField('Balance', `${currency}${parsedData}`, true)
                                 .addField('ATM Balance', `${currency}${atmparsedData}`, true)
                                 .addField('Net Worth', `${currency}${parsedData + atmparsedData}`, true)
@@ -83,7 +85,7 @@ module.exports.run = (client, message, args, data, announcement) => {
                                     })
                                 }
                                 var newbal = new Discord.RichEmbed()
-                                    .setColor(data.embedcolor)
+                                    .setColor(colors.critical)
                                     .setDescription('No money was found; creating new bank file for ' + message.author.toString())                               
                                 console.log("The file was saved!");
                                 message.channel.send({embed: newbal}).then(message => {
@@ -126,19 +128,19 @@ module.exports.run = (client, message, args, data, announcement) => {
                              if(data.includes('NaN')) {
                                 fs.unlink(`./data/serverdata/${message.guild.id}/economy/${balMember.id}.txt`)
                                 var balerror = new Discord.RichEmbed()
-                                    .setColor(data.embedcolor)
+                                    .setColor(colors.critical)
                                     .setDescription('Your Balance had a error, so it was fixed')
                                 return message.channel.send({embed: balerror})
                             }
                             if(balatmdata.includes('NaN')) {
                                 fs.unlink(`./data/serverdata/${message.guild.id}/economy/atm/${balMember.id}.txt`)
                                 var atmerror = new Discord.RichEmbed()
-                                    .setColor(data.embedcolor)
+                                    .setColor(colors.critical)
                                     .setDescription('Your ATM Balance had a error, so it was fixed')
                                 return message.channel.send({embed: atmbalerror})
                             }
                              var balance = new Discord.RichEmbed()
-                                .setColor(data.embedcolor)
+                                .setColor(colors.system)
                                 .setAuthor(balMember.user.tag, balMember.user.displayAvatarURL)
                                 .addField('User', balMember.user.tag, true)
                                 .addField('Balance', `${currency}${newparsedData}`, true)
@@ -155,7 +157,7 @@ module.exports.run = (client, message, args, data, announcement) => {
                                     return console.log(err)
                                 }
                                 var newbal = new Discord.RichEmbed()
-                                    .setColor(data.embedcolor)
+                                    .setColor(colors.critical)
                                     .setDescription('No money was found; creating new bank file for ' + balMember.user.tag)                               
                                 console.log("The file was saved!");
                                 message.channel.send({embed: newbal}).then(message => {
@@ -167,6 +169,10 @@ module.exports.run = (client, message, args, data, announcement) => {
                      });
                     }
                 });
+            } else {
+                message.channel.send('```' + boxen('This command is not available with LiteMode', {padding: 1}) + '```')
+            }
+        });
                  }
 
 

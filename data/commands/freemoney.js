@@ -3,11 +3,13 @@ const Discord = require("discord.js");
 const boxen = require("boxen")
 const fs = require('fs')
 const moment = require("moment")
-module.exports.run = (client, message, args, data, announcement) => {
+module.exports.run = (client, message, args, data, announcement,colors) => {
     var commandlock = data.lock
   if(commandlock.includes('true')) {       
     if(message.author.id !== data.ownerid) return message.channel.send('Sorry, but a command lock is in effect. Only the owner can use commands at this time.')   
   } 
+  fs.readFile(`./data/serverdata/${message.guild.id}/litemode.txt`, function(err, litedata) {
+    if(!litedata.includes('true')) {
     const modlog = message.guild.channels.find('name', 'mod-log');
 
     fs.exists(`./data/serverdata/${message.guild.id}/settings/freemoneypayout.txt`, function(exists) {
@@ -32,14 +34,14 @@ module.exports.run = (client, message, args, data, announcement) => {
                             if(parseddata === 'NaN') {
                                 fs.unlink(`./data/serverdata/${message.guild.id}/economy/${message.author.id}.txt`)
                                 var balerror = new Discord.RichEmbed()
-                                    .setColor(data.embedcolor)
+                                    .setColor(colors.critical)
                                     .setDescription('Your balance had a error, so it was fixed')
                                 return message.channel.send({embed: balerror})
                             }
 
                             fs.writeFile(`./data/serverdata/${message.guild.id}/economy/${message.author.id}.txt`, parsedall, function(err) {
                                 var randomfreemoney = new Discord.RichEmbed()
-                                    .setColor(data.embedcolor)
+                                    .setColor(colors.success)
                                     .setTitle('Free Money')
                                     .setAuthor(message.author.tag, message.author.displayAvatarURL)
                                     .setDescription(`You have earned ${currency}${parsedmoney}\nYour new balance is ${currency}${parsedall}`)
@@ -53,7 +55,7 @@ module.exports.run = (client, message, args, data, announcement) => {
                             const newparsedall = parseFloat(parsedmoney + newparseddata)
                             fs.writeFile(`./data/serverdata/${message.guild.id}/economy/${message.author.id}.txt`, newparsedall, function(err) {
                                 var randomfreemoney = new Discord.RichEmbed()
-                                    .setColor(data.embedcolor)
+                                    .setColor(colors.system)
                                     .setTitle('Free Money')
                                     .setAuthor(message.author.tag, message.author.displayAvatarURL)
                                     .setDescription(`You have earned ${currency}${parsedmoney}\nYour new balance is ${currency}${newparsedall}`)
@@ -66,10 +68,12 @@ module.exports.run = (client, message, args, data, announcement) => {
                      });
                     });
                 });
-                 }
-
-
-
+            } else {
+                //LiteMode
+                message.channel.send('This command is not availble for Sunset LiteMode')
+            }
+        });
+}
 module.exports.help = {
     name: "freemoney",
     usage: "freemoney",

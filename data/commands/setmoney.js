@@ -3,13 +3,14 @@ const Discord = require("discord.js");
 const boxen = require("boxen")
 const fs = require('fs')
 const moment = require("moment")
-module.exports.run = (client, message, args, data, announcement) => {
+module.exports.run = (client, message, args, data, announcement, colors) => {
 
     var commandlock = data.lock
   if(commandlock.includes('true')) {       
     if(message.author.id !== data.ownerid) return message.channel.send('Sorry, but a command lock is in effect. Only the owner can use commands at this time.')   
   } 
-
+  fs.readFile(`./data/serverdata/${message.guild.id}/litemode.txt`, function (err, litedata) {
+    if (!litedata.includes('true')) {
     fs.readFile(`./data/serverdata/${message.guild.id}/settings/currency.txt`, function(err, currency) {
 
     if(message.author.id !== data.ownerid) return;
@@ -19,7 +20,7 @@ module.exports.run = (client, message, args, data, announcement) => {
     const payment = args[2]
 
     var nomemberprov = new Discord.RichEmbed()
-        .setColor(data.embedcolor)
+        .setColor(colors.critical)
         .setDescription('Please provide a member to set money amount')
 
     if(!balMember) return message.channel.send({embed: nomemberprov})
@@ -30,7 +31,7 @@ module.exports.run = (client, message, args, data, announcement) => {
             const parsedPayment = parseFloat(payment)
             fs.writeFile(`./data/serverdata/${message.guild.id}/economy/${balMember.id}.txt`, parsedPayment, function(err,data) {
                 var success = new Discord.RichEmbed()
-               //     .setColor(data.embedcolor)
+               .setColor(colors.success)
                     .setTitle('Successfully Set Money!')
                     .setDescription(`User: ${balMember.user.tag}\nAmount: ${currency}${parsedPayment}`)
                     message.channel.send({embed: success})
@@ -44,7 +45,10 @@ module.exports.run = (client, message, args, data, announcement) => {
         });
     });
 
-
+    } else {    
+        message.channel.send('This command is not available for Sunset LiteMode')
+    }
+});
 
 }
 module.exports.help = {

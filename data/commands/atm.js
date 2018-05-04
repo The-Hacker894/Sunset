@@ -3,12 +3,15 @@ const Discord = require("discord.js");
 const boxen = require("boxen")
 const fs = require('fs')
 const moment = require("moment")
-module.exports.run = (client, message, args, data, announcement) => {
+module.exports.run = (client, message, args, data, announcement, colors) => {
     var commandlock = data.lock
   if(commandlock.includes('true')) {       
     if(message.author.id !== data.ownerid) return message.channel.send('Sorry, but a command lock is in effect. Only the owner can use commands at this time.')   
   } 
-    message.channel.startTyping()
+
+  fs.readFile(`./data/serverdata/${message.guild.id}/litemode.txt`, function(err, litedata) {
+    if(!litedata.includes('true')) {
+
     var balMember = message.guild.member(message.mentions.users.first());
     var balaction = args[2]
     var balother = args[3]
@@ -70,7 +73,7 @@ if(!balMember) {
                     });
                 }
                 var atm = new Discord.RichEmbed()
-                    .setColor(data.embedcolor)
+                    .setColor(colors.system)
                     .addField('Balance', `${currency}${parsedBAL}`, true)
                     .addField('ATM Balance', `${currency}${parsedATM}`, true)
                     .addField('Net Worth', `${currency}${parsedNW}`, true)
@@ -89,7 +92,7 @@ if(!balMember) {
                     })
                 }
                 var newbal = new Discord.RichEmbed()
-                    .setColor(data.embedcolor)
+                    .setColor(colors.critical)
                     .setDescription('No money was found; creating new bank file for ' + message.author.tag)                               
                 console.log("The file was saved!");
                 message.channel.send({embed: newbal}).then(message => {
@@ -102,7 +105,7 @@ if(!balMember) {
     }
     if(action.includes('dep')) {
         var nodepprov = new Discord.RichEmbed()
-            .setColor(data.embedcolor)
+            .setColor(colors.critical)
             .setDescription('No Money to Deposit Provided')
             .setAuthor(message.author.tag, message.author.displayAvatarURL)
         
@@ -125,7 +128,7 @@ if(!balMember) {
                  var parsedDEP = parseFloat(other)
 
                  var notenoughmoney = new Discord.RichEmbed()
-                .setColor(data.embedcolor)
+                .setColor(colors.critical)
                 .setDescription('You do not have the sufficient funds to deposit ' + currency + parsedDEP + '\nBalance: ' + currency + newparsedBAL + '\nATM: ' + currency + newparsedATM)
                 .setAuthor(message.author.tag, message.author.displayAvatarURL)
 
@@ -133,8 +136,8 @@ if(!balMember) {
                  fs.writeFile(`./data/serverdata/${message.guild.id}/economy/atm/${message.author.id}.txt`, newparsedATM + parsedDEP, function(err) {
                     fs.writeFile(`./data/serverdata/${message.guild.id}/economy/${message.author.id}.txt`, newparsedBAL - parsedDEP, function(err) {
                         var depositsuccess = new Discord.RichEmbed()
-                            .setColor(data.embedcolor)
-                            .setTitle('Successfully Depositing Money')
+                            .setColor(colors.success)
+                            .setTitle('Successfully Deposited Money')
                             .setDescription(`Successfully deposited ${currency}${parsedDEP}\nNew Balance: ${currency}${newparsedBAL - parsedDEP}\nNew ATM: ${currency}${parsedDEP + newparsedATM}`)
                             message.channel.send({embed: depositsuccess})
                     })
@@ -147,7 +150,7 @@ if(!balMember) {
     }
     if(action.includes('deposit')) {
         var dnodepprov = new Discord.RichEmbed()
-            .setColor(data.embedcolor)
+            .setColor(colors.critical)
             .setDescription('No Money to Deposit Provided')
             .setAuthor(message.author.tag, message.author.displayAvatarURL)
         
@@ -170,7 +173,7 @@ if(!balMember) {
                  var parsedDEPOSIT = parseFloat(other)
 
                  var dnotenoughmoney = new Discord.RichEmbed()
-                .setColor(data.embedcolor)
+                .setColor(colors.critical)
                 .setDescription('You do not have the sufficient funds to deposit '+ currency + parsedDEPOSIT + '\nBalance: '+ currency + newparseddBAL + '\nATM: ' + currency + newparseddATM)
                 .setAuthor(message.author.tag, message.author.displayAvatarURL)
 
@@ -178,7 +181,7 @@ if(!balMember) {
                  fs.writeFile(`./data/serverdata/${message.guild.id}/economy/atm/${message.author.id}.txt`, newparseddATM + parsedDEPOSIT, function(err) {
                     fs.writeFile(`./data/serverdata/${message.guild.id}/economy/${message.author.id}.txt`, newparseddBAL - parsedDEPOSIT, function(err) {
                         var ddepositsuccess = new Discord.RichEmbed()
-                            .setColor(data.embedcolor)
+                            .setColor(colors.critical)
                             .setTitle('Successfully Depositing Money')
                             .setDescription(`Successfully deposited ${currency}${parsedDEPOSIT}\nNew Balance: ${currency}${newparseddBAL - parsedDEPOSIT}\nNew ATM: ${currency}${parsedDEPOSIT + newparseddATM}`)
                             message.channel.send({embed: ddepositsuccess})
@@ -192,7 +195,7 @@ if(!balMember) {
     }
     if(action.includes('withdrawal')) {
         var nowithprov = new Discord.RichEmbed()    
-            .setColor(data.embedcolor)
+            .setColor(colors.critical)
             .setDescription('No Withdrawal Provided')
         if(!other) return message.channel.send({embed: nowithprov})
         fs.readFile(`./data/serverdata/${message.guild.id}/economy/atm/${message.author.id}.txt`, 'utf8', function(atmerr, withATMdata) {
@@ -213,7 +216,7 @@ if(!balMember) {
                 var parsedWITH = parseFloat(other)
 
                 var notenoughmoneyWITH = new Discord.RichEmbed()
-                    .setColor(data.embedcolor)
+                    .setColor(colors.critical)
                     .setDescription(`You do not have ${currency}${parsedWITH}.`)
                     .addField('ATM Balance', `${currency}${parsedWithData}`)
                     .addField('Balance: ', `${currency}${parsedWithATMData}`)
@@ -232,7 +235,7 @@ if(!balMember) {
                             })
                         }
                         var withdrawalsuccess = new Discord.RichEmbed()
-                            .setColor(data.embedcolor)
+                            .setColor(colors.critical)
                             .setTitle('Successfully Withdrawn Money')
                             .setDescription(`Successfully withdrawn ${currency}${parsedWITH}\nNew Balance: ${currency}${parsedWithData + parsedWITH}\nNew ATM: ${currency}${parsedWithATMData - parsedWITH}`)
                             message.channel.send({embed: withdrawalsuccess})
@@ -286,7 +289,7 @@ fs.exists(`./data/serverdata/${message.guild.id}/economy/atm/${balMember.id}.txt
             });
         }
         var atm = new Discord.RichEmbed()
-            .setColor(data.embedcolor)
+            .setColor(colors.system)
             .addField('Balance', `${currency}${balparsedBAL}`, true)
             .addField('ATM Balance', `${currency}${balparsedATM}`, true)
             .addField('Net Worth', `${currency}${balparsedBAL + balparsedATM}`, true)
@@ -306,7 +309,7 @@ fs.exists(`./data/serverdata/${message.guild.id}/economy/atm/${balMember.id}.txt
             })
         }
         var balnewbal = new Discord.RichEmbed()
-            .setColor(data.embedcolor)
+            .setColor(colors.critical)
             .setDescription('No money was found; creating new bank file for ' + balMember.user.tag)                               
         console.log("The file was saved!");
         message.channel.send({embed: balnewbal}).then(message => {
@@ -321,6 +324,10 @@ fs.exists(`./data/serverdata/${message.guild.id}/economy/atm/${balMember.id}.txt
 }
 
     });
+    } else {
+        return message.channel.send('```' + boxen('This command is not available on LiteMode', {padding: 1}) + '```')
+    }
+});
 }
 module.exports.help = {
     name: "atm",

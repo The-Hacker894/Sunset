@@ -4,7 +4,7 @@ const moment = require("moment")
 var embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
 const momentdate = moment().format('MMMM Do YYYY')
 const momentday = moment().format('dddd')
-module.exports.run = (client, message, args, data, game, announcement) => {
+module.exports.run = (client, message, args, data, game, announcement, colors) => {
   var commandlock = data.lock
   if(commandlock.includes('true')) {       
     if(message.author.id !== data.ownerid) return message.channel.send('Sorry, but a command lock is in effect. Only the owner can use commands at this time.')   
@@ -14,7 +14,7 @@ module.exports.run = (client, message, args, data, game, announcement) => {
   if (message.author.id !== data.ownerid) return message.channel.send(`**Owner Only Command**`).catch(console.error);
   let flushmessage = message.content.split(' ').slice(1).join(' ')
   var flushinfoembed = new Discord.RichEmbed()
-    .setColor(data.embedcolor)
+    .setColor(colors.system)
     .setTitle("Flush Info")
     .setDescription('This command is used to reload certain things')
     .addField('Game',data.prefix + 'flush game')
@@ -24,7 +24,7 @@ module.exports.run = (client, message, args, data, game, announcement) => {
   if(flushmessage.length < 1) return message.channel.send({embed: flushinfoembed})
   if(flushmessage === `game`) {
     var flushgamesuccessembed = new Discord.RichEmbed()
-      .setColor(data.embedcolor)
+      .setColor(colors.system)
       .setTitle('Flushed Game')
       .setAuthor(message.author.username, message.author.displayAvatarURL)
     client.user.setGame(game.game + ' | ' + data.prefix + 'help', { type: game.activity })
@@ -32,7 +32,7 @@ module.exports.run = (client, message, args, data, game, announcement) => {
   }
   if(flushmessage === `activity`) {
     var flushgamesuccessembed = new Discord.RichEmbed()
-      .setColor(data.embedcolor)
+      .setColor(colors.success)
       .setTitle('Flushed Activity')
       .setAuthor(message.author.username, message.author.displayAvatarURL)
     client.user.setGame(game.game + ' | ' + data.prefix + 'help', { type: game.activity })
@@ -40,7 +40,7 @@ module.exports.run = (client, message, args, data, game, announcement) => {
   }
   if(flushmessage === `session`) {
     var flushannouncementsuccessembed = new Discord.RichEmbed()
-      .setColor(data.embedcolor)
+      .setColor(colors.success)
       .setTitle('Flushing Session')
       .setAuthor(message.author.username, message.author.displayAvatarURL)
       message.channel.send({embed: flushannouncementsuccessembed})
@@ -49,7 +49,7 @@ module.exports.run = (client, message, args, data, game, announcement) => {
   }
   if(flushmessage === `process`) {
     var flushprocesssuccessembed = new Discord.RichEmbed()
-      .setColor(data.embedcolor)
+      .setColor(colors.success)
       .setTitle('Flushing Process')
       .setAuthor(message.author.username, message.author.displayAvatarURL)
       message.channel.send({embed: flushprocesssuccessembed})

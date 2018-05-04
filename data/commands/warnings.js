@@ -2,20 +2,22 @@ const RichEmbed = require("discord.js").RichEmbed;
 const Discord = require("discord.js");
 const boxen = require("boxen")
 const fs = require('fs')
-module.exports.run = (client, message, args, data, announcement) => {
+module.exports.run = (client, message, args, data, announcement, colors) => {
 
 
     var commandlock = data.lock
   if(commandlock.includes('true')) {       
     if(message.author.id !== data.ownerid) return message.channel.send('Sorry, but a command lock is in effect. Only the owner can use commands at this time.')   
   } 
+  fs.readFile(`./data/serverdata/${message.guild.id}/litemode.txt`, function (err, litedata) {
+    if (!litedata.includes('true')) {
     var warnMember = message.guild.member(message.mentions.users.first());
     var messagecontent = message.content.split(' ').slice(1).join(' ')
     var warnReason = message.content.split(/\s+/g).slice(2).join(" ");
 
     if(!warnMember) {
         var noargs = new Discord.RichEmbed()
-            .setColor(data.embedcolor)
+            .setColor(colors.critical)
             .setDescription('Please provide a member to check warnings for')
             return message.channel.send({embed: noargs});
     }
@@ -30,12 +32,12 @@ module.exports.run = (client, message, args, data, announcement) => {
                                      return message.channel.send(err)
                                  }
                                  var warnscleared = new Discord.RichEmbed()
-                                    .setColor(data.embedcolor)
+                                    .setColor(colors.success)
                                     .setTitle('Cleared Warns')
                                     .setDescription(`Warns cleared for ${warnMember.user.tag}`)
                                     .setAuthor(warnMember.user.tag, warnMember.user.displayAvatarURL)
                                 var warnsclearedDM = new Discord.RichEmbed()
-                                 .setColor(data.embedcolor)
+                                 .setColor(colors.success)
                                  .setTitle(`Cleared Warns [${message.guild.name}]`)
                                  .setDescription(`Your warns have been cleared on ${message.guild.name}`)
                                  .setFooter(`Warns cleared by ${message.author.tag}`)
@@ -46,7 +48,7 @@ module.exports.run = (client, message, args, data, announcement) => {
                                });
                              } else {
                                  var otherwarnerror = new Discord.RichEmbed()
-                                    .setColor(data.embedcolor)
+                                    .setColor(colors.critical)
                                     .setDescription(`${warnMember.user.tag} has no warns on this guild.`)
                                 .setAuthor(warnMember.user.tag, warnMember.user.displayAvatarURL)
                                  return message.channel.send({embed: otherwarnerror})
@@ -61,7 +63,7 @@ module.exports.run = (client, message, args, data, announcement) => {
                                 return message.channel.send(err)
                             }
                             var warndata = new Discord.RichEmbed()
-                                .setColor(data.embedcolor)
+                                .setColor(colors.system)
                                 .setTitle(`Warnings ${warnMember.user.tag}`)
                                 .setDescription(data)
                             message.channel.send({embed: warndata})
@@ -69,7 +71,7 @@ module.exports.run = (client, message, args, data, announcement) => {
                           });
                         } else {
                             var warnerror = new Discord.RichEmbed()
-                                .setColor(data.embedcolor)
+                                .setColor(colors.critical)
                                 .setDescription(`${warnMember.user.tag} has no warns on this guild.`)
                                 .setAuthor(warnMember.user.tag, warnMember.user.displayAvatarURL)
                             message.channel.send({embed: warnerror})
@@ -77,6 +79,11 @@ module.exports.run = (client, message, args, data, announcement) => {
                         }
                     });
                 }
+            } else {
+                    // Lite Mode
+                    message.channel.send('This command is not available for Sunset LiteMode')
+            }
+        });
 
 
 }

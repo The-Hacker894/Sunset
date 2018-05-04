@@ -1,7 +1,8 @@
 const RichEmbed = require("discord.js").RichEmbed;
 const Discord = require("discord.js");
 const boxen = require('boxen');
-module.exports.run = (client, message, args, data, game, announcement) => {
+const fs = require('fs')
+module.exports.run = (client, message, args, data, game, announcement, colors) => {
   var commandlock = data.lock
   if(commandlock.includes('true')) {       
     if(message.author.id !== data.ownerid) return message.channel.send('Sorry, but a command lock is in effect. Only the owner can use commands at this time.')   
@@ -10,19 +11,19 @@ module.exports.run = (client, message, args, data, game, announcement) => {
 let useravatar = message.content.split(' ').slice(1).join(' ')
 let otheruser = message.guild.member(message.mentions.users.first())
 var useravatarlengthtooshortembed = new Discord.RichEmbed()
-  .setColor(data.embedcolor)
+  .setColor(colors.system)
   .setTitle('Avatar Help')
   .setDescription('You must provide a mentioned user')
   .addField(data.prefix + 'avatar <@user>','<@user> =  Mentioned User')
   // removed 
 var avatarmlembed = new Discord.RichEmbed()
-  .setColor(data.embedcolor)
+  .setColor(colors.system)
   .setTitle('Avatar Command Used')
   .setDescription(message.author.username)
   .setAuthor(message.author.username ,message.author.avatarURL)
   // removed 
 var avatarnomenembed = new Discord.RichEmbed()
-  .setColor(data.embedcolor)
+  .setColor(colors.system)
   .setTitle('Avatar of ' + message.author.username)
   .setImage(message.author.displayAvatarURL)
   .setAuthor(message.author.username ,message.author.displayAvatarURL)
@@ -31,7 +32,7 @@ var avatarnomenembed = new Discord.RichEmbed()
 if(useravatar.length < 1) return message.channel.send({embed: avatarnomenembed})
 
   var avatarouembed = new Discord.RichEmbed()
-    .setColor(data.embedcolor)
+    .setColor(colors.system)
     .setTitle('Avatar of ' + otheruser.user.username)
     .setImage(message.mentions.users.first().displayAvatarURL)
     .setAuthor(message.author.username ,message.author.displayAvatarURL)
