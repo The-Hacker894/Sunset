@@ -3,7 +3,15 @@ const Discord = require("discord.js");
 const boxen = require('boxen');
 const fs = require('fs')
 module.exports.run = (client, message, args, data, game, announcement, colors) => {
-    
+    var commandlock = data.lock
+  if(commandlock.includes('true')) {       
+    if(message.author.id !== data.ownerid) return message.channel.send('Sorry, but a command lock is in effect. Only the owner can use commands at this time.')   
+  } 
+
+    if (!fs.existsSync(`./data/serverdata/${message.guild.id}/litemode.txt`)) {
+        fs.writeFileSync(`./data/serverdata/${message.guild.id}/litemode.txt`, 'false', function(err) {
+        });
+    };
     var channelMention = args[1]
     var announceMessage = message.content.split(/\s+/g).slice(2).join(" ");
     var noChannel = new Discord.RichEmbed()
@@ -44,7 +52,6 @@ module.exports.run = (client, message, args, data, game, announcement, colors) =
     
     message.channel.send({embed: success})
     announcementChannel.send(announceMessage)
-
 
 }
 module.exports.help = {

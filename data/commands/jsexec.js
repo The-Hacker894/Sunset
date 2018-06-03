@@ -9,7 +9,10 @@ module.exports.run = (client, message, args, data, game, announcement, colors) =
   if(commandlock.includes('true')) {       
     if(message.author.id !== data.ownerid) return message.channel.send('Sorry, but a command lock is in effect. Only the owner can use commands at this time.')   
   } 
-  
+  if (!fs.existsSync(`./data/serverdata/${message.guild.id}/litemode.txt`)) {
+    fs.writeFileSync(`./data/serverdata/${message.guild.id}/litemode.txt`, 'false', function(err) {
+    });
+  };
   const modlog = message.guild.channels.find('name', 'mod-log');
   const announcements = message.guild.channels.find('name', 'announcements')
 var wronguserembed = new Discord.RichEmbed()
@@ -40,17 +43,6 @@ var noevalembed = new Discord.RichEmbed()
   .setDescription("Please provide something to evaluate")
   .addField(data.prefix + 'jsexec <evaluation>','<evaluation> = Something to evaluate.')
   // removed 
-/*>jsexec var weather = require('weather-js');
- 
-// Options: 
-// search:     location name or zipcode 
-// degreeType: F or C 
- 
-weather.find({search: 'San Francisco, CA', degreeType: 'F'}, function(err, result) {
-  if(err) console.log(err);
- 
-  console.log(JSON.stringify(result, null, 2));
-});*/
 
 if (something2execute.length < 1) return message.channel.send({embed: noevalembed}).catch(console.error);
 
@@ -64,6 +56,7 @@ var jsembed = new Discord.RichEmbed()
     message.channel.send({embed: jsembed}).catch(console.error);
     console.log(boxen('[JS Execution] ' + message.guild.name + ' | ' + message.author.tag, {padding: 1}))
     if(modlog) return modlog.send({embed: jsexecmlembed}).catch(console.error);
+
 }
 module.exports.help = {
   name: "jsexec",

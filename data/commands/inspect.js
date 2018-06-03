@@ -6,8 +6,14 @@ const fs = require('fs')
 const inspections = ['invite', 'video']
 const vui = require('video-url-inspector');
 module.exports.run = (client, message, args, data, game, announcement,colors) => {
-
-
+    var commandlock = data.lock
+    if(commandlock.includes('true')) {       
+      if(message.author.id !== data.ownerid) return message.channel.send('Sorry, but a command lock is in effect. Only the owner can use commands at this time.')   
+    } 
+    if (!fs.existsSync(`./data/serverdata/${message.guild.id}/litemode.txt`)) {
+        fs.writeFileSync(`./data/serverdata/${message.guild.id}/litemode.txt`, 'false', function(err) {
+        });
+    };
 var option = args[1];
 
 var item = message.content.split(/\s+/g).slice(2).join(" ");
@@ -80,6 +86,7 @@ if(inspections.some(insp => option.includes(insp))) {
         .setDescription('That inspection option is not valid')
         return message.channel.send({embed: invalidInspection})
 }
+
 
 }
 module.exports.help = {

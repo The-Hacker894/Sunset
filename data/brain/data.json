@@ -1,7 +1,7 @@
 {
     "name": "Sunset",
-    "newversion": "6.0",
-    "description": "Sunset is the best bot your could ever have",
+    "newversion": "6.1",
+    "description": "Sunset, the swiss army knife of Discord Bots",
     "library": "Discord.js",
     "language": "Node.js",
     "prefix": ">",
@@ -11,11 +11,11 @@
     "bot_client_id": "371097223942897665",
     "bot_permissions": "2146958591",
     "github_project_link": "https://github.com/The-Hacker894/Sunset/",
-    "bot_discriminator": "8283",
-    "bot_guild_id": "<@371097223942897665>",
     "lock": " false",
     "nsfwterms": ["pussy", "cock", "porn", "hentai", "porn", "ass", "fuck", "piss", "penis", "vagina", "dick", "nude", "nut", "ejaculate", "cum", "hoe", "tit", "boob", "titmonger", "tit monger", "tits", "xvideos", "hentai", "pornhub", "rule34", "rule 34", "nigga", "nigger", "e621", "e 6 2 1", "furry", "pleasurebonbon", "furrycumhentai", "xxx"],
     "dbltoken": "",
     "googlAPIKey": "",
-    "translateKey": ""
+    "translateKey": "",
+    "dmCommands": ["help", "ping", "info"],
+	"helpPages":"5"
 }

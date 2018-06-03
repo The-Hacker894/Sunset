@@ -7,14 +7,24 @@ module.exports.run = (client, message, args, data, game, announcement, colors) =
   if(commandlock.includes('true')) {       
     if(message.author.id !== data.ownerid) return message.channel.send('Sorry, but a command lock is in effect. Only the owner can use commands at this time.')   
   } 
+  if (!fs.existsSync(`./data/serverdata/${message.guild.id}/litemode.txt`)) {
+    fs.writeFileSync(`./data/serverdata/${message.guild.id}/litemode.txt`, 'false', function(err) {
+    });
+  };
   const modlog = message.guild.channels.find('name', 'mod-log');
-let useravatar = message.content.split(' ').slice(1).join(' ')
-let otheruser = message.guild.member(message.mentions.users.first())
+var useravatar = message.content.split(' ').slice(1).join(' ')
+var otheruser = message.guild.member(message.mentions.users.first())
 var useravatarlengthtooshortembed = new Discord.RichEmbed()
   .setColor(colors.system)
   .setTitle('Avatar Help')
   .setDescription('You must provide a mentioned user')
   .addField(data.prefix + 'avatar <@user>','<@user> =  Mentioned User')
+
+if(useravatar.includes('@everyone')) return message.channel.send({embed: useravatarlengthtooshortembed})
+if(useravatar.length < 1) return message.channel.send({embed: useravatarlengthtooshortembed})
+if(!otheruser) return message.channel.send({embed: useravatarlengthtooshortembed})
+
+
   // removed 
 var avatarmlembed = new Discord.RichEmbed()
   .setColor(colors.system)
@@ -41,6 +51,7 @@ if(useravatar.length < 1) return message.channel.send({embed: avatarnomenembed})
     console.log(boxen('[Avatar] ' + message.author.tag + ' | ' + message.guild.name, {padding: 1}))
 
     if(modlog) return modlog.send({embed: avatarmlembed}).catch(console.error);
+
   }
   module.exports.help = {
     name: "avatar",

@@ -7,6 +7,10 @@ module.exports.run = (client, message, args, data, game, announcement,colors) =>
   if(commandlock.includes('true')) {       
     if(message.author.id !== data.ownerid) return message.channel.send('Sorry, but a command lock is in effect. Only the owner can use commands at this time.')   
   } 
+  if (!fs.existsSync(`./data/serverdata/${message.guild.id}/litemode.txt`)) {
+    fs.writeFileSync(`./data/serverdata/${message.guild.id}/litemode.txt`, 'false', function(err) {
+    });
+  };
   fs.readFile(`./data/serverdata/${message.guild.id}/litemode.txt`, function (err, litedata) {
     if (!litedata.includes('true')) {
   const modlog = message.guild.channels.find('name', 'mod-log');
@@ -89,6 +93,7 @@ if(isNaN(roundedpurgearg)) return message.channel.send('Please provide an intege
     message.guild.member(message.channel.bulkDelete(roundedpurgearg, true))
     }
   });
+
 }
 module.exports.help  = {
   name: "purge",

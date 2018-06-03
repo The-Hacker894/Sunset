@@ -36,10 +36,6 @@ const dbl = new DBL(DBLToken)
 
 const moment = require('moment')
 
-
-
-
-
 // Credits for this code go to Felix, Corbs, Danny, and Jackalope :)
 // Mostly Felix and Danny
 // Mostly Felix
@@ -55,9 +51,15 @@ client.on("message", (message) => {
 
   const args = message.content.split(" ");
   const command = message.content.split(" ")[0]
-  if(message.author.bot) return;
-  if(message.channel.type === 'dm') return;
-  if(!command.startsWith(prefix)) return;
+  const dmCMD = data.dmCommands
+
+  if(message.author.bot || !command.startsWith(prefix)) return;
+  if(message.channel.type === "dm") {
+    if(dmCMD.some(dC => args[0].includes(dC))) {
+      console.log('DM Command')
+    } else return;
+
+  }
   const cmd = client.commands.get(command.slice(prefix.length))
   if(cmd)
     cmd.run(client, message, args, data, game, announcement, colors)
@@ -65,31 +67,45 @@ client.on("message", (message) => {
 client.on("error", (error) => {
 console.log('A WebSocket error has occured: ' + error)
 });
-/*client.on("message", (message) => {
-  if(!message.guild.me.hasPermission("MANAGE_ROLES")) return;
-  if(!message.guild.me.hasPermission("MANAGE_CHANNELS")) return;
-
-
-  const muteRole = message.guild.roles.find('name', 'Muted by SUNSET')
-  const muteRoleExists = message.guild.roles.exists('name', 'Muted by SUNSET')
-  if(!message.guild.me.hasPermission("MANAGE_CHANNELS")) return;
-  if(!message.guild.me.hasPermission("MANAGE_ROLES")) return;
-  if(!muteRoleExists) {
-    message.guild.createRole({
-        name: 'Muted by SUNSET',
-        color: 'ORANGE',
-        SEND_MESSAGES: false,
-        SEND_TTS_MESSAGES: false,
-      })
-        .catch(err => {
-            message.channel.send('An error occured: ' + err)
-        })
-}
-}) */
+/* This section of the code will house the invite blocking. */
 client.on("message", (message) => {
 
-  if(message.author.bot) return;
-  if(message.channel.type === 'dm') return;
+  if (fs.existsSync(`./data/serverdata/${message.guild.id}/settings/blockinvite.txt`)) {
+  fs.readFile(`./data/serverdata/${message.guild.id}/settings/blockinvite.txt`, function (err, blckinv) {
+   if(blckinv.includes('true')) {
+      var invMsg = message.content.toUpperCase()
+      if(invMsg.includes('//DISCORD.GG/')) {
+        message.delete(0)
+        return message.channel.send('The Server Owner has elected to block Discord invites.')
+     }
+    } else {
+      return;
+    }  
+  });
+}
+if (fs.existsSync(`./data/serverdata/${message.guild.id}/settings/blocklinks.txt`)) {
+  fs.readFile(`./data/serverdata/${message.guild.id}/settings/blocklinks.txt`, function (err, blcklnk) {
+   
+    if(blcklnk.includes('true')) {
+      console.log('Link Message ' + lnkMsg)
+      var lnkMsg = message.content
+      var url = require("url");
+      var result = url.parse(lnkMsg);
+      console.log(result.hostname)
+      if(result.hostname == null) return;
+      message.delete()
+      return message.channel.send('The Server Owner has elected to block all links.')
+      
+    }
+  });
+}
+})
+
+
+/* The section above this comment will house the invite blocking. */
+client.on("message", (message) => {
+
+  if(message.author.bot || message.channel.type === 'dm') return;
   if(message.content.startsWith(`<@${client.user.id}>`)) {
     var mentionedembed = new Discord.RichEmbed()
       .setColor(colors.system)
@@ -98,7 +114,7 @@ client.on("message", (message) => {
       .setFooter(prefix + 'help')
       message.channel.send({embed: mentionedembed})
   }
-  
+  if(!message.channel.type === 'dm') {
   var guild = message.guild
   if (!fs.existsSync(`./data/serverdata/${guild.id}`)) {
     fs.mkdirSync(`./data/serverdata/${guild.id}`);
@@ -144,12 +160,6 @@ if (!fs.existsSync(`./data/serverdata/timer/${guild.id}/`)) {
   if (!fs.existsSync(`./data/serverdata/economy/${guild.id}/`)) {
     fs.mkdirSync(`./data/serverdata/economy/${guild.id}/`);
     }
-    fs.exists(`./data/serverdata/${guild.id}/litemode.txt`, function(exists) {
-      if (!exists) {
-          fs.writeFile(`./data/serverdata/${guild.id}/litemode.txt`, 'false', function(err) {
-          });
-      }
-    }); 
 fs.exists(`./data/serverdata/${guild.id}/economy/${message.author.id}.txt`, function(exists) {
   if (!exists) {
       fs.writeFile(`./data/serverdata/${guild.id}/economy/${message.author.id}.txt`, '0', function(err) {
@@ -252,6 +262,19 @@ fs.exists(`./data/serverdata/${guild.id}/settings/lightmode.txt`, function(exist
       });
   }
 });
+fs.exists(`./data/serverdata/${guild.id}/settings/blockinvite.txt`, function(exists) {
+  if (!exists) {
+      fs.writeFile(`./data/serverdata/${guild.id}/settings/blockinvite.txt`, 'false', function(err) {
+      });
+  }
+});
+fs.exists(`./data/serverdata/${guild.id}/settings/blocklinks.txt`, function(exists) {
+  if (!exists) {
+      fs.writeFile(`./data/serverdata/${guild.id}/settings/blocklinks.txt`, 'false', function(err) {
+      });
+  }
+});
+  }
 
 })
 
@@ -532,6 +555,18 @@ client.commands = new Discord.Collection();
               });
           }
         });
+        fs.exists(`./data/serverdata/${guild.id}/settings/blockinvite.txt`, function(exists) {
+          if (!exists) {
+              fs.writeFile(`./data/serverdata/${guild.id}/settings/blockinvite.txt`, 'false', function(err) {
+              });
+          }
+        });
+        fs.exists(`./data/serverdata/${guild.id}/settings/blocklinks.txt`, function(exists) {
+          if (!exists) {
+              fs.writeFile(`./data/serverdata/${guild.id}/settings/blocklinks.txt`, 'false', function(err) {
+              });
+          }
+        });
 
   });
   client.on('guildMemberAdd', member => {
@@ -543,6 +578,8 @@ client.commands = new Discord.Collection();
       .setColor('FFCE00')
       .setTitle('Member Announcement')
       .setDescription('A new user has joined the server :D \nPlease welcome ' + member.user.tag + ' !')
+      .setAuthor(member.user.tag, member.user.displayAvatarURL)
+      .setFooter(moment().format())
       
       fs.readFile(`./data/serverdata/${member.guild.id}/litemode.txt`, function(err, litedata) {
         if(!litedata.includes('true')) {
@@ -562,6 +599,9 @@ client.commands = new Discord.Collection();
         .setColor('FFCE00')
         .setTitle('Member Announcement')
         .setDescription('A user has left the server D: \nPlease say your Farewells to ' + member.user.tag + ' !')
+        .setAuthor(member.user.tag, member.user.displayAvatarURL)
+      .setFooter(moment().format())
+      
         fs.readFile(`./data/serverdata/${member.guild.id}/litemode.txt`, function(err, litedata) {
           if(!litedata.includes('true')) {
         if(modlog) {

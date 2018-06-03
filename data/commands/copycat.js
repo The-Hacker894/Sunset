@@ -2,7 +2,17 @@ const RichEmbed = require("discord.js").RichEmbed;
 const Discord = require("discord.js");
 const boxen = require('boxen');
 const fs = require('fs')
+const moment = require('moment')
 module.exports.run = (client, message, args, data, game, announcement,colors) => {
+    var commandlock = data.lock
+    if(commandlock.includes('true')) {       
+      if(message.author.id !== data.ownerid) return message.channel.send('Sorry, but a command lock is in effect. Only the owner can use commands at this time.')   
+    } 
+
+    if (!fs.existsSync(`./data/serverdata/${message.guild.id}/litemode.txt`)) {
+        fs.writeFileSync(`./data/serverdata/${message.guild.id}/litemode.txt`, 'false', function(err) {
+        });
+    };
     fs.readFile(`./data/serverdata/${message.guild.id}/litemode.txt`, function (err, litedata) {
         if (!litedata.includes('true')) {
             message.channel.startTyping()
@@ -31,7 +41,11 @@ module.exports.run = (client, message, args, data, game, announcement,colors) =>
     .then(wb => wb.send(ccmsg)).then(wb => {
         setTimeout(function(){
             wb.delete()
-            message.channel.send('***WebHook Deleted***')
+            var wbDeleted = new Discord.RichEmbed()
+                .setColor(colors.critical)
+                .setTitle('WebHook Deleted')
+                .setDescription('Member: ' + message.author.tag + '\nTime: ' + moment().format())
+            message.channel.send({embed: wbDeleted})
         }, 180000);
         }))
     message.channel.stopTyping()
@@ -53,7 +67,8 @@ module.exports.run = (client, message, args, data, game, announcement,colors) =>
     .then(wb => wb.send(ccmsg)).then(wb => {
         setTimeout(function(){
             wb.delete()
-            message.channel.send('***WebHook Deleted***')
+            var wbDeleted = 'WebHook Deleted\n\n Member: ' + message.author.tag + '\nTime: ' + moment().format()
+            message.channel.send(wbDeleted)
         }, 180000);
         }))
         

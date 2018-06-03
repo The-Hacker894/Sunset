@@ -9,6 +9,10 @@ module.exports.run = (client, message, args, data, game, announcement,colors) =>
     if(commandlock.includes('true')) {       
       if(message.author.id !== data.ownerid) return message.channel.send('Sorry, but a command lock is in effect. Only the owner can use commands at this time.')   
     } 
+    if (!fs.existsSync(`./data/serverdata/${message.guild.id}/litemode.txt`)) {
+        fs.writeFileSync(`./data/serverdata/${message.guild.id}/litemode.txt`, 'false', function(err) {
+        });
+    };
     if (!fs.existsSync(`./data/serverdata/timer/`)) {
         fs.mkdirSync(`./data/serverdata/timer/`);
         if (!fs.existsSync(`./data/serverdata/timer/${message.guild.id}/`)) {
@@ -180,7 +184,6 @@ if(data === 'true') {
         });
     }
 });
-
    
     
 }

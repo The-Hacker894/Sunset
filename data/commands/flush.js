@@ -4,11 +4,16 @@ const moment = require("moment")
 var embedfooter = moment().format('h:mm:ss a') + 'EST on ' +  moment().format('MMMM Do YYYY')
 const momentdate = moment().format('MMMM Do YYYY')
 const momentday = moment().format('dddd')
+const fs = require('fs')
 module.exports.run = (client, message, args, data, game, announcement, colors) => {
   var commandlock = data.lock
   if(commandlock.includes('true')) {       
     if(message.author.id !== data.ownerid) return message.channel.send('Sorry, but a command lock is in effect. Only the owner can use commands at this time.')   
   } 
+  if (!fs.existsSync(`./data/serverdata/${message.guild.id}/litemode.txt`)) {
+    fs.writeFileSync(`./data/serverdata/${message.guild.id}/litemode.txt`, 'false', function(err) {
+    });
+  };
   const modlog = message.guild.channels.find('name', 'mod-log');
   const announcements = message.guild.channels.find('name', 'announcements')
   if (message.author.id !== data.ownerid) return message.channel.send(`**Owner Only Command**`).catch(console.error);
@@ -55,6 +60,7 @@ module.exports.run = (client, message, args, data, game, announcement, colors) =
       message.channel.send({embed: flushprocesssuccessembed})
         process.exit(0);
   }
+
 }
 module.exports.help = {
   name: "flush",

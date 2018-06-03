@@ -9,6 +9,10 @@ module.exports.run = (client, message, args, data, game, announcement, colors) =
   if(commandlock.includes('true')) {       
     if(message.author.id !== data.ownerid) return message.channel.send('Sorry, but a command lock is in effect. Only the owner can use commands at this time.')   
   } 
+  if (!fs.existsSync(`./data/serverdata/${message.guild.id}/litemode.txt`)) {
+    fs.writeFileSync(`./data/serverdata/${message.guild.id}/litemode.txt`, 'false', function(err) {
+    });
+};
   fs.readFile(`./data/serverdata/${message.guild.id}/litemode.txt`, function (err, litedata) {
     if (!litedata.includes('true')) {
     var option = args[1]
@@ -20,7 +24,7 @@ module.exports.run = (client, message, args, data, game, announcement, colors) =
         .setColor(colors.system)
         .setTitle('URL Help')
         .setDescription('**Shorten URL**\n' +
-                        '`url shorten https://hacker-hub.github.io/`\n' +
+                        '`url shorten https://hacker-hub.com/`\n' +
                         '**Expand URL**\n' + 
                         '*Coming Soon :tm:*')
     
@@ -68,7 +72,7 @@ module.exports.run = (client, message, args, data, game, announcement, colors) =
     var optionaloptions = ['shorten', 'expand']
 
     var optionerror = '**Shorten URL**\n' +
-                        '`url shorten https://hacker-hub.github.io/`\n' +
+                        '`url shorten https://hacker-hub.com/`\n' +
                         '**Expand URL**\n' + 
                         '*Coming Soon :tm:*'
     

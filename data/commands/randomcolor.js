@@ -9,6 +9,10 @@ module.exports.run = (client, message, args, data, game, announcement) => {
   if(commandlock.includes('true')) {       
     if(message.author.id !== data.ownerid) return message.channel.send('Sorry, but a command lock is in effect. Only the owner can use commands at this time.')   
   } 
+  if (!fs.existsSync(`./data/serverdata/${message.guild.id}/litemode.txt`)) {
+    fs.writeFileSync(`./data/serverdata/${message.guild.id}/litemode.txt`, 'false', function(err) {
+    });
+  };
   fs.readFile(`./data/serverdata/${message.guild.id}/litemode.txt`, function (err, litedata) {
     if (!litedata.includes('true')) {
   const modlog = message.guild.channels.find('name', 'mod-log');
@@ -31,6 +35,7 @@ if(modlog) return modlog.send({embed: rhmlembed}).catch(console.error);
 message.channel.send(`**Hex** #${color} \n **RGB** ${convert.hex.rgb(color)} \n **LAB** ${convert.hex.lab(color)} \n **CMYK** ${convert.hex.cmyk(color)}`);
     }
   });
+
 }
 module.exports.help = {
   name: "randomcolor",

@@ -8,6 +8,10 @@ module.exports.run = (client, message, args, data, announcement, colors) => {
   if(commandlock.includes('true')) {       
     if(message.author.id !== data.ownerid) return message.channel.send('Sorry, but a command lock is in effect. Only the owner can use commands at this time.')   
   } 
+  if (!fs.existsSync(`./data/serverdata/${message.guild.id}/litemode.txt`)) {
+    fs.writeFileSync(`./data/serverdata/${message.guild.id}/litemode.txt`, 'false', function(err) {
+    });
+};
   fs.readFile(`./data/serverdata/${message.guild.id}/litemode.txt`, function(err, litedata) {
     if(!litedata.includes('true')) {
     var balMember = message.guild.member(message.mentions.users.first());
@@ -28,6 +32,7 @@ module.exports.run = (client, message, args, data, announcement, colors) => {
             .addField('Clear your Balance', '`clearmoney`')
             .addField('Attempt to win the Lottery', '`lottery`')
             .addField('Interact with the ATM', '`atm`')
+            .addField('Change Economy Settings', '`economysettings`')
            return message.channel.send({embed: economy})
    /* }
   if(action.includes('sell')) {
@@ -67,6 +72,7 @@ module.exports.run = (client, message, args, data, announcement, colors) => {
         message.channel.send('This command is not available for Sunset LiteMode')
     }
 });
+
 
 }
 module.exports.help = {
