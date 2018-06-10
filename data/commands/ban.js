@@ -57,13 +57,14 @@ var notBannable = new Discord.RichEmbed()
       .setDescription('That member is not bannable')
   if (!message.member.hasPermission('BAN_MEMBERS')) return message.channel.send({embed: embedpermreturn}).catch(console.error);
   if(!message.guild.me.hasPermission("BAN_MEMBERS")) return message.channel.send({embed: embedbotpermreturn}).catch(console.error);
-  if(banMember.id === message.author.id) return message.channel.send({embed: selfBan});
-  if(banMember.highestRole.position >= message.member.highestRole.position) return message.channel.send({embed: sameRole})
-  if(message.guild.me.highestRole.position <= banMember.highestRole.position) return message.channel.send({embed: sameRoleClient})
-  if(!banMember.bannable) return message.channel.send({embed: notBannable})
+
   //  if(!banmessage.content.indexOf('@') === '@') return message.channel.send(':(')
     if(banreason.length < 1) return message.channel.send({embed: embedreturn}).catch(console.error);
     if(banMember.length < 1) return message.channel.send({embed: embedreturn}).catch(console.error);
+    if(banMember.id === message.author.id) return message.channel.send({embed: selfBan});
+    if(banMember.highestRole.position >= message.member.highestRole.position) return message.channel.send({embed: sameRole})
+    if(message.guild.me.highestRole.position <= banMember.highestRole.position) return message.channel.send({embed: sameRoleClient})
+    if(!banMember.bannable) return message.channel.send({embed: notBannable})
         message.guild.member(banMember).ban(banreason)
         message.delete()
         var embedaction = new Discord.RichEmbed()

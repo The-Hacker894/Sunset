@@ -1,6 +1,6 @@
 {
     "name": "Sunset",
-    "newversion": "6.1",
+    "newversion": "6.1.1",
     "description": "Sunset, the swiss army knife of Discord Bots",
     "library": "Discord.js",
     "language": "Node.js",
@@ -17,5 +17,14 @@
     "googlAPIKey": "",
     "translateKey": "",
     "dmCommands": ["help", "ping", "info"],
-	"helpPages":"5"
+    "helpPages":"5",
+    "changelog": ["-Fixed an issue where the ban command would not work",
+                "-Fixed an issue where the bot would crash when a role changed due to the litemode.txt file not existing",
+                "-Fixed an issue where DM commands would not work due to the bot trying to call the API for Guild IDs (DMs don't have these so it makes sense)",
+                "-Updated the DM commands",
+                "-Fixed an issue where some parts of the `serversettings` command would not work",
+                "-Added the ability to disable server announcements from Sunset in `serversettings` command",
+                "-Fixed an issue with the `createtxt` command",
+                "-Fixed a bunch of declaration errors",
+                ""]
 }

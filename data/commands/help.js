@@ -21,11 +21,11 @@ console.log('pages | ' + pages)
     var dmhelpembed = new Discord.RichEmbed()
   .setColor(colors.system)
     .setTitle('Sunset Commands')
-    .setDescription('To get a list of commands available in DM channels use `' + data.prefix + 'help dm`')
-    .addField('**Information**','`litemode` `dbl` `help` `ping` `info`')
+    .setDescription('To get a list of commands available in DM channels use `' + data.prefix + 'help dm`\n\n**Please note that Sunset 6.1 does not have an updated `help` command for DMs. This will be fixed in 6.1.1**')
+    .addField('**Information**','`litemode` `changelog` `dbl` `help` `ping` `info`')
     .addField('**Server Info**','`inspect` `serversettings` `invite` `serverinfo` `avatar` `profile`')
     .addField('**Entertainment**','`translate` `cleverbot` `emojify` `cowthink` `cowsay` `fliptext` `figlet` `say` `2ball` `8ball`')
-    .addField('**More Entertainment**', '`copycat` `timer` `urban` `dictionary` `google` `coinflip` `roll`')
+    .addField('**More Entertainment**', '`copycat` `timer` `urban` `google` `coinflip` `roll`')
     .addField('**Economy**', '`atm` `bal` `pay` `freemoney` `lottery` `rob` `clearmoney`')
     .addField('**Content Generation**', '`morsecode` `binary` `url` `base64` `qrcode` `lastqr` `createtxt` `lasttxt`')
     .addField('**Moderation**','`warn` `warnings` `rules` `channelsettings` `mute` `unmute` `ban` `unban` `kick` `purge` `mkchannel` `delchannel` `setnick`')
@@ -49,7 +49,9 @@ function noHelpArg() {
 				'**Get help on available commands**\n' +
 				'I know how hard it can be to learn how to use commands.\n\n' +
 				'`' + data.prefix + 'help commands <page>`\n' +
-				'The default page is 1 / ' + data.helpPages + '\n\n')
+				'The default page is 1 / ' + data.helpPages + '\n' + 
+				'**View the `' + data.newversion + '` changelog**\n' + 
+				'`' + data.prefix + 'changelog`\n\n')
 	.addField('Other Links', '[HackerHub](https://hacker-hub.com/)\n[About the Developer](https://skylarmccauley.hacker-hub.com/)\n[Sunset Website](https://hacker-hub.com/sunset)')
 	.addField('Current Announcement', announcement.announce)
 .setThumbnail(client.user.displayAvatarURL)
@@ -73,6 +75,7 @@ function helpPageOne() {
 						'**ban** - `Ban the mentioned member`\n' + 
 						'**base64** - `Encode and Decode the provided message in Base64`\n' + 
 						'**binary** - `Encode and Decode the provided message in binary`\n' + 
+						'**changelog** - `View the changes in this new version of Sunset`\n' +
 						'**channelsettings** - `Modify the metadata of the current channel`\n' + 
 						'**clearmoney** - `Go off the grid and clear your entire balance and ATM balance`\n' +
 						'**cleverbot** - `Chat with CleverBot through the cleverbot.io library`\n' +
@@ -91,7 +94,6 @@ function helpPageTwo() {
 					'**createtxt** - `Create a text file with the provided message`\n' +
 					'**dbl** - `Interact with the Discord Bot List API (Coming Soon)`\n' +
 					'**delchannel** - `Delete the current text channel`\n' + 
-					'**dictionary** - `Search the OxFord Dictionary for the provided word`\n' + 
 					'**emojify** - `Emojify the provided message if possible`\n' + 
 					'**figlet** - `Figletizes the provided message`\n' +
 					'**freemoney** - `Earn freemoney, the payout is randomized between $1 and $50`\n' +
@@ -244,7 +246,6 @@ if(parsedPages == 5) {
 								'**createtxt** - `Create a text file with the provided message`\n' +
 								'**dbl** - `Interact with the Discord Bot List API (Coming Soon)`\n' +
 								'**delchannel** - `Delete the current text channel`\n' + 
-								'**dictionary** - `Search the OxFord Dictionary for the provided word`\n' + 
 								'**economysettings** - `Change how the Sunset Economy functions`\n' +
 								'**emojify** - `Emojify the provided message if possible`\n' + 
 								'**figlet** - `Figletizes the provided message`\n' +

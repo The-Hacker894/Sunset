@@ -159,7 +159,7 @@ module.exports.run = (client, message, args, data, colors) => {
         console.log(boxen('[Channel Settings (Position)] ' + message.guild.name + ' | ' + message.author.tag + ' | ' + message.channel.position, {padding: 1}))
         if(modlog) return modlog.send({embed: channelsettingpositionml})
             }
-    if(settings.includes('webhooks')){
+    if(setting.includes('webhooks')){
         var noWebHookPerms = new Discord.RichEmbed()
             .setColor(colors.critical)
             .setTitle('Permission Error')

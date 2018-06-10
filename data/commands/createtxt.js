@@ -3,6 +3,7 @@ const Attachment = require("discord.js").Attachment
 const RichEmbed = require("discord.js").RichEmbed;
 const boxen = require("boxen")
 const writeFile = require("write")
+const fs = require('fs')
 const talkedRecently = new Set();
 module.exports.run = (client, message, args, data, game, announcement, colors) => {
     var commandlock = data.lock

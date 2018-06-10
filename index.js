@@ -15,6 +15,7 @@ const fse = require("fs-extra")
 fs.readFile(`./data/brain/startup.txt`, 'utf8', function(err, data) {
   console.log(data)
 })
+var something = "hello"
 
 const Discord = require("discord.js");
 const RichEmbed = require("discord.js").RichEmbed;
@@ -69,7 +70,7 @@ console.log('A WebSocket error has occured: ' + error)
 });
 /* This section of the code will house the invite blocking. */
 client.on("message", (message) => {
-
+  if(message.channel.type == "dm") return;
   if (fs.existsSync(`./data/serverdata/${message.guild.id}/settings/blockinvite.txt`)) {
   fs.readFile(`./data/serverdata/${message.guild.id}/settings/blockinvite.txt`, function (err, blckinv) {
    if(blckinv.includes('true')) {
@@ -274,6 +275,12 @@ fs.exists(`./data/serverdata/${guild.id}/settings/blocklinks.txt`, function(exis
       });
   }
 });
+fs.exists(`./data/serverdata/${guild.id}/settings/serverannouncements.txt`, function(exists) {
+  if (!exists) {
+      fs.writeFile(`./data/serverdata/${guild.id}/settings/serverannouncements.txt`, 'true', function(err) {
+      });
+  }
+});
   }
 
 })
@@ -351,27 +358,46 @@ client.commands = new Discord.Collection();
         .setTitle('User Banned :hammer:')
         .setDescription('The user ' + user.tag + ' has been met with the Ban Hammer :hammer: ')
         .setAuthor(user.username ,user.avatarURL)
+              if(fs.existsSync(`./data/serverdata/${guild.id}/litemode.txt`)) {
+                if (fs.existsSync(`./data/serverdata/${guild.id}/settings/serverannouncements.txt`)) {
+
+      fs.readFile(`./data/serverdata/${guild.id}/litemode.txt`, function(err, litedata) { 
+        fs.readFile(`./data/serverdata/${guild.id}/settings/serverannouncements.txt`, function(err, servann) { 
+      
+
         if(!litedata.includes('true')) {
+          
+          
       if(modlog) {
         modlog.send({embed: newbanembed}).catch(console.error);
       }
+      if(servann.includes('true')) {
       if (announcements) {
        announcements.send({embed: newbanembed}).catch(console.error);
       }
     }
-    });
+  }
+})
+      })
+    }
+  }
+});
   });
+  
   client.on('guildMemberUpdate', (message, oMember, nMember) => {
     var modlog = message.guild.channels.find('name', 'mod-log')
     var guildMemberUpdateembed = new Discord.RichEmbed()
       .setColor('FFCE00')
       .setTitle('Guild Member Update')
       .setDescription(oMember + ' | ' + nMember)
+            if(fs.existsSync(`./data/serverdata/${oMember.guild.id}/litemode.txt`)) {
+
       fs.readFile(`./data/serverdata/${oMember.guild.id}/litemode.txt`, function(err, litedata) {
         if(!litedata.includes('true')) {
       if(modlog) return modlog.send({embed: guildMemberUpdateembed}).catch(console.error);
         }
       });
+            }
   });
   client.on('guildUpdate', (oGuild, nGuild) => {
     var modlog = oGuild.channels.find('name', 'mod-log')
@@ -379,11 +405,14 @@ client.commands = new Discord.Collection();
       .setColor('FFCE00')
       .setTitle('Guild Updated')
       .setDescription('The Guild has been updated! \n \n **Before:** ' + oGuild + ' \n \n **After:** ' + nGuild)
+            if(fs.existsSync(`./data/serverdata/${oGuild.guild.id}/litemode.txt`)) {
+
       fs.readFile(`./data/serverdata/${oGuild.id}/litemode.txt`, function(err, litedata) {
         if(!litedata.includes('true')) {
       if(modlog) return modlog.send({embed: guildupdateembed  }).catch(console.error);
         }
       });
+            }
   });
   client.on('guildBanRemove', (guild, user) => {
     var modlog = guild.channels.find('name', 'mod-log')
@@ -393,16 +422,29 @@ client.commands = new Discord.Collection();
       .setTitle('User Unbanned')
       .setDescription('The user ' + user.tag + ' has been unbanned')
       .setAuthor(user.username , user.displayAvatarURL)
+            if(fs.existsSync(`./data/serverdata/${guild.id}/litemode.txt`)) {
+              if (fs.existsSync(`./data/serverdata/${guild.id}/settings/serverannouncements.txt`)) { 
+
+
       fs.readFile(`./data/serverdata/${guild.id}/litemode.txt`, function(err, litedata) {
+        fs.readFile(`./data/serverdata/${guild.id}/settings/serverannouncements.txt`, function(err, servann) {
+
         if(!litedata.includes('true')) {
       if(modlog) {
         modlog.send({embed: newunbanembed}).catch(console.error);
       }
+      if(servann.includes('true')) {
+
       if (announcements) {
        announcements.send({embed: newunbanembed}).catch(console.error);
       }
     }
-    });
+    }
+  });
+});
+            }
+          }
+            
   });
   client.on("guildDelete", guild => {
     console.log('Removed from 1 server | ' + guild).catch(console.error);
@@ -567,6 +609,12 @@ client.commands = new Discord.Collection();
               });
           }
         });
+        fs.exists(`./data/serverdata/${guild.id}/settings/serverannouncements.txt`, function(exists) {
+          if (!exists) {
+              fs.writeFile(`./data/serverdata/${guild.id}/settings/serverannouncements.txt`, 'true', function(err) {
+              });
+          }
+        });
 
   });
   client.on('guildMemberAdd', member => {
@@ -580,17 +628,28 @@ client.commands = new Discord.Collection();
       .setDescription('A new user has joined the server :D \nPlease welcome ' + member.user.tag + ' !')
       .setAuthor(member.user.tag, member.user.displayAvatarURL)
       .setFooter(moment().format())
-      
+            if(fs.existsSync(`./data/serverdata/${member.guild.id}/litemode.txt`)) {
+              if (fs.existsSync(`./data/serverdata/${member.guild.id}/settings/serverannouncements.txt`)) { 
+
       fs.readFile(`./data/serverdata/${member.guild.id}/litemode.txt`, function(err, litedata) {
+        fs.readFile(`./data/serverdata/${member.guild.id}/settings/serverannouncements.txt`, function(err, servann) {
+
         if(!litedata.includes('true')) {
       if(modlog) {
         modlog.send({embed: newuserjoinembed}).catch(console.error);
       }
+      if(servann.includes('true')) {
+
       if (announcements) {
        announcements.send({embed: newuserjoinembed}).catch(console.error);
       }
     }
-    });
+  }
+  });
+});
+
+            }
+          }       
   });
   client.on('guildMemberRemove', member => {
     var modlog = member.guild.channels.find('name', 'mod-log');
@@ -601,17 +660,28 @@ client.commands = new Discord.Collection();
         .setDescription('A user has left the server D: \nPlease say your Farewells to ' + member.user.tag + ' !')
         .setAuthor(member.user.tag, member.user.displayAvatarURL)
       .setFooter(moment().format())
-      
+            if(fs.existsSync(`./data/serverdata/${member.guild.id}/litemode.txt`)) {
+              if (fs.existsSync(`./data/serverdata/${member.guild.id}/settings/serverannouncements.txt`)) {
+
         fs.readFile(`./data/serverdata/${member.guild.id}/litemode.txt`, function(err, litedata) {
+          fs.readFile(`./data/serverdata/${member.guild.id}/settings/serverannouncements.txt`, function(err, servann) {
+
           if(!litedata.includes('true')) {
         if(modlog) {
           modlog.send({embed: olduserjoinembed}).catch(console.error);
         }
+        if(servann.includes('true')) {
+
         if (announcements) {
          announcements.send({embed: olduserjoinembed}).catch(console.error);
         }
       }
-      });
+      }
+    });
+  });
+            }
+          }
+            
   });
   client.on('channelUpdate', (oChannel, nChannel) => {
     var modlog = oChannel.guild.channels.find('name', 'mod-log');
@@ -619,11 +689,14 @@ client.commands = new Discord.Collection();
         .setColor('FFCE00')
         .setTitle('Channel Updated')
         .setDescription('**Before:** ' + oChannel + '\n **After:**' + nChannel)
+              if(fs.existsSync(`./data/serverdata/${oChannel.guild.id}/litemode.txt`)) {
+
         fs.readFile(`./data/serverdata/${oChannel.guild.id}/litemode.txt`, function(err, litedata) {
           if(!litedata.includes('true')) {
         if(modlog) return modlog.send({embed: channelupdateeventembed}).catch(console.error);
           }
         });
+              }
   });
   client.on('channelPinsUpdate', (channel, time) => {
     var modlog = channel.guild.channels.find('name', 'mod-log');
@@ -631,11 +704,14 @@ client.commands = new Discord.Collection();
         .setColor('FFCE00')
         .setTitle('Channel Pins Updated')
         .addField(channel.name, time)
+              if(fs.existsSync(`./data/serverdata/${channel.guild.id}/litemode.txt`)) {
+
         fs.readFile(`./data/serverdata/${channel.guild.id}/litemode.txt`, function(err, litedata) {
           if(!litedata.includes('true')) {
       if(modlog) return modlog.send({embed: channelpinsupdateembed}).catch(console.error);
           }
         });
+              }
   });
   client.on('roleCreate', role => {
     var modlog = role.guild.channels.find('name', 'mod-log');
@@ -643,11 +719,15 @@ client.commands = new Discord.Collection();
       .setColor('FFCE00')
       .setTitle('Role Created')
       .setDescription(role)
+      if(fs.existsSync(`./data/serverdata/${role.guild.id}/litemode.txt`)) {
       fs.readFile(`./data/serverdata/${role.guild.id}/litemode.txt`, function(err, litedata) {
         if(!litedata.includes('true')) {
       if(modlog) return modlog.send({embed: rolecreateembed}).catch(console.error);
         }
       });
+      return;
+    }
+  
   });
   client.on('roleDelete', role => {
     var modlog = role.guild.channels.find('name', 'mod-log');
@@ -655,11 +735,14 @@ client.commands = new Discord.Collection();
       .setColor('FFCE00')
       .setTitle('Role Deleted')
       .setDescription(role)
+            if(fs.existsSync(`./data/serverdata/${role.guild.id}/litemode.txt`)) {
+
       fs.readFile(`./data/serverdata/${role.guild.id}/litemode.txt`, function(err, litedata) {
         if(!litedata.includes('true')) {
       if(modlog) return modlog.send({embed: roledeleteembed}).catch(console.error);
         }
       });
+            }
   });
   client.on('roleUpdate', role => {
     var modlog = role.guild.channels.find('name', 'mod-log');
@@ -667,11 +750,14 @@ client.commands = new Discord.Collection();
       .setColor('FFCE00')
       .setTitle('Role Updated')
       .setDescription(role)
+            if(fs.existsSync(`./data/serverdata/${role.guild.id}/litemode.txt`)) {
+
       fs.readFile(`./data/serverdata/${role.guild.id}/litemode.txt`, function(err, litedata) {
         if(!litedata.includes('true')) {
       if(modlog) return modlog.send({embed: roleupdateembed}).catch(console.error);
         }
       });
+            }
   });
   /*client.on('messageUpdate', (oldMessage, newMessage) => {
     var modlog = oldMessage.guild.channels.find('name', 'mod-log');
@@ -693,8 +779,14 @@ client.commands = new Discord.Collection();
      .setTitle('Message Deleted')
      .setDescription(message.author.tag + '\n \n' + message)
      .setAuthor(message.author.username, message.author.displayAvatarURL)
-     
+           if(fs.existsSync(`./data/serverdata/${message.guild.id}/litemode.txt`)) {
+ fs.readFile(`./data/serverdata/${message.guild.id}/litemode.txt`, function(err, litedata) {
+        if(!litedata.includes('true')) {
      if(modlog) return modlog.send({embed: messagedelembed}).catch(console.error);
+           }
+ 
+ });
+           }
   });
 
 

@@ -3,7 +3,7 @@ const Discord = require("discord.js");
 const boxen = require("boxen")
 const fs = require('fs')
 const moment = require("moment")
-const options = ['invites', 'links']
+const options = ['invites', 'links', 'announcements']
 module.exports.run = (client, message, args, data, announcement, colors) => {
 
     var commandlock = data.lock
@@ -45,8 +45,9 @@ module.exports.run = (client, message, args, data, announcement, colors) => {
                     .setColor(colors.system)
                     .setTitle(client.user.username + ' Server Settings')
                     .setDescription('If you are looking for economy settings use `' + data.prefix + 'economysettings`')
-                    .addField('Block Invites', '`' + data.prefix + 'serversettings invites <true|false>`')
-                    .addField('Block Links', '`' + data.prefix + 'serversettings links <true|false>`')
+                    .addField('Block Invites', '`' + data.prefix + 'serversettings invites <true|false>`', true)
+                    .addField('Block Links', '`' + data.prefix + 'serversettings links <true|false>`', true)
+                    .addField('Announcements', '`' + data.prefix + 'serversettings announcements <true|false>`', true)
                     .setAuthor(client.user.username, client.user.displayAvatarURL)
                     message.channel.send({embed: noOption})
             }
@@ -130,13 +131,58 @@ module.exports.run = (client, message, args, data, announcement, colors) => {
                         });
                         return
                     }
-                }
-                var trueOrFalse = new Discord.RichEmbed()
+                    var trueOrFalse = new Discord.RichEmbed()
                     .setColor(colors.critical)
                     .setTitle('Error')
                     .setDescription('`' + data.prefix + 'serversettings links` only allows for one parameter that either includes `true` or `false`.')
                     .setAuthor(message.guild.name, message.guild.iconURL)
                     return message.channel.send({embed: trueOrFalse})
+                }
+                if(option.includes('announcements')) {
+                    if (!fs.existsSync(`./data/serverdata/${message.guild.id}/settings/serverannouncements.txt`)) {
+                        fs.writeFileSync(`./data/serverdata/${message.guild.id}/settings/serverannouncements.txt`, 'true', function(err) {
+                        });
+                    };
+                    fs.readFile(`./data/serverdata/${message.guild.id}/settings/serverannouncements.txt`, function (err, servann) {
+
+                    function noParam() {
+                        var noParam = new Discord.RichEmbed()
+                            .setColor(colors.system)
+                            .setTitle('Guild Announcements')
+                            .setDescription('Disabling this will remove Ban, UnBan, Join, and Leave announcements.\n\n `' + servann + '`')
+                            .setAuthor(message.guild.name, message.guild.iconURL)
+                            message.channel.send({embed: noParam})
+                    }
+                    if(!parameter) {
+                        return noParam()
+                    }
+                    if(parameter.includes('true')) {
+                        fs.writeFile(`./data/serverdata/${message.guild.id}/settings/serverannouncements.txt`, 'true', function(err) {
+                            if(err) return message.channel.send('An unexpected error occured: ' + err)
+                            var successTrue = new Discord.RichEmbed()  
+                                .setColor(colors.success)
+                                .setTitle('Server Announcements Enabled!')
+                                .setDescription('Sunset will now start sending server announcements.')
+                                .setAuthor(message.guild.name, message.guild.iconURL)
+                                return message.channel.send({embed: successTrue})
+                        })
+                        return;
+                    }
+                    if(parameter.includes('false')) {
+                        fs.writeFile(`./data/serverdata/${message.guild.id}/settings/serverannouncements.txt`, 'false', function(err) {
+                            if(err) return message.channel.send('An unexpected error occured: ' + err)
+                            var successFalse = new Discord.RichEmbed()
+                                .setColor(colors.success)
+                                .setTitle('Server Announcements Disabled')
+                                .setDescription('Sunset will now stop sending server announcements.')
+                                .setAuthor(message.guild.name, message.guild.iconURL)
+                                return message.channel.send({embed: successFalse})
+                        });
+                        return;
+                    }
+                });
+                }
+                
 
             } else {
                 return mainHelp()

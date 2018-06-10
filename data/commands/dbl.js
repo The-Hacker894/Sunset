@@ -6,6 +6,7 @@ const boxen = require('boxen');
 const DBL = require('dblapi.js')
 const tinyurl = require('tinyurl')
 const calls = ["bot", "user"]
+const fs = require('fs')
 module.exports.run = (client, message, args, data, game, announcement, colors) => {
     const dbl = new DBL(data.dbltoken)
     var option = args[1]

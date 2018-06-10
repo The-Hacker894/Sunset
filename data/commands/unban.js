@@ -1,6 +1,7 @@
 const RichEmbed = require("discord.js").RichEmbed;
 const Discord = require("discord.js");
 const boxen = require('boxen');
+const fs = require('fs')
 module.exports.run = (client, message, args, data, game, announcement, colors) => {
   var commandlock = data.lock
   if(commandlock.includes('true')) {       
