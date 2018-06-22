@@ -11,6 +11,52 @@ module.exports.run = (client, message, args, data, game, announcement, colors) =
   if(commandlock.includes('true')) {       
     if(message.author.id !== data.ownerid) return message.channel.send('Sorry, but a command lock is in effect. Only the owner can use commands at this time.')   
   } 
+  if(message.channel.type == 'dm') {
+    var dmArg = args[1]
+    var dmRPShelp = new Discord.RichEmbed()
+      .setColor(colors.system)
+      .setTitle('RPS Usage')
+      .setDescription('Please provide an item to *through*\n`' + data.prefix + 'rps <rock|paper|scissors>`')
+    if(!dmArg) return message.channel.send({embed: dmRPShelp})
+    request('https://www.random.org/integers/?num=1&min=0&max=2&base=10&col=1&format=plain&rnd=new', function (error, response, body) {
+      var botChoice = opts[Number(body)];
+
+      var rpschosen = new Discord.RichEmbed()
+      .setColor(colors.success)
+      .setTitle('RPS')
+      .setDescription(`I choose **${botChoice.toUpperCase()}**`)
+
+      var rpsiwon = new Discord.RichEmbed()
+    .setColor(colors.critical)
+    .setTitle('RPS')
+    .setDescription(`I choose **${botChoice.toUpperCase()}**\n\nI won :tada:`)
+
+    var rpswetied = new Discord.RichEmbed()
+    .setColor(colors.system)
+    .setTitle('RPS')
+    .setDescription(`I choose **${botChoice.toUpperCase()}**\n\nWe tied :checkered_flag:`)
+
+    var rpsyouwon = new Discord.RichEmbed()
+    .setColor(colors.success)
+    .setTitle('RPS')
+    .setDescription(`I choose **${botChoice.toUpperCase()}**\n\nYou won :flag_white:`)
+
+    message.channel.send({embed: rpschosen}).then(message => {
+      if(wins[botChoice] == args[1]){
+        message.edit({embed: rpsiwon})
+  
+      }else if(botChoice == args[1]){
+        message.edit({embed: rpswetied})
+      }else{
+        message.edit({embed: rpsyouwon})
+  
+      }
+  return;
+        });
+        return;
+  });
+return;
+  }
   if (!fs.existsSync(`./data/serverdata/${message.guild.id}/litemode.txt`)) {
     fs.writeFileSync(`./data/serverdata/${message.guild.id}/litemode.txt`, 'false', function(err) {
     });

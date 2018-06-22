@@ -9,6 +9,8 @@ module.exports.run = (client, message, args, data, game, announcement, colors) =
   if(commandlock.includes('true')) {       
     if(message.author.id !== data.ownerid) return message.channel.send('Sorry, but a command lock is in effect. Only the owner can use commands at this time.')   
   } 
+  var setting = args[1]
+    var option = message.content.split(/\s+/g).slice(2).join(" ");
   if (!fs.existsSync(`./data/serverdata/${message.guild.id}/litemode.txt`)) {
     fs.writeFileSync(`./data/serverdata/${message.guild.id}/litemode.txt`, 'false', function(err) {
     });
@@ -19,8 +21,7 @@ module.exports.run = (client, message, args, data, game, announcement, colors) =
 
     var newstatus = client.user.presence.status.toUpperCase()
 
-    var setting = args[1]
-    var option = message.content.split(setting).slice(1).join(' ')
+    
     var settingembed = new Discord.RichEmbed()
         .setColor(colors.system)
         .setTitle('Settings Command Used')
@@ -210,8 +211,6 @@ module.exports.run = (client, message, args, data, game, announcement, colors) =
 
     var newstatus = client.user.presence.status.toUpperCase()
 
-    var setting = args[1]
-    var option = message.content.split(setting).slice(1).join(' ')
     var settingembed = '**Announcement** \n' + announcement.announce + '\n **Command Lock** \n ' + data.lock + '\n **Game** \n' + game.game + '\n **Status** \n' + client.user.presence.status
 
         var settingannouncement = '**Announcement** \n ' + announcement.announce

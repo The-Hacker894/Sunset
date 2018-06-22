@@ -16,20 +16,21 @@ console.log('pages | ' + pages)
     var dmHelp = new Discord.RichEmbed()
       .setColor(colors.system)
       .setDescription('To get a list of commands available for regular text channels use `' + data.prefix + 'help`')
-      .addField('**Information**', '`help` `ping` `info`')
+	  .addField('**Information**', '`help` `ping` `info`')
+	  .addField('**Entertainment**', '`rps`')
     if(dmArg === ('dm')) return message.channel.send({embed: dmHelp})
     var dmhelpembed = new Discord.RichEmbed()
   .setColor(colors.system)
     .setTitle('Sunset Commands')
     .setDescription('To get a list of commands available in DM channels use `' + data.prefix + 'help dm`\n\n**Please note that Sunset 6.1 does not have an updated `help` command for DMs. This will be fixed in 6.1.1**')
-    .addField('**Information**','`litemode` `changelog` `dbl` `help` `ping` `info`')
+    .addField('**Information**','`litemode` `support` `changelog` `dbl` `help` `ping` `info`')
     .addField('**Server Info**','`inspect` `serversettings` `invite` `serverinfo` `avatar` `profile`')
-    .addField('**Entertainment**','`translate` `cleverbot` `emojify` `cowthink` `cowsay` `fliptext` `figlet` `say` `2ball` `8ball`')
+    .addField('**Entertainment**','`translate` `cleverbot` `emojify` `fliptext` `figlet` `say` `2ball` `8ball`')
     .addField('**More Entertainment**', '`copycat` `timer` `urban` `google` `coinflip` `roll`')
     .addField('**Economy**', '`atm` `bal` `pay` `freemoney` `lottery` `rob` `clearmoney`')
-    .addField('**Content Generation**', '`morsecode` `binary` `url` `base64` `qrcode` `lastqr` `createtxt` `lasttxt`')
+    .addField('**Content Generation**', '`morsecode` `binary` `url` `base64` `qrcode` `txt`')
     .addField('**Moderation**','`warn` `warnings` `rules` `channelsettings` `mute` `unmute` `ban` `unban` `kick` `purge` `mkchannel` `delchannel` `setnick`')
-    .addField('**Other**','`randomcolor` `error-report`')
+    .addField('**Other**','`randomcolor`')
     .addField('**Owner Only Commands**','`jsexec` `flush` `settings` `setmoney`')
    return message.channel.send({embed: dmhelpembed})
 
@@ -49,7 +50,8 @@ function noHelpArg() {
 				'**Get help on available commands**\n' +
 				'I know how hard it can be to learn how to use commands.\n\n' +
 				'`' + data.prefix + 'help commands <page>`\n' +
-				'The default page is 1 / ' + data.helpPages + '\n' + 
+				'The default page is 1 / ' + data.helpPages + '\n\n' + 
+				'You can also use *some* commands in DM Channels. Just use `' +data.prefix + 'help` in a DM with Sunset!\n\n' + 
 				'**View the `' + data.newversion + '` changelog**\n' + 
 				'`' + data.prefix + 'changelog`\n\n')
 	.addField('Other Links', '[HackerHub](https://hacker-hub.com/)\n[About the Developer](https://skylarmccauley.hacker-hub.com/)\n[Sunset Website](https://hacker-hub.com/sunset)')
@@ -79,7 +81,8 @@ function helpPageOne() {
 						'**channelsettings** - `Modify the metadata of the current channel`\n' + 
 						'**clearmoney** - `Go off the grid and clear your entire balance and ATM balance`\n' +
 						'**cleverbot** - `Chat with CleverBot through the cleverbot.io library`\n' +
-						'**coinflip** - `Flip a coin`')
+						'**coinflip** - `Flip a coin`\n' + 
+						'**console** - `Interact with the Sunset CLI')
 			.setFooter('Page 1 / ' + data.helpPages)
 			.setAuthor(client.user.username, client.user.displayAvatarURL)
 			message.channel.send({embed: helpPageOne})
@@ -89,9 +92,6 @@ function helpPageTwo() {
 		.setTitle('Sunset Command Page 2 / ' + data.helpPages)
 		.setColor(colors.system)
 		.setDescription('**copycat** - `Make a copycat of yourself`\n' + 
-					'**cowsay** - `Returns the provided message in a cowsay code block`\n' + 
-					'**cowthink** - `Returns the provided message in a cowthink code block`\n' +
-					'**createtxt** - `Create a text file with the provided message`\n' +
 					'**dbl** - `Interact with the Discord Bot List API (Coming Soon)`\n' +
 					'**delchannel** - `Delete the current text channel`\n' + 
 					'**emojify** - `Emojify the provided message if possible`\n' + 
@@ -111,8 +111,6 @@ function helpPageThree() {
 		.setTitle('Sunset Command Page 3 /' + data.helpPages)
 		.setColor(colors.system)
 		.setDescription('**kick** - `Kick the mentioned member`\n' +
-										'**lastqr** - `Recover the most recent QR Code generated`\n' +
-										'**lasttxt** - `Recover the most recent Text File generated`\n' + 
 										'**litemode** - `Toggle Sunset LiteMode`\n' +
 										'**lottery** - `Buy a lottery ticket Ticket Prices and Payouts are randomized.`\n' +
 										'**mkchannel** - `Make a text, voice, or category channel`\n' +
@@ -122,7 +120,7 @@ function helpPageThree() {
 										'**ping** - `Ping Sunset**\n' +
 										'**profile** - `View the profile of yourself or of the mentioned member`\n' +
 										'**purge** - `Bulk Delete up to 200 messages in the current channel`\n' +
-										'**qrcode** - `Encode the provided message in a QR Code`\n' +
+										'**qrcode** - `Encode and Recover QR Codes`\n' +
 										'**randomcolor** - `Get a random color in Hex, RGB, LAB, and CMYK`\n' +
 										'**reverse** - `Reverse Text`\n' +
 										'**rob** - `Rob members for their money`\n' +
@@ -143,8 +141,10 @@ function helpPageFour() {
 										'**serversettings** - `Change how Sunset functions for your server`\n' + 
 										'**setnick** - `Set the nickname of the mentioned member`\n' +
 										'**softban** - `Bans then unbans the mentioned member`\n' + 
+										'**support** - `Give some support to the creator of Sunset`\n' +
 										'**timer** - `Set a timer for a maximum of 12 hours`\n' +
 										'**translate** - `Translate the provided messages from English to the provided language`\n' +
+										'**txt** - `Write and Recover text files`\n' +
 										'**unban** - `Unban the mentioned member`\n' +
 										'**unmute** - `Unmute the mentioned member`\n' +
 										'**urban** - `Search the Urban Dictionary for the provided word`\n' +
@@ -243,7 +243,6 @@ if(parsedPages == 5) {
 					.setDescription('**copycat** - `Make a copycat of yourself`\n' + 
 								'**cowsay** - `Returns the provided message in a cowsay code block`\n' + 
 								'**cowthink** - `Returns the provided message in a cowthink code block`\n' +
-								'**createtxt** - `Create a text file with the provided message`\n' +
 								'**dbl** - `Interact with the Discord Bot List API (Coming Soon)`\n' +
 								'**delchannel** - `Delete the current text channel`\n' + 
 								'**economysettings** - `Change how the Sunset Economy functions`\n' +
@@ -264,7 +263,6 @@ if(parsedPages == 5) {
 					.setColor(colors.system)
 					.setDescription('**kick** - `Kick the mentioned member`\n' +
 													'**lastqr** - `Recover the most recent QR Code generated`\n' +
-													'**lasttxt** - `Recover the most recent Text File generated`\n' + 
 													'**litemode** - `Toggle Sunset LiteMode`\n' +
 													'**mkchannel** - `Make a text, voice, or category channel`\n' +
 													'**morsecode** - `Encode and Decode the provided message in Morse Code`\n' +
@@ -272,7 +270,7 @@ if(parsedPages == 5) {
 													'**ping** - `Ping Sunset**\n' +
 													'**profile** - `View the profile of yourself or of the mentioned member`\n' +
 													'**purge** - `Bulk Delete up to 200 messages in the current channel`\n' +
-													'**qrcode** - `Encode the provided message in a QR Code`\n' +
+													'**qrcode** - `Encode and Recover QR Codes`\n' +
 													'**randomcolor** - `Get a random color in Hex, RGB, LAB, and CMYK`\n' +
 													'**reverse** - `Reverse Text`\n' +
 													'**roll** - `Roll a die`')
@@ -292,8 +290,10 @@ if(parsedPages == 5) {
 													'**serversettings** - `Change how Sunset functions for your server`\n' + 
 													'**setnick** - `Set the nickname of the mentioned member`\n' +
 													'**softban** - `Bans then unbans the mentioned member`\n' + 
+													'**support** - `Give some support to the creator of Sunset`\n' +
 													'**timer** - `Set a timer for a maximum of 12 hours`\n' +
 													'**translate** - `Translate the provided messages from English to the provided language`\n' +
+													'**txt** - `Write and Recover text files`\n' +
 													'**unban** - `Unban the mentioned member`\n' +
 													'**unmute** - `Unmute the mentioned member`\n' +
 													'**urban** - `Search the Urban Dictionary for the provided word`\n' +

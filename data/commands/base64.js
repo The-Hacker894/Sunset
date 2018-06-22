@@ -18,7 +18,7 @@ module.exports.run = (client, message, args, data, game, announcement, colors) =
     if(!litedata.includes('true')) {
    
     var code = args[1]
-    var text = message.content.split(code).slice(1).join(' ')
+    var text = message.content.split(/\s+/g).slice(2).join(" ");
     
     var codeerror = new Discord.RichEmbed()
         .setColor(colors.system)

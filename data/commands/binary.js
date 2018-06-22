@@ -15,7 +15,7 @@ module.exports.run = (client, message, args, data, game, announcement, colors) =
   fs.readFile(`./data/serverdata/${message.guild.id}/litemode.txt`, function(err, litedata) {
     if(!litedata.includes('true')) {
     var code = args[1]
-    var text = message.content.split(code).slice(1).join(' ')
+    var text = message.content.split(/\s+/g).slice(2).join(" ");
     var options = ['encode', 'decode', 'recover']
     var codeerror = new Discord.RichEmbed()
         .setColor(colors.system)

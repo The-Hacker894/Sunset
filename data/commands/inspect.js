@@ -58,6 +58,10 @@ if(inspections.some(insp => option.includes(insp))) {
                                 '**Uses**: `' + invite.uses + '`\n' + 
                                 '**ChannelCount:** `' + channelCount + '`\n')
                                 message.channel.send({embed: fetchedInvite})
+}).catch({
+    if(error) {
+        message.channel.send('An unexpected error occured: ' + error)
+    }
 })
 
     }

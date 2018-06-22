@@ -15,21 +15,15 @@ const fse = require("fs-extra")
 fs.readFile(`./data/brain/startup.txt`, 'utf8', function(err, data) {
   console.log(data)
 })
-var something = "hello"
 
 const Discord = require("discord.js");
-const RichEmbed = require("discord.js").RichEmbed;
 const client = new Discord.Client({autoReconnect:true});
-const data = require("./data/brain/data.json");
-const datajson = require('./data/brain/data.json')
+var data = require("./data/brain/data.json");
 const announcement = require("./data/brain/announcement.json");
 const game = require("./data/brain/game.json");
 const colors = require("./data/brain/colors.json")
-
-
 const prefix = data.prefix
 const token = data.token
-const request = require("request")
 const DBL = require("dblapi.js")
 const pusage = require('pidusage')
 const DBLToken = data.dbltoken
@@ -48,6 +42,13 @@ const botjoinembed = new Discord.RichEmbed()
   .setDescription('Thank you for inviting Sunset to your server. \n I want you to know that I am **always** recieving updates so you may see some new features pop up here and there.\nI also have a feature to set server-specific rules. All you have to do is send `rules set <rules>` and your done! \nI also log some data for moderation and for quality assurance, but I don\'t thnk that will be a problem.')
   .addField('**Here is the current Announcement**', '```' + announcement.announce + '```')
   .addField('**Current Version**', '```' + data.newversion + '```')
+  client.on("message", (message) => {
+    if(message.content.startsWith(data.prefix + "lasttxt")) return message.channel.send('This command has been depricated. Please use `' + data.prefix +'txt`')
+    if(message.content.startsWith(data.prefix + "createtxt")) return message.channel.send('This command has been depricated. Please use `' + data.prefix +'txt`')
+    if(message.content.startsWith(data.prefix + "lastqr")) return message.channel.send('This command has been depricated. Please use `' + data.prefix +'createqr`')
+
+
+  })
 client.on("message", (message) => {
 
   const args = message.content.split(" ");
@@ -77,23 +78,49 @@ client.on("message", (message) => {
       var invMsg = message.content.toUpperCase()
       if(invMsg.includes('//DISCORD.GG/')) {
         message.delete(0)
-        return message.channel.send('The Server Owner has elected to block Discord invites.')
+        return message.channel.send('The Server Owner has elected to block Discord Instant Invites.')
+     } else if(invMsg.includes('discordapp.com/invite')) {
+      return message.channel.send('The Server Owner has elected to block Discord Instant Invites.')
      }
     } else {
       return;
-    }  
+    }
   });
 }
 if (fs.existsSync(`./data/serverdata/${message.guild.id}/settings/blocklinks.txt`)) {
   fs.readFile(`./data/serverdata/${message.guild.id}/settings/blocklinks.txt`, function (err, blcklnk) {
+    if(err) return console.log('An unexpected error occured while trying to read `blocklinks.txt` on server ' + message.guild.id + ' | ' + message.guild.name)
    
     if(blcklnk.includes('true')) {
-      console.log('Link Message ' + lnkMsg)
+      // If Links are to be blocked
       var lnkMsg = message.content
+      console.log('Link Message ' + lnkMsg)
       var url = require("url");
       var result = url.parse(lnkMsg);
       console.log(result.hostname)
-      if(result.hostname == null) return;
+      if(result.hostname === null) {
+        var { exec } = require('child_process');
+
+    exec('ping -c1 ' + lnkMsg, (err, stdout, stderr) => {
+    console.log('stdout ' + stdout)
+    console.log('stderr ' + stderr)
+    if(stdout.length > 1) {
+      message.delete()
+      return message.channel.send('The Server Owner has elected to block all links.')
+      
+    } else if(stderr.includes('Name or service not known')) {
+      return;
+    } else if(lnkMsg.includes('discord.gg')) {
+      return message.channel.send('The Server Owner has elected to block links.')
+    } else if(lnkMsg.includes('discordapp.com/invite')) {
+      return message.channel.send('The Server Owner has elected to block links.')
+    }
+    return;
+    
+ 
+  });
+  return;
+      }
       message.delete()
       return message.channel.send('The Server Owner has elected to block all links.')
       
