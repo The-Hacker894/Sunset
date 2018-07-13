@@ -19,7 +19,7 @@
   
 Sunset is the best Discord Bot you'll ever have. You can invite it to your server with the link below.  
   
-If you would like to know how to run Sunset yourself visit the [Sunset Website](https://hackerhubsite.weebly.com/sunset.html)  
+If you would like to know how to run Sunset yourself visit the [Sunset Website](https://www.hacker-hub.com/sunset/)  
   
 **So this bot can restart on its own when it crashes or shutsdown you may want to install a process manager like PM2**  
   
